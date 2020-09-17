@@ -15,6 +15,8 @@ Encore
     //.setManifestKeyPrefix('build/')
 
     .addEntry('app', ['./assets/js/App.js','./assets/css/app.css'])
+    .addEntry('login', ['./assets/js/login.js','./assets/css/login.css'])
+    .addEntry('main', ['./assets/js/main.js','./assets/css/main.css'])
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 

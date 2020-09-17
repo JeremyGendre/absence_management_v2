@@ -1,0 +1,19 @@
+:root{
+    --main-color:#005973;
+    --main-hover-color:#0088B0;
+    --main-error-color:#D02121;
+}
+
+*{
+    padding:0;
+    margin:0;
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+}
+
+.main-color-text{
+    color:var(--main-color);
+}
+
+.text-center{
+    text-align: center;
+}
