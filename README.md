@@ -14,7 +14,7 @@ Secondly, duplicate the .env file and create a .env.local file that you can over
 ### Commands
 - `yarn install / npm install`
 - `composer install`
-- `php bin/console doctrine:database:drop --force`
+- `php bin/console doctrine:database:drop --if-exists --force`
 - `php bin/console doctrine:database:create`
 - `php bin/console doctrine:schema:update --force` or `php bin/console doctrine:migrations:migrate`
 - `php bin/console doctrine:fixtures:load`
@@ -23,4 +23,6 @@ Secondly, duplicate the .env file and create a .env.local file that you can over
 - `symfony serve` to start the php development server
 
 OR If you have make installed on your computer :
-- `make install` or `make install-dataset`
+- `make install` or `make install-dataset`  
+then
+- `symfony serve` to start the php development server
