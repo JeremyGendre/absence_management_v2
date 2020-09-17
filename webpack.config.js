@@ -14,7 +14,7 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
-    .addEntry('app', './assets/js/app.js')
+    .addEntry('app', ['./assets/js/App.js','./assets/css/app.css'])
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -58,7 +58,7 @@ Encore
     //.autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
-    //.enableReactPreset()
+    .enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
 ;
 
