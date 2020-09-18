@@ -41,6 +41,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/auth", name="get_authenticated_user", methods={"GET"})
+     * @return JsonResponse
+     */
+    public function getAuthUser():JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        return new JsonResponse($user->serialize());
+    }
+
+    /**
      * @Route(path="/{id}", name="user_one", methods={"GET"})
      * @param User $user
      * @return JsonResponse
@@ -69,16 +80,6 @@ class UserController extends AbstractController
         if($user === null){
             return $errorHandler->jsonResponseError("Aucun utilisateur trouvé avec le nom '".$username."'.");
         }
-        return new JsonResponse($user->serialize());
-    }
-
-    /**
-     * @Route(path="/get/auth", name="user_one_by_username", methods={"GET"})
-     * @return JsonResponse
-     */
-    public function getAuthUser(){
-        /** @var User $user */
-        $user = $this->getUser();
         return new JsonResponse($user->serialize());
     }
 

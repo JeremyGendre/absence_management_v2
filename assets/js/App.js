@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import '../css/app.css';
@@ -14,38 +14,46 @@ import NewHolidaysRequestScreen from "./Screen/NewHolidaysRequestScreen/NewHolid
 import PersonnalCalendarScreen from "./Screen/PersonnalCalendarScreen/PersonnalCalendarScreen";
 import ProfileScreen from "./Screen/ProfileScreen/ProfileScreen";
 import ServiceCalendarScreen from "./Screen/ServiceCalendarScreen/ServiceCalendarScreen";
-import ApplicationSession from "./Component/Context/session";
+import ApplicationSession, {SessionContext} from "./Component/Context/session";
 import TabularCalendarScreen from "./Screen/TabularCalendarScreen/TabularCalendarScreen";
+import MyLoader from "./Component/MyLoader/MyLoader";
 
 function App() {
+    const user = useContext(SessionContext);
     return (
-        <ApplicationSession>
-            <Router>
-                <Header/>
-                <div className="my-app-container">
-                    <Switch>
-                        <Route exact path="/profile"><ProfileScreen/></Route>
-                        <Route exact path="/holidays/list"><HolidayListScreen/></Route>
-                        <Route exact path="/holidays/new"><NewHolidaysRequestScreen/></Route>
-                        <Route exact path="/calendar/personnal"><PersonnalCalendarScreen/></Route>
-                        <Route exact path="/calendar/service"><ServiceCalendarScreen/></Route>
-                        <Route exact path="/calendar/colleagues"><ColleaguesCalendarScreen/></Route>
-                        <Route exact path="/calendar/tabular"><TabularCalendarScreen/></Route>
-                        <Route exact path="/admin"><AdminScreen/></Route>
-                        <Route path="/404" component={NotFoundPage} />
-                        <Route path="/403" component={NotAuthorizedPage} />
-                        <Route path="/"><HomeScreen/></Route>
-                        <Redirect to="/404" />
-                    </Switch>
-                </div>
-            </Router>
-        </ApplicationSession>
+        <>
+            {user.user === null ? (
+                <MyLoader/>
+            ) : (
+                <Router>
+                    <Header/>
+                    <div className="my-app-container">
+                        <Switch>
+                            <Route exact path="/profile"><ProfileScreen/></Route>
+                            <Route exact path="/holidays/list"><HolidayListScreen/></Route>
+                            <Route exact path="/holidays/new"><NewHolidaysRequestScreen/></Route>
+                            <Route exact path="/calendar/personnal"><PersonnalCalendarScreen/></Route>
+                            <Route exact path="/calendar/service"><ServiceCalendarScreen/></Route>
+                            <Route exact path="/calendar/colleagues"><ColleaguesCalendarScreen/></Route>
+                            <Route exact path="/calendar/tabular"><TabularCalendarScreen/></Route>
+                            <Route exact path="/admin"><AdminScreen/></Route>
+                            <Route path="/404" component={NotFoundPage} />
+                            <Route path="/403" component={NotAuthorizedPage} />
+                            <Route path="/"><HomeScreen/></Route>
+                            <Redirect to="/404" />
+                        </Switch>
+                    </div>
+                </Router>
+            )}
+        </>
     );
 }
 
 ReactDOM.render(
     <React.StrictMode>
-        <App/>
+        <ApplicationSession>
+            <App/>
+        </ApplicationSession>
     </React.StrictMode>,
     document.getElementById('app')
 );

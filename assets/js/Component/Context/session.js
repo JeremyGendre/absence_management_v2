@@ -28,17 +28,26 @@ export function redirectToLogout(){
 
 export default function ApplicationSession(props){
     let userInfos = null;
-    try{
-        userInfos = JSON.parse(document.getElementById('user').getAttribute('data-user'));
-        console.log(userInfos);
-    }catch(error){
-        logout();
-    }
+
     const [user, setUser] = useState({
         user: userInfos,
         isAdmin: userHasRole(userInfos,'ROLE_ADMIN'),
         updateUser: updateUserState
     });
+
+    useEffect(()=>{
+        axios.get('/api/user/auth').then((data)=>{
+            let messageResult = isBadResult(data);
+            if(messageResult !== ''){
+                logout();
+            }else{
+                updateUserState(data.data);
+            }
+        }).catch((error)=>{
+            console.error(error);
+            logout();
+        });
+    },[]);
 
     function logout(){
         MySwal.fire({
@@ -52,9 +61,9 @@ export default function ApplicationSession(props){
 
     function updateUserState(userData) {
         setUser({
-            ...user,
             user: userData,
-            isAdmin: userHasRole(userData,"ROLE_ADMIN")
+            isAdmin: userHasRole(userData,"ROLE_ADMIN"),
+            updateUser: updateUserState
         });
     }
 

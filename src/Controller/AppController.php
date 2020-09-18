@@ -15,10 +15,6 @@ class AppController extends AbstractController
      */
     public function index()
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        return $this->render('app/index.html.twig',[
-            'user' => json_encode($user->serialize())
-        ]);
+        return $this->render('app/index.html.twig');
     }
 }

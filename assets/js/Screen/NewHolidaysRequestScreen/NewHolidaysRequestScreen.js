@@ -13,7 +13,7 @@ import withReactContent from 'sweetalert2-react-content';
 import {isBadResult} from "../../utils/server";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
-import {displayDate, displayEnglishDate, isSameDay} from "../../utils/date";
+import {isSameDay} from "../../utils/date";
 
 const MySwal = withReactContent(Swal);
 
