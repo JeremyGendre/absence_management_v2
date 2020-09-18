@@ -1,0 +1,31 @@
+.status-close{
+    color:#F1634F;
+}
+.status-accepted{
+    color:#4FCD49;
+}
+.status-asked{
+    color:#F1C04F;
+}
+
+.dismiss-button-simple-text{
+    color:blue;
+}
+
+.dismiss-button-simple-text:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.loader{
+    top:unset !important;
+    left:unset !important;
+    position:unset !important;
+    margin:unset !important;
+    transform: unset !important;
+}
+.loader:before,.loader:after{
+    top:unset !important;
+    left:unset !important;
+    transform: unset !important;
+}

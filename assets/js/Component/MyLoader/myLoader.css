@@ -1,0 +1,57 @@
+.my-loading-container{
+  width:100vw;
+  height: 100vh;
+  top:0;
+  left:0;
+}
+
+.my-loading-screen{
+  display:flex;
+  /*position:absolute;*/
+  z-index:100;
+}
+
+.my-loading-fit{
+  width:100%;
+  height:100%;
+  box-sizing: border-box;
+}
+
+.my-loader{
+  margin:auto;
+  width:50px;
+  height:50px;
+  border-radius: 50%;
+  border: solid 4px transparent;
+  border-bottom : solid 4px var(--main-color);
+  border-top: solid 4px var(--main-color);
+  animation: spin 1s linear infinite;
+}
+
+.my-loader-small{
+  width:35px;
+  height:35px;
+}
+
+.my-loader-normal{
+  width:50px;
+  height:50px;
+}
+
+.my-loader-big{
+  width:60px;
+  height:60px;
+}
+
+.loading-cell{
+  font-weight: bold;
+}
+
+@keyframes spin {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,124 @@
+.header-nav{
+    background-color: var(--main-color);
+    box-shadow: 0px 0px 5px grey;
+    padding-right:1em;
+    padding-left: 1em;
+}
+.header-nav ul{
+    list-style-type: none;
+}
+.header-li{
+    display:inline-block;
+    padding:0.9em 1em 0.9em 1em;
+    color:white;
+    transition: all 0.15s ease-in-out;
+}
+.header-li:not(.link-profile) a:hover{
+    color:#dddddd;
+}
+.header-li a{
+    text-decoration: none;
+    color:inherit;
+    transition: inherit;
+}
+
+.link-profile{
+    float: right;
+}
+.link-profile-a{
+    transition: inherit;
+}
+.profile-name{
+    margin-right:0.2em;
+}
+.link-profile-a:hover{
+    cursor:pointer;
+}
+.fa-user-circle{
+    transition: all 0.15s ease-in-out;
+}
+.link-profile-a:hover .fa-user-circle{
+    color:#dddddd;
+}
+.dropdown-arrows{
+    transform:translateY(-2px) translateX(1px);
+}
+
+.submenu{
+    z-index: 10;
+    position:absolute;
+    background-color:#EAEAEA;
+    box-shadow: 1px 3px 5px lightgrey;
+    transform: translateY(5px);
+}
+.submenu ul li{
+    color:#353535;
+    display:block;
+    padding:0.9em 1em 0.9em 1em;
+}
+.submenu ul li a:hover{
+    color:#353535 !important;
+}
+.submenu ul li:hover{
+    background-color: #f5f5f5;
+    cursor:pointer;
+}
+.links-submenu-header{
+    padding:0 !important;
+}
+.links-submenu-header a{
+    padding:0.9em 1em 0.9em 1em;
+    display: block;
+}
+
+.hidden{
+    display:none;
+}
+
+.header-submenu{
+    display:none;
+}
+.header-dropdown-links:hover > .header-submenu{
+    display:block;
+}
+
+.submenu-hr{
+    opacity:0.3;
+}
+
+.link-admin-view{
+    color:var(--main-admin-color) !important;
+}
+.link-admin-view:hover a > *{
+    color:var(--main-admin-color) !important;
+}
+.link-profile-submenu{
+    right:10px;
+}
+
+@media(max-width: 460px){
+    .header-li{
+        display:block;
+        text-align: center;
+    }
+    .submenu ul li{
+        text-align: left;
+    }
+    .link-profile{
+        float:unset;
+    }
+    .link-profile-submenu{
+        left:25%;
+    }
+}
+@media(max-width: 200px){
+    .link-profile-text{
+        display:none;
+    }
+    .submenu{
+        width:100%;
+    }
+    .submenu ul li {
+        text-align: center;
+    }
+}
