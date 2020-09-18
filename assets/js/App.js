@@ -22,20 +22,22 @@ function App() {
         <ApplicationSession>
             <Router>
                 <Header/>
-                <Switch>
-                    <Route exact path="/"><HomeScreen/></Route>
-                    <Route exact path="/profile"><ProfileScreen/></Route>
-                    <Route exact path="/holidays/list"><HolidayListScreen/></Route>
-                    <Route exact path="/holidays/new"><NewHolidaysRequestScreen/></Route>
-                    <Route exact path="/calendar/personnal"><PersonnalCalendarScreen/></Route>
-                    <Route exact path="/calendar/service"><ServiceCalendarScreen/></Route>
-                    <Route exact path="/calendar/colleagues"><ColleaguesCalendarScreen/></Route>
-                    <Route exact path="/calendar/tabular"><TabularCalendarScreen/></Route>
-                    <Route exact path="/admin"><AdminScreen/></Route>
-                    <Route path="/404" component={NotFoundPage} />
-                    <Route path="/403" component={NotAuthorizedPage} />
-                    <Redirect to="/404" />
-                </Switch>
+                <div className="my-app-container">
+                    <Switch>
+                        <Route exact path="/"><HomeScreen/></Route>
+                        <Route exact path="/profile"><ProfileScreen/></Route>
+                        <Route exact path="/holidays/list"><HolidayListScreen/></Route>
+                        <Route exact path="/holidays/new"><NewHolidaysRequestScreen/></Route>
+                        <Route exact path="/calendar/personnal"><PersonnalCalendarScreen/></Route>
+                        <Route exact path="/calendar/service"><ServiceCalendarScreen/></Route>
+                        <Route exact path="/calendar/colleagues"><ColleaguesCalendarScreen/></Route>
+                        <Route exact path="/calendar/tabular"><TabularCalendarScreen/></Route>
+                        <Route exact path="/admin"><AdminScreen/></Route>
+                        <Route path="/404" component={NotFoundPage} />
+                        <Route path="/403" component={NotAuthorizedPage} />
+                        <Redirect to="/404" />
+                    </Switch>
+                </div>
             </Router>
         </ApplicationSession>
     );

@@ -51,6 +51,22 @@ class AppFixtures extends Fixture
         $manager->persist($user);
         $manager->flush();
 
+        $user = new User();
+
+        /** @var Service $oneService */
+        $oneService = $manager->getRepository(Service::class)->findOneBy([]);
+        $user->setService($oneService);
+        $user->setTitle("Random user");
+        $user->setFirstName("User");
+        $user->setLastName("Random");
+        $user->setEmail("randus@media-sante.com");
+        $user->setUsername("randus");
+        $user->setRoles(["ROLE_USER"]);
+        $user->setPassword($this->encoder->encodePassword($user,"johndoe"));
+
+        $manager->persist($user);
+        $manager->flush();
+
         $holiday = new Holiday();
         $holiday->setCause("Flemme de venir");
         /** @var User $oneUser */
