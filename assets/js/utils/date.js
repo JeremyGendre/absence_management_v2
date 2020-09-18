@@ -5,6 +5,13 @@ export function displayDate(date){
     return getRealDay(date) + '/' + getRealMonth(date) + '/' + date.getFullYear();
 }
 
+export function displayEnglishDate(date){
+    if(!(date instanceof Date)){
+        return false;
+    }
+    return date.getFullYear() + '-' + getRealMonth(date) + '-' + getRealDay(date);
+}
+
 export function displayDateForCalendar(date){
     if(!(date instanceof Date)){
         try{
@@ -17,6 +24,18 @@ export function displayDateForCalendar(date){
         date.setSeconds(date.getSeconds() + 1);
     }
     return date.getFullYear() + '-' + getRealMonth(date) + '-' + getRealDay(date) + ' '+ getRealNumberForTime(date.getHours()) + ':' + getRealNumberForTime(date.getMinutes()) + ':' + getRealNumberForTime(date.getSeconds());
+}
+
+export function isSameDay(date1, date2){
+    if(!(date1 instanceof Date) || !(date2 instanceof Date)){
+        try{
+            date1 = new Date(date1);
+            date2 = new Date(date2);
+        }catch(e){
+            return false;
+        }
+    }
+    return displayDate(date1) === displayDate(date2);
 }
 
 export function isDatePassed(date){

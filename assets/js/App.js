@@ -24,7 +24,6 @@ function App() {
                 <Header/>
                 <div className="my-app-container">
                     <Switch>
-                        <Route exact path="/"><HomeScreen/></Route>
                         <Route exact path="/profile"><ProfileScreen/></Route>
                         <Route exact path="/holidays/list"><HolidayListScreen/></Route>
                         <Route exact path="/holidays/new"><NewHolidaysRequestScreen/></Route>
@@ -35,6 +34,7 @@ function App() {
                         <Route exact path="/admin"><AdminScreen/></Route>
                         <Route path="/404" component={NotFoundPage} />
                         <Route path="/403" component={NotAuthorizedPage} />
+                        <Route path="/"><HomeScreen/></Route>
                         <Redirect to="/404" />
                     </Switch>
                 </div>

@@ -13,6 +13,7 @@ import withReactContent from 'sweetalert2-react-content';
 import {isBadResult} from "../../utils/server";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
+import {displayDate, displayEnglishDate, isSameDay} from "../../utils/date";
 
 const MySwal = withReactContent(Swal);
 
@@ -52,9 +53,11 @@ const oneDayPeriodOptions = [
     },
 ];
 
+const newDate = new Date();
+
 const initialState = {
-    startDate : new Date(),
-    endDate : new Date(),
+    startDate : newDate,
+    endDate : newDate,
     canBeOnOneDay : true,
     oneDayType:'Journée entière',
     cause:'',
@@ -78,13 +81,13 @@ export default function NewHolidaysRequestScreen(props){
     function handleStartDateChange(e,data){
         let newDate = data.value;
         setStartDate(newDate);
-        setCanBeOnOneDay(Date.parse(newDate) === Date.parse(endDate));
+        setCanBeOnOneDay(isSameDay(newDate,endDate));
     }
 
     function handleEndDateChange(e,data){
         let newDate = data.value;
         setEndDate(newDate);
-        setCanBeOnOneDay(Date.parse(newDate) === Date.parse(startDate));
+        setCanBeOnOneDay(isSameDay(newDate,startDate));
     }
 
     function backToInitialState(){
