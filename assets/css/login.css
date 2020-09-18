@@ -54,6 +54,7 @@
     color:white;
     border:solid 2px var(--main-color);
     border-radius: 3px;
+    transition: all 0.1s ease-in-out;
 }
 
 .login-submit:hover{

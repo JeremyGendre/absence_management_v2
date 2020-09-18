@@ -24,3 +24,6 @@ Then, duplicate the .env file and create a .env.local file that you can override
 - `make install` or `make install-dataset`  
 then
 - `symfony serve` to start the php development server
+
+In order to develop in JavaScript, dont forget to run `yarn encore dev` each time you did modifications to your code.   
+To run *webpack encore* each time a modification is done, you can run `yarn watch` : it will actually trigger a webpack build each time you save your modifications to your JS code.
