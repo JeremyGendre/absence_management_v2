@@ -20,9 +20,8 @@ import withReactContent from 'sweetalert2-react-content';
 import {isBadResult} from "../../utils/server";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
-import {isSameDay} from "../../utils/date";
+import {displayEnglishDate, isSameDay} from "../../utils/date";
 import {STATUS_ACCEPTED, STATUS_ASKED} from "../../utils/holidaysStatus";
-import {Redirect} from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
@@ -131,8 +130,8 @@ export default function NewHolidaysRequestScreen(props){
             oneDayTypeVar = oneDayType;
         }
         axios.post('/api/holiday/new/user/'+user.user.id,{
-            start_date:startDate,
-            end_date:endDate,
+            start_date:displayEnglishDate(startDate),
+            end_date: displayEnglishDate(endDate),
             type:type,
             period_type:oneDayTypeVar,
             status: user.isAdmin ? STATUS_ACCEPTED : STATUS_ASKED,

@@ -66,9 +66,7 @@ export default function HolidayListScreen(props){
             confirmButtonText: 'Oui, annuler'
         }).then((result) => {
             if (result.value) {
-                let holidaysDeleted = holidaysBeingDeleted;
-                holidaysDeleted.push(holiday.key);
-                setHolidaysBeingDeleted(holidaysDeleted);
+                setHolidaysBeingDeleted([...holidaysBeingDeleted,holiday.key]);
                 axios.delete('/api/holiday/delete/'+holiday.key).then(result => {
                     let messageResult = isBadResult(result);
                     if(messageResult !== ''){//erreur
@@ -116,8 +114,8 @@ export default function HolidayListScreen(props){
                             <TableRow key={0}>
                                 <TableCell/>
                                 <TableCell/>
-                                <TableCell/>
                                 <TableCell>Aucun congés</TableCell>
+                                <TableCell/>
                                 <TableCell/>
                                 <TableCell/>
                             </TableRow>
@@ -143,23 +141,19 @@ export default function HolidayListScreen(props){
                                     status = '';
                                     break;
                             }
-                            let style = null;
-                            if(holidaysBeingDeleted.includes(data.key)){
-                                style = {opacity:'0.7'};
-                            }
                             return(
-                                <TableRow id={"user-holiday-"+data.key} key={data.key} style={style}>
+                                <TableRow id={"user-holiday-"+data.key} key={data.key}>
                                     <TableCell>{displayDate(data.start)}</TableCell>
                                     <TableCell>{displayDate(data.end)}</TableCell>
                                     <TableCell>{data.duration}</TableCell>
                                     <TableCell>{data.type}</TableCell>
                                     <TableCell>{statusIcon} {status}</TableCell>
                                     <TableCell>
-                                        {(isDatePassed(data.start) === false) && (
-                                            <Button primary loading={style !== null} disabled={style !== null} onClick={handleDeleteClick.bind(this,data)}>
+                                        {(isDatePassed(data.start) === false) ? (
+                                            <Button primary loading={holidaysBeingDeleted.includes(data.key)} disabled={holidaysBeingDeleted.includes(data.key)} onClick={handleDeleteClick.bind(this,data)}>
                                                 Annuler
                                             </Button>
-                                        )}
+                                        ) : (<></>)}
                                     </TableCell>
                                 </TableRow>
                             );
