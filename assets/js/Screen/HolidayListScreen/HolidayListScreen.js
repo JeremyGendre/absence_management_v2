@@ -92,7 +92,7 @@ export default function HolidayListScreen(props){
 
     return(
         <Container className="custom-containers">
-            <SemanticHeader as='h1'>Mes congés</SemanticHeader>
+            <SemanticHeader as='h1' className="classic-head-title">Mes congés</SemanticHeader>
             <Table selectable textAlign="center" className="p-relative">
                 <TableHeader>
                     <TableRow>

@@ -7,6 +7,16 @@ body{
     background-color: #EEEEEE;
 }
 
+.classic-head-title{
+    border-left: solid 5px var(--main-color) !important;
+    padding-left: 1em !important;
+    margin-bottom:1em !important;
+}
+
+h1{
+    color: var(--main-color) !important;
+}
+
 .my-app-container{
     margin-top:2em;
 }

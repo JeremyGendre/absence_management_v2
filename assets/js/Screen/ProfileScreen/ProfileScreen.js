@@ -128,7 +128,7 @@ export default function ProfileScreen(props){
                 <MyLoader size="big"/>
             ) : (
                 <Container className="profile-container custom-containers">
-                    <SemanticHeader as='h1'>Mon Profil</SemanticHeader>
+                    <SemanticHeader as='h1' className="classic-head-title">Mon Profil</SemanticHeader>
                     <Form onSubmit={handleFormSubmit}>
                         {(formErrors.length > 0) ? (
                             <Message negative>

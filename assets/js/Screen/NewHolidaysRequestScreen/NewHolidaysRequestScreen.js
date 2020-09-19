@@ -154,7 +154,7 @@ export default function NewHolidaysRequestScreen(props){
 
     return(
         <Container className="custom-containers">
-            <SemanticHeader as='h1'>Nouvelle demande</SemanticHeader>
+            <SemanticHeader as='h1' className="classic-head-title">Nouvelle demande</SemanticHeader>
             <Form onSubmit={handleFormSubmit}>
                 {(formErrors.length === 0) ? (
                     <></>

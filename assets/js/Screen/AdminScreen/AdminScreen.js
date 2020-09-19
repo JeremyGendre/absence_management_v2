@@ -130,7 +130,7 @@ export default function AdminScreen(props){
     }
     return(
         <Container className="profile-container custom-containers">
-            <SemanticHeader as='h1'>Page Administrateur</SemanticHeader>
+            <SemanticHeader as='h1' className="classic-head-title">Page Administrateur</SemanticHeader>
             <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
             <Table selectable>
                 <TableHeader>
