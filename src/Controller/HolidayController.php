@@ -45,7 +45,7 @@ class HolidayController extends AbstractController
         $holidays = $holidayRepository->findBy(["user" => $user],["startDate"=>"DESC"]);
         $response = [];
         foreach ($holidays as $holiday){
-            $response[] = $holiday->serialize();
+            $response[] = $holiday->serializeAsEvent();
         }
         return new JsonResponse($response);
     }
@@ -71,7 +71,7 @@ class HolidayController extends AbstractController
         $today = new \DateTime();
         foreach ($holidays as $holiday){
             if($status === Holiday::STATUS_PENDING && $holiday->getEndDate() < $today){
-                $response[] = $holiday->serialize();
+                $response[] = $holiday->serializeAsEvent();
             }
         }
         return new JsonResponse($response);

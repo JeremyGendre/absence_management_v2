@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 
@@ -39,10 +39,11 @@ const events = [
 ];
 
 export default function ColleaguesCalendarScreen(props){
+    const [colleagueEvents, setColleagueEvents] = useState(events);
     return(
         <Container className="custom-containers">
             <SemanticHeader as="h1" className="text-center">Calendrier de mes collègues</SemanticHeader>
-            <FullCalendar plugins={[ dayGridPlugin ]} events={events}/>
+            <FullCalendar plugins={[ dayGridPlugin ]} events={colleagueEvents}/>
         </Container>
     );
 }

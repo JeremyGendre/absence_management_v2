@@ -21,6 +21,12 @@ class Holiday implements MySerializerInterface
         self::STATUS_ACCEPTED => "Accepté",
     ];
 
+    public const STATUS_EVENTS_COLORS = [
+        self::STATUS_PENDING => "#F1C04F",
+        self::STATUS_REJECTED => "#E72D2D",
+        self::STATUS_ACCEPTED => "#4FCD49",
+    ];
+
     public const TYPE_PAYED = 1;
     public const TYPE_TIME_CREDIT = 2;
     public const TYPE_MEDICAL = 3;
@@ -208,6 +214,17 @@ class Holiday implements MySerializerInterface
             "cause" => $this->cause,
             "status" => $this->status,
             "user" => $this->getUser()->serializeForHoliday()
+        ];
+    }
+
+    public function serializeAsEvent(){
+        $color = self::STATUS_EVENTS_COLORS[$this->status];
+        return [
+            "start" => $this->getStartDate()->format('Y-m-d'),
+            "end" => $this->getEndDate()->format('Y-m-d'),
+            "title" => $this->cause ?? '',
+            "backgroundColor" => $color,
+            "borderColor" => $color,
         ];
     }
 }

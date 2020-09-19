@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 
@@ -39,10 +39,12 @@ const events = [
 ];
 
 export default function ServiceCalendarScreen(props){
+    const [serviceEvents, setServiceEvents] = useState(events);
+
     return(
         <Container className="custom-containers">
             <SemanticHeader as="h1" className="text-center">Calendrier de mon service</SemanticHeader>
-            <FullCalendar plugins={[ dayGridPlugin ]} events={events}/>
+            <FullCalendar plugins={[ dayGridPlugin ]} events={serviceEvents}/>
         </Container>
     );
 }
