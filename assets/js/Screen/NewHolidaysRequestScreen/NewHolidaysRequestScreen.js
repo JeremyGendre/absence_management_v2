@@ -7,13 +7,22 @@ import {
 } from 'semantic-ui-react';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import './NewHolidaysRequestScreen.css';
-import {TYPE_AM, TYPE_CP, TYPE_CT, TYPES_LABEL} from "../../utils/holidaysTypes";
+import {
+    LABEL_PERIOD_TYPES,
+    PERIOD_TYPE_AFTERNOON, PERIOD_TYPE_ALL_DAY, PERIOD_TYPE_MORNING,
+    TYPE_AM,
+    TYPE_CP,
+    TYPE_CT,
+    TYPES_LABEL
+} from "../../utils/holidaysTypes";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {isBadResult} from "../../utils/server";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
 import {isSameDay} from "../../utils/date";
+import {STATUS_ACCEPTED, STATUS_ASKED} from "../../utils/holidaysStatus";
+import {Redirect} from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
@@ -38,18 +47,18 @@ const types = [
 const oneDayPeriodOptions = [
     {
         key:1,
-        text:'Matin',
-        value:'Matin'
+        text: LABEL_PERIOD_TYPES.PERIOD_TYPE_MORNING,
+        value: PERIOD_TYPE_MORNING
     },
     {
         key:2,
-        text:'Après-midi',
-        value:'Après-midi'
+        text: LABEL_PERIOD_TYPES.PERIOD_TYPE_AFTERNOON,
+        value: PERIOD_TYPE_AFTERNOON
     },
     {
         key:3,
-        text:'Journée entière',
-        value:'Journée entière'
+        text: LABEL_PERIOD_TYPES.PERIOD_TYPE_ALL_DAY,
+        value: PERIOD_TYPE_ALL_DAY
     },
 ];
 
@@ -59,7 +68,7 @@ const initialState = {
     startDate : newDate,
     endDate : newDate,
     canBeOnOneDay : true,
-    oneDayType:'Journée entière',
+    oneDayType: PERIOD_TYPE_ALL_DAY,
     cause:'',
     type:null,
     submitting:false,
@@ -126,9 +135,10 @@ export default function NewHolidaysRequestScreen(props){
             end_date:endDate,
             type:type,
             period_type:oneDayTypeVar,
-            status:null,
+            status: user.isAdmin ? STATUS_ACCEPTED : STATUS_ASKED,
             cause:cause
         }).then(result => {
+            setSubmitting(false);
             let messageResult = isBadResult(result);
             if(messageResult !== ''){//erreur
                 MySwal.fire({icon:'error',title:messageResult});
@@ -137,6 +147,7 @@ export default function NewHolidaysRequestScreen(props){
                 backToInitialState();
             }
         }).catch(error => {//erreur
+            setSubmitting(false);
             MySwal.fire({icon:'error',title:'Une erreur est survenue. Création impossible.'});
             console.log(error);
         });
@@ -167,7 +178,7 @@ export default function NewHolidaysRequestScreen(props){
                         <SemanticDatepicker required name="start_end" locale="fr-FR" value={endDate} format="DD/MM/YYYY" onChange={(e,data) => handleEndDateChange(e,data)}/>
                     </FormField>
                     { (canBeOnOneDay) ? (
-                        <FormSelect label="Type de période" options={oneDayPeriodOptions} onChange={(e,data) => setOneDayType(data.value)} defaultValue={'Journée entière'}/>
+                        <FormSelect label="Type de période" options={oneDayPeriodOptions} onChange={(e,data) => setOneDayType(data.value)} defaultValue={oneDayType}/>
                     ):(
                         <></>
                     )}

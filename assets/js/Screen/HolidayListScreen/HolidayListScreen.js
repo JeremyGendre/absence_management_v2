@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {
+    Button,
     Container,
     Header as SemanticHeader, Icon, Loader,
     Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow,
@@ -53,7 +54,7 @@ export default function HolidayListScreen(props){
             console.log(error);
             setLoadingData(false);
         })
-    },[])
+    },[]);
 
     function handleDeleteClick(holiday){
         MySwal.fire({
@@ -94,7 +95,7 @@ export default function HolidayListScreen(props){
     return(
         <Container className="custom-containers">
             <SemanticHeader as='h1'>Mes congés</SemanticHeader>
-            <Table selectable className="p-relative">
+            <Table selectable textAlign="center" striped className="p-relative">
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell>Debut</TableHeaderCell>
@@ -154,8 +155,11 @@ export default function HolidayListScreen(props){
                                     <TableCell>{data.type}</TableCell>
                                     <TableCell>{statusIcon} {status}</TableCell>
                                     <TableCell>
-                                        {(style === null && isDatePassed(data.start) === false) && (<span className="dismiss-button-simple-text" onClick={handleDeleteClick.bind(this,data)}>Annuler</span>)}
-                                        {style !== null && <Loader active/>}
+                                        {(isDatePassed(data.start) === false) && (
+                                            <Button primary loading={style !== null} disabled={style !== null} onClick={handleDeleteClick.bind(this,data)}>
+                                                Annuler
+                                            </Button>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             );

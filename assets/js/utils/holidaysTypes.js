@@ -17,6 +17,16 @@ export const TYPES_LABEL = {
     }
 };
 
+export const PERIOD_TYPE_MORNING = 1;
+export const PERIOD_TYPE_AFTERNOON = 2;
+export const PERIOD_TYPE_ALL_DAY = 3;
+
+export const LABEL_PERIOD_TYPES = {
+    PERIOD_TYPE_MORNING : "Matin",
+    PERIOD_TYPE_AFTERNOON : "Après-midi",
+    PERIOD_TYPE_ALL_DAY : "Journée"
+};
+
 export function getShortType(type){
     let result = 'Inconnu';
     switch(type){
