@@ -3,6 +3,10 @@
     margin:0;
 }
 
+body{
+    background-color: #EEEEEE;
+}
+
 .my-app-container{
     margin-top:2em;
 }
