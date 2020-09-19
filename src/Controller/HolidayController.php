@@ -205,7 +205,7 @@ class HolidayController extends AbstractController
         if(!$holidayValidator->validate($data)){
             return $errorHandler->jsonResponseError("Les données transmises ne sont pas valides");
         }
-        dump($data['start_date'],$data['end_date']);
+
         $holiday = new Holiday();
         $holiday->setUser($user);
         $holiday->setStartDate(new \DateTime($data['start_date']));
@@ -220,7 +220,7 @@ class HolidayController extends AbstractController
         }elseif($user->hasRole('ROLE_ADMIN')){
             $holiday->setStatus(Holiday::STATUS_ACCEPTED);
         }
-        dd($holiday);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($holiday);
         $em->flush();
