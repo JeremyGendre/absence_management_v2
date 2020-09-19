@@ -50,7 +50,7 @@ const holidaysAsked = [
 export default function AdminScreen(props){
     const user = useContext(SessionContext);
 
-    let holidaysListFull = [];
+    let holidaysListFull = holidaysAsked;
 
     let searching = setTimeout(() => {},100);
 
@@ -58,7 +58,6 @@ export default function AdminScreen(props){
     const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
 
     useEffect(() => {
-        holidaysListFull = holidaysAsked;
         setHolidaysListDisplayed(holidaysAsked)
     },[]);
 
