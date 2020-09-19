@@ -42,7 +42,7 @@ export default function ColleaguesCalendarScreen(props){
     return(
         <Container className="custom-containers">
             <SemanticHeader as="h1" className="text-center">Calendrier de mes collègues</SemanticHeader>
-            <FullCalendar defaultView="dayGridMonth" plugins={[ dayGridPlugin ]} events={events}/>
+            <FullCalendar plugins={[ dayGridPlugin ]} events={events}/>
         </Container>
     );
 }

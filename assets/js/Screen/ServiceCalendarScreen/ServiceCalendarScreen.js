@@ -42,7 +42,7 @@ export default function ServiceCalendarScreen(props){
     return(
         <Container className="custom-containers">
             <SemanticHeader as="h1" className="text-center">Calendrier de mon service</SemanticHeader>
-            <FullCalendar defaultView="dayGridMonth" plugins={[ dayGridPlugin ]} events={events}/>
+            <FullCalendar plugins={[ dayGridPlugin ]} events={events}/>
         </Container>
     );
 }
