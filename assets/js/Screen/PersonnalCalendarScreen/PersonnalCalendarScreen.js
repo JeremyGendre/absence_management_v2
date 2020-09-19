@@ -13,17 +13,12 @@ export default function PersonnalCalendarScreen(props){
     const user = useContext(SessionContext);
 
     useEffect(() => {
-        axios.get('/api/holiday/user/' + user.user.id).then(data => {
-            console.log(data.data);
+        axios.get('/api/holiday/user/' + user.user.id + '/events').then(data => {
             setPersonalEvents(data.data);
         }).catch(error => {
             console.error(error);
         });
     },[]);
-
-    useEffect(() => {
-        console.log(personalEvents);
-    },[personalEvents]);
 
     return(
         <Container className="custom-containers">
