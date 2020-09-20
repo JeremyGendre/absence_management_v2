@@ -24,8 +24,8 @@ function convertListToAdminListFormat(holidays){
 }
 
 function convertOneToAdminListFormat(holiday){
-    let newStartDate = new Date(holiday.start_date);
-    let newEndDate = new Date(holiday.end_date);
+    let newStartDate = new Date(holiday.start_date.date);
+    let newEndDate = new Date(holiday.end_date.date);
     return {
         key: holiday.id,
         person: holiday.user.display_name,

@@ -154,7 +154,7 @@ export default function ProfileScreen(props){
                             <Form.Input fluid label="Intitulé de poste" required placeholder='Intitulé de poste' onChange={(e,data) => setTitle(data.value)} defaultValue={title} width={8}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Button className="submit-button-container" color='teal' loading={submitting}>Enregistrer</Form.Button>
+                            <Form.Button className="submit-button-container" primary loading={submitting}>Enregistrer</Form.Button>
                         </Form.Group>
                     </Form>
                 </Container>

@@ -287,7 +287,7 @@ class HolidayController extends AbstractController
     ):JsonResponse{
         /** @var User $authUser */
         $authUser = $this->getUser();
-        if(!$authUser->getHolidays()->contains($holiday) && !$authUser->hasRole("ROLE_ADMIN")){
+        if($holiday->getUser() !== $authUser && !$authUser->hasRole("ROLE_ADMIN")){
             return $errorHandler->jsonResponseError("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
         }
         $em = $this->getDoctrine()->getManager();

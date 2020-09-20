@@ -49,7 +49,9 @@ export default function MyLoader(props){
     }else {
         return (
             <div className={"my-loading-container my-loading-screen " + display} style={style}>
-                <div className={"my-loader " + size}/>
+                <div className={"my-loader-sub-container " + size}>
+                    <div className={'my-loader'}/>
+                </div>
             </div>
         );
     }

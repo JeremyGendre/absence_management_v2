@@ -69,7 +69,7 @@ const initialState = {
     canBeOnOneDay : true,
     oneDayType: PERIOD_TYPE_ALL_DAY,
     cause:'',
-    type:null,
+    type: TYPE_CP,
     submitting:false,
     formErrors : []
 };
@@ -160,9 +160,9 @@ export default function NewHolidaysRequestScreen(props){
                     <></>
                 ) : (
                     <Message negative>
-                        {formErrors.map((error) => {
+                        {formErrors.map((error,index) => {
                             return (
-                                <p>{error}</p>
+                                <p key={index}>{error}</p>
                             );
                         })}
                     </Message>
@@ -183,17 +183,13 @@ export default function NewHolidaysRequestScreen(props){
                     )}
                 </FormGroup>
                 <FormGroup>
-                    <FormSelect label="Type de congés" required options={types} onChange={(e,data) => setType(data.value)}/>
+                    <FormSelect label="Type de congés" required options={types} defaultValue={type} onChange={(e,data) => setType(data.value)}/>
                 </FormGroup>
                 <FormGroup>
                     <FormTextArea label="Cause" width={9} placeholder="Cause éventuelle" onChange={(e,data) => setCause(data.value)}/>
                 </FormGroup>
                 <FormGroup>
-                    { submitting ? (
-                        <FormButton className="submit-button-container" color="teal" loading>Valider</FormButton>
-                    ) : (
-                        <FormButton className="submit-button-container" color="teal">Valider</FormButton>
-                    )}
+                    <FormButton className="submit-button-container" primary loading={submitting} disabled={submitting}>Valider</FormButton>
                 </FormGroup>
             </Form>
         </Container>
