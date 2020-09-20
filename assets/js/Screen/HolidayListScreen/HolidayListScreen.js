@@ -79,12 +79,13 @@ export default function HolidayListScreen(props){
                             }
                         });
                         setListHolidays(newHolidaysList);
-                        setHolidaysBeingDeleted(removeFromArray(holiday.key,holidaysBeingDeleted));
                         MySwal.fire({icon:'success', title:'Congés annulés'});
                     }
                 }).catch(error => {
                     MySwal.fire({icon:'error', title:'Une erreur est survenue'});
                     console.log(error);
+                }).finally(() => {
+                    setHolidaysBeingDeleted(removeFromArray(holiday.key,holidaysBeingDeleted));
                 });
             }
         });

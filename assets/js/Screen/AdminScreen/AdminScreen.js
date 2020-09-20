@@ -13,6 +13,7 @@ import {SessionContext} from "../../Component/Context/session";
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {isBadResult} from "../../utils/server";
 import MyLoader from "../../Component/MyLoader/MyLoader";
+import {removeFromArray} from "../../utils/functions";
 
 const MySwal = withReactContent(Swal);
 
@@ -42,6 +43,7 @@ export default function AdminScreen(props){
     const [loadingData,setLoadingData] = useState(true);
     const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
     const [holidaysListFull,setHolidaysListFull] = useState([]);
+    const [holidaysBeingProcessed,setHolidaysBeingProcessed] = useState([]);
     const user = useContext(SessionContext);
 
     let searching = setTimeout(() => {},100);
@@ -63,7 +65,7 @@ export default function AdminScreen(props){
         });
     },[]);
 
-    function handleAcceptClick(){
+    function handleAcceptClick(holiday){
         MySwal.fire({
             title: 'Accepter cette demande ?',
             icon: 'warning',
@@ -73,15 +75,21 @@ export default function AdminScreen(props){
             confirmButtonText: 'Oui, accepter'
         }).then((result) => {
             if (result.value) {
-                MySwal.fire({
-                    icon:'success',
-                    title:'Demande acceptée'
+                setHolidaysBeingProcessed([...holidaysBeingProcessed,holiday.key]);
+                axios.put('/api/holiday/accept/' + holiday.key).then(data => {
+                    MySwal.fire({icon:'success', title:'Demande acceptée'});
+                    setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
+                    setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                }).catch(error => {
+                    MySwal.fire({icon:'error', title:'Action impossible', text: 'Une erreur est survenue'});
+                }).finally(() => {
+                    setHolidaysBeingProcessed(removeFromArray(holiday.key,holidaysBeingProcessed));
                 });
             }
         });
     }
 
-    function handleRefuseClick(){
+    function handleRefuseClick(holiday){
         MySwal.fire({
             title: 'Refuser cette demande ?',
             icon: 'warning',
@@ -91,9 +99,15 @@ export default function AdminScreen(props){
             confirmButtonText: 'Oui, refuser'
         }).then((result) => {
             if (result.value) {
-                MySwal.fire({
-                    icon:'success',
-                    title:'Demande refusée'
+                setHolidaysBeingProcessed([...holidaysBeingProcessed,holiday.key]);
+                axios.put('/api/holiday/reject/' + holiday.key).then(data => {
+                    MySwal.fire({icon:'success', title:'Demande refusée'});
+                    setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
+                    setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                }).catch(error => {
+                    MySwal.fire({icon:'error', title:'Action impossible', text: 'Une erreur est survenue'});
+                }).finally(() => {
+                    setHolidaysBeingProcessed(removeFromArray(holiday.key,holidaysBeingProcessed));
                 });
             }
         });
@@ -151,17 +165,27 @@ export default function AdminScreen(props){
                     </TableBody>
                 ) : (
                     <TableBody>
-                        {holidaysListDisplayed.map((data) => {
+                        {holidaysListDisplayed.length === 0 && (
+                            <TableRow key={0}>
+                                <TableCell/>
+                                <TableCell/>
+                                <TableCell>Aucunes données</TableCell>
+                                <TableCell/>
+                                <TableCell/>
+                                <TableCell/>
+                            </TableRow>
+                        )}
+                        {holidaysListDisplayed.length !== 0 && holidaysListDisplayed.map((data) => {
                             return(
-                                <TableRow key={data.key}>
+                                <TableRow key={data.key} disabled={holidaysBeingProcessed.includes(data.key)}>
                                     <TableCell>{data.person}</TableCell>
                                     <TableCell>{data.service}</TableCell>
                                     <TableCell>{data.start}</TableCell>
                                     <TableCell>{data.end}</TableCell>
                                     <TableCell>{data.duration}</TableCell>
                                     <TableCell>
-                                        <Icon name="check" className="admin-list-icons status-accepted" onClick={handleAcceptClick} title="Accepter"/>
-                                        <Icon name="close" className="admin-list-icons status-close" onClick={handleRefuseClick} title="Refuser"/>
+                                        <Icon name="check" className="admin-list-icons status-accepted" onClick={handleAcceptClick.bind(this,data)} title="Accepter"/>
+                                        <Icon name="close" className="admin-list-icons status-close" onClick={handleRefuseClick.bind(this,data)} title="Refuser"/>
                                     </TableCell>
                                 </TableRow>
                             );
