@@ -4,7 +4,7 @@
 }
 
 body{
-    background-color: #EEEEEE;
+    background-color: var(--main-background-color);
 }
 
 .classic-head-title{

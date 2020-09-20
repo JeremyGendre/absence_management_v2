@@ -75,6 +75,7 @@ class AppFixtures extends Fixture
         $holiday->setStartDate(new \DateTimeImmutable());
         $holiday->setEndDate(new \DateTimeImmutable());
         $holiday->setType(Holiday::TYPE_TIME_CREDIT);
+        $holiday->setStatus(Holiday::STATUS_ACCEPTED);
         $holiday->setPeriodType(Holiday::PERIOD_TYPE_ALL_DAY);
 
         $manager->persist($holiday);

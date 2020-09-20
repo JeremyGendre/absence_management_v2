@@ -12,6 +12,7 @@ import {Redirect} from "react-router-dom";
 import {SessionContext} from "../../Component/Context/session";
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {isBadResult} from "../../utils/server";
+import MyLoader from "../../Component/MyLoader/MyLoader";
 
 const MySwal = withReactContent(Swal);
 
@@ -38,6 +39,7 @@ function convertOneToAdminListFormat(holiday){
 
 export default function AdminScreen(props){
     const [searchLoading,setSearchLoading] = useState(false);
+    const [loadingData,setLoadingData] = useState(true);
     const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
     const [holidaysListFull,setHolidaysListFull] = useState([]);
     const user = useContext(SessionContext);
@@ -54,8 +56,10 @@ export default function AdminScreen(props){
                 setHolidaysListDisplayed(convertedHolidays);
                 setHolidaysListFull(convertedHolidays);
             }
+            setLoadingData(false);
         }).catch(error => {
             console.error(error);
+            setLoadingData(false);
         });
     },[]);
 
@@ -141,24 +145,30 @@ export default function AdminScreen(props){
                         <TableHeaderCell> </TableHeaderCell>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
-                    {/* LOOP ON DATA HERE */}
-                    {holidaysListDisplayed.map((data) => {
-                        return(
-                            <TableRow key={data.key}>
-                                <TableCell>{data.person}</TableCell>
-                                <TableCell>{data.service}</TableCell>
-                                <TableCell>{data.start}</TableCell>
-                                <TableCell>{data.end}</TableCell>
-                                <TableCell>{data.duration}</TableCell>
-                                <TableCell>
-                                    <Icon name="check" className="admin-list-icons status-accepted" onClick={handleAcceptClick} title="Accepter"/>
-                                    <Icon name="close" className="admin-list-icons status-close" onClick={handleRefuseClick} title="Refuser"/>
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
+                {loadingData ? (
+                    <TableBody className="p-relative">
+                        <MyLoader size="small" fitTable={6} block style={{paddingTop:"5px"}}/>
+                    </TableBody>
+                ) : (
+                    <TableBody>
+                        {/* LOOP ON DATA HERE */}
+                        {holidaysListDisplayed.map((data) => {
+                            return(
+                                <TableRow key={data.key}>
+                                    <TableCell>{data.person}</TableCell>
+                                    <TableCell>{data.service}</TableCell>
+                                    <TableCell>{data.start}</TableCell>
+                                    <TableCell>{data.end}</TableCell>
+                                    <TableCell>{data.duration}</TableCell>
+                                    <TableCell>
+                                        <Icon name="check" className="admin-list-icons status-accepted" onClick={handleAcceptClick} title="Accepter"/>
+                                        <Icon name="close" className="admin-list-icons status-close" onClick={handleRefuseClick} title="Refuser"/>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                )}
             </Table>
         </Container>
     );
