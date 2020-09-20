@@ -10,23 +10,26 @@ import MyLoader from "../../Component/MyLoader/MyLoader";
 
 export default function PersonnalCalendarScreen(props){
     const [personalEvents, setPersonalEvents] = useState([]);
+    const [loadingData, setLoadingData] = useState(true);
     const user = useContext(SessionContext);
 
     useEffect(() => {
         axios.get('/api/holiday/user/' + user.user.id + '/events').then(data => {
             setPersonalEvents(data.data);
+            setLoadingData(false);
         }).catch(error => {
             console.error(error);
+            setLoadingData(false);
         });
     },[]);
 
     return(
         <Container className="custom-containers">
             <SemanticHeader as="h1" className="text-center">Mon calendrier</SemanticHeader>
-            {personalEvents.length > 0 ? (
-                <FullCalendar plugins={[ dayGridPlugin ]} events={personalEvents}/>
-            ) : (
+            {loadingData ? (
                 <MyLoader size="big"/>
+            ) : (
+                <FullCalendar plugins={[ dayGridPlugin ]} events={personalEvents}/>
             )}
         </Container>
     );
