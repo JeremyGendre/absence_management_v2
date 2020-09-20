@@ -73,7 +73,7 @@ class HolidayController extends AbstractController
         $today = new \DateTime();
         $eventSerialization = strpos($request->getRequestUri(),'/events') !== false;
         foreach ($holidays as $holiday){
-            if($status === Holiday::STATUS_PENDING && $holiday->getEndDate() < $today){
+            if($holiday->getEndDate() > $today){
                 $response[] = $eventSerialization ? $holiday->serializeAsEvent() : $holiday->serialize();
             }
         }

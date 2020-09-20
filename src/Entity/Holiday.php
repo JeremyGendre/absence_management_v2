@@ -206,9 +206,9 @@ class Holiday implements MySerializerInterface
     {
         return [
             "id" => $this->id,
-            "start_date" => $this->startDate,
-            "end_date" => $this->endDate,
-            "created_at" => $this->createdAt,
+            "start_date" => $this->getStartDate()->format('Y-m-d'),
+            "end_date" => $this->getEndDate()->format('Y-m-d'),
+            "created_at" => $this->getCreatedAt()->format('Y-m-d'),
             "type" => $this->type,
             "period_type" => $this->periodType,
             "cause" => $this->cause,

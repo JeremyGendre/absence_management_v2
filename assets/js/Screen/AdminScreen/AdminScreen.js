@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
+import axios from 'axios';
 import {
     Container,
     Header as SemanticHeader, Icon, Input, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow,
@@ -9,56 +10,53 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {Redirect} from "react-router-dom";
 import {SessionContext} from "../../Component/Context/session";
+import {STATUS_ASKED} from "../../utils/holidaysStatus";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
-const holidaysAsked = [
-    {
-        key:1,
-        person:"Gendre Jérémy",
-        service: 'Informatique',
-        start:displayDate(new Date()),
-        end:displayDate(new Date()),
-        duration:getTimeBetweenTwoDates(new Date(),new Date()),
-    },
-    {
-        key:2,
-        person:"Fillon Nathalie",
-        service: 'CFML',
-        start:displayDate(new Date()),
-        end:displayDate(new Date()),
-        duration:getTimeBetweenTwoDates(new Date(),new Date()),
-    },
-    {
-        key:3,
-        person:"Guallard Mélanie",
-        service: 'CR',
-        start:displayDate(new Date()),
-        end:displayDate(new Date()),
-        duration:getTimeBetweenTwoDates(new Date(),new Date()),
-    },
-    {
-        key:4,
-        person:"Soula Christelle",
-        service: 'Commercial',
-        start:displayDate(new Date()),
-        end:displayDate(new Date()),
-        duration:getTimeBetweenTwoDates(new Date(),new Date()),
-    },
-];
+function convertListToAdminListFormat(holidays){
+    let result = [];
+    holidays.map(holiday => {
+        result.push(convertOneToAdminListFormat(holiday));
+    });
+    return result;
+}
+
+function convertOneToAdminListFormat(holiday){
+    let newStartDate = new Date(holiday.start_date);
+    let newEndDate = new Date(holiday.end_date);
+    return {
+        key: holiday.id,
+        person: holiday.user.display_name,
+        service: holiday.user.service.name,
+        start: displayDate(newStartDate),
+        end: displayDate(newEndDate),
+        duration: getTimeBetweenTwoDates(newStartDate,newEndDate)
+    };
+}
 
 export default function AdminScreen(props){
+    const [searchLoading,setSearchLoading] = useState(false);
+    const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
+    const [holidaysListFull,setHolidaysListFull] = useState([]);
     const user = useContext(SessionContext);
-
-    let holidaysListFull = holidaysAsked;
 
     let searching = setTimeout(() => {},100);
 
-    const [searchLoading,setSearchLoading] = useState(false);
-    const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
-
     useEffect(() => {
-        setHolidaysListDisplayed(holidaysAsked)
+        axios.get('/api/holiday/status/' + STATUS_ASKED).then(data => {
+            let returnedMessage = isBadResult(data);
+            if(returnedMessage !== ''){
+                MySwal.fire({icon:'error',title:returnedMessage});
+            }else{
+                let convertedHolidays = convertListToAdminListFormat(data.data);
+                setHolidaysListDisplayed(convertedHolidays);
+                setHolidaysListFull(convertedHolidays);
+            }
+        }).catch(error => {
+            console.error(error);
+        });
     },[]);
 
     function handleAcceptClick(){
