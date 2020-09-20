@@ -151,7 +151,6 @@ export default function AdminScreen(props){
                     </TableBody>
                 ) : (
                     <TableBody>
-                        {/* LOOP ON DATA HERE */}
                         {holidaysListDisplayed.map((data) => {
                             return(
                                 <TableRow key={data.key}>
