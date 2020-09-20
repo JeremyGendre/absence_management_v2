@@ -162,7 +162,9 @@ class HolidayController extends AbstractController
         HolidayRepository $holidayRepository,
         Service $service
     ):JsonResponse{
-        //TODO
+        $holidays = $holidayRepository->findByService($service);
+        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        return new JsonResponse($response);
     }
 
     /**

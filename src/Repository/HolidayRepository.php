@@ -21,6 +21,12 @@ class HolidayRepository extends ServiceEntityRepository
         parent::__construct($registry, Holiday::class);
     }
 
+    /**
+     * @param User $user
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return mixed
+     */
     public function findByUserAndDates(User $user, \DateTime $startDate, \DateTime $endDate){
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -31,6 +37,26 @@ class HolidayRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @param Service $service
+     * @return mixed
+     */
+    public function findByService(Service $service){
+        return $this->createQueryBuilder('h')
+            ->innerJoin('h.user','u')
+            ->andWhere('u.service = :service')
+            ->setParameter('service', $service)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @param Service $service
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return mixed
+     */
     public function findByServiceAndDates(Service $service, \DateTime $startDate, \DateTime $endDate){
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -41,6 +67,11 @@ class HolidayRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return mixed
+     */
     public function findByDates(\DateTime $startDate, \DateTime $endDate){
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -49,7 +80,6 @@ class HolidayRepository extends ServiceEntityRepository
             ->setParameter('end',$endDate);
         return $query->getResult();
     }
-
 
 
     // /**
