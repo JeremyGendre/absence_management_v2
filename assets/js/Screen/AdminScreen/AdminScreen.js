@@ -14,29 +14,9 @@ import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {isBadResult} from "../../utils/server";
 import MyLoader from "../../Component/MyLoader/MyLoader";
 import {removeFromArray} from "../../utils/functions";
+import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 
 const MySwal = withReactContent(Swal);
-
-function convertListToAdminListFormat(holidays){
-    let result = [];
-    holidays.map(holiday => {
-        result.push(convertOneToAdminListFormat(holiday));
-    });
-    return result;
-}
-
-function convertOneToAdminListFormat(holiday){
-    let newStartDate = new Date(holiday.start_date.date);
-    let newEndDate = new Date(holiday.end_date.date);
-    return {
-        key: holiday.id,
-        person: holiday.user.display_name,
-        service: holiday.user.service.name,
-        start: displayDate(newStartDate),
-        end: displayDate(newEndDate),
-        duration: getTimeBetweenTwoDates(newStartDate,newEndDate)
-    };
-}
 
 export default function AdminScreen(props){
     const [searchLoading,setSearchLoading] = useState(false);

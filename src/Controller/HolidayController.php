@@ -45,7 +45,7 @@ class HolidayController extends AbstractController
      */
     public function getByUser(Request $request, User $user,HolidayRepository $holidayRepository) : JsonResponse{
         $holidays = $holidayRepository->findBy(["user" => $user],["startDate"=>"DESC"]);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($request,$holidays,($user === $this->getUser()));
         return new JsonResponse($response);
     }
 

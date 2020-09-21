@@ -235,12 +235,12 @@ class Holiday implements MySerializerInterface
         ];
     }
 
-    public function serializeAsEvent(){
+    public function serializeAsEvent(bool $isPersonalEvent = false){
         $color = self::STATUS_EVENTS_COLORS[$this->status];
         return [
             "start" => $this->getStartDate()->format('Y-m-d'),
             "end" => $this->getEndDate()->format('Y-m-d'),
-            "title" => $this->cause ?? '',
+            "title" => $isPersonalEvent ? ($this->cause ?? '') : $this->getUser()->getName(),
             "backgroundColor" => $color,
             "borderColor" => $color,
         ];

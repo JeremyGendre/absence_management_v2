@@ -81,6 +81,10 @@ class User implements UserInterface, MySerializerInterface
 
     public function __toString()
     {
+        return $this->getName();
+    }
+
+    public function getName(){
         return $this->firstName . ' ' . $this->lastName;
     }
 
