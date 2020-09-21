@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import {isBadResult} from "../../utils/server";
 import {Form, Message} from "semantic-ui-react";
-import Swal, {resumeTimer} from 'sweetalert2';
+import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 const MySwal = withReactContent(Swal);
@@ -86,9 +86,9 @@ export default function ProfileScreen(props){
             {(formErrors.length > 0) ? (
                 <Message negative>
                     {
-                        formErrors.map((error) => {
+                        formErrors.map((error,index) => {
                             return (
-                                <p>{error}</p>
+                                <p key={index}>{error}</p>
                             );
                         })
                     }

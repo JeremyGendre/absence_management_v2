@@ -41,7 +41,7 @@ export default function ProfileScreen(props){
             setLoadingData(false);
             console.log(error);
         });
-    },[])
+    },[]);
 
     const panes = [
         {
@@ -58,7 +58,7 @@ export default function ProfileScreen(props){
                     <PasswordForm/>
                 </Tab.Pane>
         },
-    ]
+    ];
 
     return(
         <>

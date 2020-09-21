@@ -1,5 +1,10 @@
 import React, {useState} from "react";
-import {Form, FormGroup, FormInput, Input, Message} from "semantic-ui-react";
+import {Form, FormGroup, Input, Message} from "semantic-ui-react";
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 
 export default function PasswordForm(props){
     const [password,setPassword] = useState(null);
@@ -8,12 +13,21 @@ export default function PasswordForm(props){
     const [submitting,setSubmitting] = useState(false);
 
     function handlePasswordFormSubmit(){
-        if(password !== confirmPassword){
-            setFormErrors(['Les deux valeurs renseignées ne sont pas identiques, veuillez saisir le même mot de passe.']);
+        let errors = passwordFormErrors();
+        if(errors.length > 0){
+            setFormErrors(errors);
         }else{
             setSubmitting(true);
             setFormErrors([]);
-            console.log('ouais re');
+            axios.put('').then(data => {
+                console.log(data);
+                MySwal.fire({icon:'success',title:'Mot de passe modifié'});
+            }).catch(error => {
+                console.error(error);
+                setFormErrors(['Une erreur est survenue, modification impossible. Réessayez plus tard, si le problème persiste, contactez un administrateur.']);
+            }).finally(()=>{
+                setSubmitting(false);
+            });
         }
     }
 
@@ -36,9 +50,9 @@ export default function PasswordForm(props){
             {(formErrors.length > 0) ? (
                 <Message negative>
                     {
-                        formErrors.map((error) => {
+                        formErrors.map((error,index) => {
                             return (
-                                <p>{error}</p>
+                                <p key={index}>{error}</p>
                             );
                         })
                     }
