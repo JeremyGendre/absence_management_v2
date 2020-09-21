@@ -9,6 +9,7 @@ import axios from "axios";
 import {isBadResult} from "../../utils/server";
 import Profile from "../../Component/User/Profile";
 import {SessionContext} from "../../Component/Context/session";
+import PasswordForm from "../../Component/User/PasswordForm";
 
 export default function ProfileScreen(props){
     const [loadingData,setLoadingData] = useState(true);
@@ -52,7 +53,10 @@ export default function ProfileScreen(props){
         },
         {
             menuItem: { key: 'password', icon: 'key', content: 'Mot de passe' },
-            render: () => <Tab.Pane>Password</Tab.Pane>
+            render: () =>
+                <Tab.Pane>
+                    <PasswordForm/>
+                </Tab.Pane>
         },
     ]
 

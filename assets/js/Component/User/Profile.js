@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import {isBadResult} from "../../utils/server";
-import {SessionContext} from "../Context/session";
 import {Form, Message} from "semantic-ui-react";
-import Swal from 'sweetalert2';
+import Swal, {resumeTimer} from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 const MySwal = withReactContent(Swal);
@@ -108,7 +107,7 @@ export default function ProfileScreen(props){
                 <Form.Input fluid icon="id badge" iconPosition='left' label="Intitulé de poste" required placeholder='Intitulé de poste' onChange={(e,data) => setTitle(data.value)} defaultValue={title} width={8}/>
             </Form.Group>
             <Form.Group>
-                <Form.Button className="submit-button-container" primary loading={submitting}>Enregistrer</Form.Button>
+                <Form.Button className="submit-button-container" primary disabled={submitting} loading={submitting}>Enregistrer</Form.Button>
             </Form.Group>
         </Form>
     );

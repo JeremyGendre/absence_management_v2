@@ -6,7 +6,7 @@
 
 .header-nav{
     background-color: var(--main-color);
-    box-shadow: 0px 0px 5px grey;
+    box-shadow: 0 0 5px grey;
     padding-right:1em;
     padding-left: 1em;
 }
@@ -15,7 +15,7 @@
 }
 .header-li{
     display:inline-block;
-    padding:0.9em 1em 0.9em 1em;
+    padding:0.9em 2em 0.9em 2em;
     color:white;
     transition: all 0.15s ease-in-out;
 }
@@ -53,14 +53,14 @@
 .submenu{
     z-index: 999;
     position:absolute;
-    background-color:#EAEAEA;
+    background-color:#d2d2d2;
     box-shadow: 1px 3px 5px lightgrey;
     transform: translateY(5px);
 }
 .submenu ul li{
     color:#353535;
     display:block;
-    padding:0.9em 1em 0.9em 1em;
+    padding:0.9em 2em 0.9em 2em;
 }
 .submenu ul li a:hover{
     color:#353535 !important;
@@ -73,7 +73,7 @@
     padding:0 !important;
 }
 .links-submenu-header a{
-    padding:0.9em 1em 0.9em 1em;
+    padding:0.9em 2em 0.9em 2em;
     display: block;
 }
 
