@@ -170,11 +170,11 @@ export default function NewHolidaysRequestScreen(props){
                 <FormGroup>
                     <FormField>
                         <label>Date de début <span className="form-required-star">*</span></label>
-                        <SemanticDatepicker required name="start_date" locale="fr-FR" value={startDate} format="DD/MM/YYYY" onChange={(e,data) => handleStartDateChange(e,data)}/>
+                        <SemanticDatepicker icon='calendar' required name="start_date" locale="fr-FR" value={startDate} format="DD/MM/YYYY" onChange={(e,data) => handleStartDateChange(e,data)}/>
                     </FormField>
                     <FormField>
                         <label>Date de fin <span className="form-required-star">*</span></label>
-                        <SemanticDatepicker required name="start_end" locale="fr-FR" value={endDate} format="DD/MM/YYYY" onChange={(e,data) => handleEndDateChange(e,data)}/>
+                        <SemanticDatepicker icon='calendar' required name="start_end" locale="fr-FR" value={endDate} format="DD/MM/YYYY" onChange={(e,data) => handleEndDateChange(e,data)}/>
                     </FormField>
                     { (canBeOnOneDay) ? (
                         <FormSelect label="Type de période" options={oneDayPeriodOptions} onChange={(e,data) => setOneDayType(data.value)} defaultValue={oneDayType}/>
