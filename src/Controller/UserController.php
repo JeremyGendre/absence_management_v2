@@ -208,7 +208,7 @@ class UserController extends AbstractController
         }
         $data = json_decode($request->getContent(),true);
         if(empty($data) || empty($data['password']) || !$userValidator->checkPassword($data['password'])){
-            return $errorHandler->jsonResponseError("Le mot de passe n'est pas valide");
+            return $errorHandler->jsonResponseError("Le mot de passe n'est pas valide (au moins 6 charactères)");
         }
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
         $em = $this->getDoctrine()->getManager();
