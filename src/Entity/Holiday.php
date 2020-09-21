@@ -15,6 +15,12 @@ class Holiday implements MySerializerInterface
     public const STATUS_REJECTED = 2;
     public const STATUS_ACCEPTED = 3;
 
+    public const STATUS = [
+        self::STATUS_PENDING,
+        self::STATUS_REJECTED,
+        self::STATUS_ACCEPTED
+    ];
+
     public const LABEL_STATUS = [
         self::STATUS_PENDING => "Demandé",
         self::STATUS_REJECTED => "Refusé",
@@ -31,6 +37,12 @@ class Holiday implements MySerializerInterface
     public const TYPE_TIME_CREDIT = 2;
     public const TYPE_MEDICAL = 3;
 
+    public const TYPES = [
+        self::TYPE_PAYED,
+        self::TYPE_TIME_CREDIT,
+        self::TYPE_MEDICAL
+    ];
+
     public const LABEL_TYPES = [
         self::TYPE_PAYED => "Congés payés",
         self::TYPE_TIME_CREDIT => "Crédit temps",
@@ -40,6 +52,12 @@ class Holiday implements MySerializerInterface
     public const PERIOD_TYPE_MORNING = 1;
     public const PERIOD_TYPE_AFTERNOON = 2;
     public const PERIOD_TYPE_ALL_DAY = 3;
+
+    public const PERIOD_TYPES = [
+        self::PERIOD_TYPE_MORNING,
+        self::PERIOD_TYPE_AFTERNOON,
+        self::PERIOD_TYPE_ALL_DAY
+    ];
 
     public const LABEL_PERIOD_TYPES = [
         self::PERIOD_TYPE_MORNING => "Matin",
