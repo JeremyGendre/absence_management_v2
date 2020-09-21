@@ -23,16 +23,10 @@ class HolidayFixtures extends BaseFixture implements DependentFixtureInterface
             $holiday->setUser($oneUser);
             $holiday->setCause($this->faker->text(50));
 
-            $startDate = $this->faker->dateTimeBetween('-3 months','+3 months');
-            if($this->faker->boolean(20)){
-                $endDate = clone $startDate;
-            }else{
-                $endDate = $this->faker->dateTimeBetween('-3 months','+3 months');
-                if($startDate->getTimestamp() >= $endDate->getTimestamp()){
-                    $tmp = clone $startDate;
-                    $startDate = clone $endDate;
-                    $endDate = clone $tmp;
-                }
+            $startDate = $this->faker->dateTimeBetween('-2 months','+3 months');
+            $endDate = clone $startDate;
+            if($this->faker->boolean(80)){
+                $endDate->add(new \DateInterval('P'. $this->faker->numberBetween(1,14) .'D'));
             }
 
             $holiday->setStartDate($startDate);
