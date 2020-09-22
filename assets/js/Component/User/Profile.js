@@ -4,10 +4,11 @@ import {isBadResult} from "../../utils/server";
 import {Form, Message} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import PropTypes from 'prop-types';
 
 const MySwal = withReactContent(Swal);
 
-export default function ProfileScreen(props){
+export default function Profile(props){
     const serviceOptions = props.services;
     const user = props.user;
 
@@ -112,3 +113,8 @@ export default function ProfileScreen(props){
         </Form>
     );
 }
+
+Profile.propTypes = {
+    user:PropTypes.object,
+    services:PropTypes.array
+};
