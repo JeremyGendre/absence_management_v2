@@ -9,6 +9,7 @@ import {isBadResult} from "../../utils/server";
 const MySwal = withReactContent(Swal);
 
 export default function PasswordForm(props){
+    const [oldPassword,setOldPassword] = useState(null);
     const [password,setPassword] = useState(null);
     const [confirmPassword,setConfirmPassword] = useState(null);
     const [formErrors,setFormErrors] = useState([]);
@@ -23,7 +24,7 @@ export default function PasswordForm(props){
         }else{
             setSubmitting(true);
             setFormErrors([]);
-            axios.put('/api/user/edit/password/'+user.user.id,{password:password}).then(data => {
+            axios.put('/api/user/edit/password/'+user.user.id,{oldPassword:oldPassword,password:password}).then(data => {
                 let messageResult = isBadResult(data);
                 if(messageResult !== ''){
                     setFormErrors([messageResult]);
@@ -68,6 +69,13 @@ export default function PasswordForm(props){
             ) : (
                 <></>
             )}
+            <FormGroup>
+                <Form.Field>
+                    <label>Ancien mot de passe :</label>
+                    <Input icon="eye slash" defaultValue={oldPassword} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setOldPassword(data.value)} type="password" />
+                </Form.Field>
+            </FormGroup>
+            <br/>
             <FormGroup>
                 <Form.Field>
                     <label>Nouveau mot de passe :</label>

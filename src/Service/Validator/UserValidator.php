@@ -8,14 +8,24 @@ use App\Repository\ServiceRepository;
 
 class UserValidator implements MyValidatorInterface
 {
-
+    /**
+     * @var ServiceRepository
+     */
     private $serviceRepository;
 
+    /**
+     * UserValidator constructor.
+     * @param ServiceRepository $serviceRepository
+     */
     public function __construct(ServiceRepository $serviceRepository)
     {
         $this->serviceRepository = $serviceRepository;
     }
 
+    /**
+     * @param array|null $data
+     * @return bool
+     */
     function validate(?array $data): bool
     {
         return (
@@ -26,6 +36,10 @@ class UserValidator implements MyValidatorInterface
         );
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     */
     function checkFieldsPresence(array $data): bool
     {
         return (
@@ -38,6 +52,10 @@ class UserValidator implements MyValidatorInterface
         );
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     */
     function checkFieldTypes(array $data): bool
     {
         return (
@@ -50,6 +68,10 @@ class UserValidator implements MyValidatorInterface
         );
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     */
     function checkFieldValues(array $data): bool
     {
         return (
@@ -62,11 +84,34 @@ class UserValidator implements MyValidatorInterface
         );
     }
 
-    function checkPassword($password){
+    /**
+     * @param $password
+     * @return bool
+     */
+    function checkPassword($password)
+    {
         return (
             !empty($password) &&
             is_string($password) &&
             strlen($password) < 100 && strlen($password) > 6
         );
+    }
+
+    /**
+     * @param array $data
+     * @return string|null
+     */
+    function changePasswordFromError(array $data)
+    {
+        if(empty($data)){
+            return 'Les données envoyées sont vides, impossible de modifier le mot de passe';
+        }
+        elseif(empty($data['oldPassword'])){
+            return "L'ancien mot de passe n'est pas valide.";
+        }
+        elseif(empty($data['password']) || !$this->checkPassword($data['password'])){
+            return "Le nouveau mot de passe n'est pas valide (au moins 6 charactères)";
+        }
+        return null;
     }
 }
