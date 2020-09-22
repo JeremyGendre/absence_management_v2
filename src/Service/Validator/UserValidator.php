@@ -101,7 +101,7 @@ class UserValidator implements MyValidatorInterface
      * @param array $data
      * @return string|null
      */
-    function changePasswordFromError(array $data)
+    function changePasswordFormError(array $data)
     {
         if(empty($data)){
             return 'Les données envoyées sont vides, impossible de modifier le mot de passe';

@@ -207,12 +207,12 @@ class UserController extends AbstractController
             return $errorHandler->jsonResponseError("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
         }
         $data = json_decode($request->getContent(),true);
-        $formError = $userValidator->changePasswordFromError($data);
+        $formError = $userValidator->changePasswordFormError($data);
         if($formError !== null){
             return $errorHandler->jsonResponseError($formError);
         }
         if(!$passwordEncoder->isPasswordValid($user, $data['oldPassword'])){
-            return $errorHandler->jsonResponseError("L'ancien mot de passe ne correspond pas. Veuillez réessayer");
+            return $errorHandler->jsonResponseError("L'ancien mot de passe ne correspond pas.");
         }
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
         $em = $this->getDoctrine()->getManager();

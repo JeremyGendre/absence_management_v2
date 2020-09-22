@@ -43,7 +43,7 @@ export default function PasswordForm(props){
     function passwordFormErrors(){
         let errors = [];
         if(password !== confirmPassword){
-            errors.push('Les deux valeurs renseignées ne sont pas identiques, veuillez saisir le même mot de passe.');
+            errors.push('Les deux valeurs renseignées (du nouveau mot de passe) ne sont pas identiques.');
         }else{
             if(password.length < 6){
                 errors.push('Le mot de passe doit contenir plus de 6 charactères.');
@@ -75,7 +75,7 @@ export default function PasswordForm(props){
                     <Input icon="eye slash" defaultValue={oldPassword} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setOldPassword(data.value)} type="password" />
                 </Form.Field>
             </FormGroup>
-            <br/>
+            <hr className="hr-custom"/><br/>
             <FormGroup>
                 <Form.Field>
                     <label>Nouveau mot de passe :</label>

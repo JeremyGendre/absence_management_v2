@@ -23,3 +23,7 @@
 .d-none{
     display:none;
 }
+
+.hr-custom{
+    opacity:0.4;
+}
