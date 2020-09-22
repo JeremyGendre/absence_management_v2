@@ -13,12 +13,15 @@ import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {isBadResult} from "../../utils/server";
 import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 import HolidaysAdminList from "../../Component/Admin/HolidaysAdminList";
+import UsersAdminList from "../../Component/Admin/UsersAdminList";
 
 const MySwal = withReactContent(Swal);
 
 export default function AdminScreen(props){
     const [loadingHolidays,setLoadingHolidays] = useState(true);
     const [holidaysListFull,setHolidaysListFull] = useState([]);
+    const [loadingUsers,setLoadingUsers] = useState(true);
+    const [usersListFull,setUsersListFull] = useState([]);
     const user = useContext(SessionContext);
 
     useEffect(() => {
@@ -35,6 +38,8 @@ export default function AdminScreen(props){
         }).finally(()=>{
             setLoadingHolidays(false);
         });
+
+        //TODO : appel api users
     },[]);
 
     const panes = [
@@ -48,8 +53,8 @@ export default function AdminScreen(props){
         {
             menuItem: { key: 'users', icon: 'users', content: 'Utilisateurs' },
             render: () =>
-                <Tab.Pane attached={false}>
-                    Des cons
+                <Tab.Pane attached={false} loading={loadingUsers}>
+                    <UsersAdminList usersList={usersListFull}/>
                 </Tab.Pane>
         },
     ];

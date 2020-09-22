@@ -18,7 +18,7 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 export default function HolidaysAdminList(props){
-    let  holidaysListFull = props.holidaysList;
+    let holidaysListFull = props.holidaysList;
     const [searchLoading,setSearchLoading] = useState(false);
     const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
     const [holidaysBeingProcessed,setHolidaysBeingProcessed] = useState([]);
@@ -89,7 +89,7 @@ export default function HolidaysAdminList(props){
             }
             setSearchLoading(false);
             setHolidaysListDisplayed(checkHolidaySearch(holidaysListFull,data.value));
-        },800);
+        },300);
     }
 
     function checkHolidaySearch(holidays, value){
