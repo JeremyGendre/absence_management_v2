@@ -1,7 +1,17 @@
-.button-edit-user{
+.users-list-admin-btn{
     transition: all 0.1s ease-in-out;
 }
-.button-edit-user:hover{
+.users-list-admin-btn:hover{
     cursor:pointer;
+}
+.button-edit-user:hover{
     color:var(--main-hover-color);
+}
+
+.button-delete-user{
+    color: #c3361b;
+}
+
+.button-delete-user:hover{
+    color: #f1634f;
 }

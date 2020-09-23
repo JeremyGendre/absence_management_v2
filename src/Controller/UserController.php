@@ -124,11 +124,16 @@ class UserController extends AbstractController
      * @Route(path="/delete/{id}", name="user_delete", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      * @param User $user
+     * @param ErrorHandler $errorHandler
      * @return JsonResponse
      */
     public function deleteUser(
-        User $user
+        User $user,
+        ErrorHandler $errorHandler
     ):JsonResponse{
+        if($this->getUser() === $user){
+            return $errorHandler->jsonResponseError("Vous ne pouvez pas vous supprimer vous-même");
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();

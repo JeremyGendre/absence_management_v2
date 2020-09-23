@@ -47,27 +47,18 @@ export default function UsersAdminList(props){
     function checkUserSearch(users, value){
         let result = [];
         users.forEach((user) => {
-            //TODO
-            /*if(user.person.toLocaleLowerCase().includes(value.toLocaleLowerCase())
-                || user.service.toLocaleLowerCase().includes(value.toLocaleLowerCase())
-                || user.start.toLocaleLowerCase().includes(value.toLocaleLowerCase())
-                || user.end.toLocaleLowerCase().includes(value.toLocaleLowerCase())
-                || user.duration === parseInt(value)){
+            if(user.last_name.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+                || user.first_name.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+                || user.service.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+                || user.email.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+                || user.username.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+                || user.created_at.toLocaleLowerCase().includes(value.toLocaleLowerCase())){
                 result.push(user);
-            }*/
+            }
         });
         return result;
     }
-/*
-*           "last_name" => $this->lastName,
-            "first_name" => $this->firstName,
-            "email" => $this->email,
-            "username" => $this->username,
-            "roles" => $this->roles,
-            "service" => $this->getService()->serialize(),
-            "title" => $this->title,
-            "created_at" => $this->createdAt->format('d/m/Y')
-* */
+
     return (
         <>
             <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
@@ -105,7 +96,8 @@ export default function UsersAdminList(props){
                                 <TableCell>{data.username}</TableCell>
                                 <TableCell>{data.created_at}</TableCell>
                                 <TableCell>
-                                    <Icon title="Modifier l'utilisateur" className="main-color-text button-edit-user" name="edit"/>
+                                    <Icon title="Modifier l'utilisateur" className="users-list-admin-btn main-color-text button-edit-user" name="edit"/>
+                                    <Icon title="Supprimer l'utilisateur" className="users-list-admin-btn button-delete-user" name="delete"/>
                                 </TableCell>
                             </TableRow>
                         );
