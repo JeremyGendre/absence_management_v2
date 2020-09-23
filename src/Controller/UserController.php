@@ -161,7 +161,10 @@ class UserController extends AbstractController
     ):JsonResponse{
         /** @var User $authUser */
         $authUser = $this->getUser();
-        if($authUser->getUsername() !== $user->getUsername() && !$authUser->hasRole("ROLE_ADMIN")){
+        if($user->hasRole("ROLE_ADMIN") && $user !== $authUser){
+            return $errorHandler->jsonResponseError("Vous ne pouvez pas modifier un autre administrateur.");
+        }
+        if($authUser !== $user && !$authUser->hasRole("ROLE_ADMIN")){
             return $errorHandler->jsonResponseError("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
         }
         $data = json_decode($request->getContent(),true);

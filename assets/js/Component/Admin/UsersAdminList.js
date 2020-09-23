@@ -15,6 +15,8 @@ import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
+import {isBadResult} from "../../utils/server";
+import RowUser from "./RowUser";
 
 const MySwal = withReactContent(Swal);
 
@@ -59,6 +61,10 @@ export default function UsersAdminList(props){
         return result;
     }
 
+    function handleDeleteUser(user){
+        console.log('delete', user);
+    }
+
     return (
         <>
             <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
@@ -88,18 +94,7 @@ export default function UsersAdminList(props){
                     )}
                     {usersListDisplayed.length !== 0 && usersListDisplayed.map((data) => {
                         return(
-                            <TableRow key={data.id} disabled={usersBeingProcessed.includes(data.id)}>
-                                <TableCell>{data.last_name}</TableCell>
-                                <TableCell>{data.first_name}</TableCell>
-                                <TableCell>{data.service.name}</TableCell>
-                                <TableCell>{data.email}</TableCell>
-                                <TableCell>{data.username}</TableCell>
-                                <TableCell>{data.created_at}</TableCell>
-                                <TableCell>
-                                    <Icon title="Modifier l'utilisateur" className="users-list-admin-btn main-color-text button-edit-user" name="edit"/>
-                                    <Icon title="Supprimer l'utilisateur" className="users-list-admin-btn button-delete-user" name="delete"/>
-                                </TableCell>
-                            </TableRow>
+                            <RowUser user={data} servicesOptions={props.servicesOptions} key={data.id}/>
                         );
                     })}
                 </TableBody>
@@ -109,5 +104,6 @@ export default function UsersAdminList(props){
 }
 
 UsersAdminList.propTypes = {
-    usersList:PropTypes.array
+    usersList:PropTypes.array,
+    servicesOptions:PropTypes.array
 };
