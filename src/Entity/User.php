@@ -299,7 +299,7 @@ class User implements UserInterface, MySerializerInterface
             "roles" => $this->roles,
             "service" => $this->getService()->serialize(),
             "title" => $this->title,
-            "created_at" => $this->createdAt
+            "created_at" => $this->createdAt->format('d/m/Y')
         ];
     }
 

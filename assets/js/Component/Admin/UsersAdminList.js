@@ -14,6 +14,7 @@ import {removeFromArray} from "../../utils/functions";
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import './UsersAdminList.css';
 
 const MySwal = withReactContent(Swal);
 
@@ -65,7 +66,7 @@ export default function UsersAdminList(props){
             "roles" => $this->roles,
             "service" => $this->getService()->serialize(),
             "title" => $this->title,
-            "created_at" => $this->createdAt
+            "created_at" => $this->createdAt->format('d/m/Y')
 * */
     return (
         <>
@@ -75,9 +76,9 @@ export default function UsersAdminList(props){
                     <TableRow>
                         <TableHeaderCell>Nom</TableHeaderCell>
                         <TableHeaderCell>Prénom</TableHeaderCell>
+                        <TableHeaderCell>Service</TableHeaderCell>
                         <TableHeaderCell>Email</TableHeaderCell>
                         <TableHeaderCell>Username</TableHeaderCell>
-                        <TableHeaderCell>Service</TableHeaderCell>
                         <TableHeaderCell>Créé le</TableHeaderCell>
                         <TableHeaderCell> </TableHeaderCell>
                     </TableRow>
@@ -99,12 +100,12 @@ export default function UsersAdminList(props){
                             <TableRow key={data.id} disabled={usersBeingProcessed.includes(data.id)}>
                                 <TableCell>{data.last_name}</TableCell>
                                 <TableCell>{data.first_name}</TableCell>
+                                <TableCell>{data.service.name}</TableCell>
                                 <TableCell>{data.email}</TableCell>
                                 <TableCell>{data.username}</TableCell>
-                                <TableCell>{data.service.name}</TableCell>
                                 <TableCell>{data.created_at}</TableCell>
                                 <TableCell>
-                                    todo
+                                    <Icon title="Modifier l'utilisateur" className="main-color-text button-edit-user" name="edit"/>
                                 </TableCell>
                             </TableRow>
                         );

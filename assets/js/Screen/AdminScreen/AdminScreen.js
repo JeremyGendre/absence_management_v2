@@ -39,7 +39,13 @@ export default function AdminScreen(props){
             setLoadingHolidays(false);
         });
 
-        //TODO : appel api users
+        axios.get('/api/user/all').then(data => {
+            setUsersListFull(data.data);
+        }).catch(error => {
+            console.log(error);
+        }).finally(() => {
+            setLoadingUsers(false);
+        })
     },[]);
 
     const panes = [
