@@ -22,23 +22,7 @@ export default function Profile(props){
 
     function handleFormSubmit(){
         setSubmitting(true);
-        let allowServiceValues = [];
-        serviceOptions.forEach((one_service) => {
-            allowServiceValues.push(one_service.value);
-        });
-        let errors = [];
-        if(!lastName || lastName.length === 0){
-            errors.push("Le nom de famille est obligatoire");
-        }
-        if(!firstName || firstName.length === 0){
-            errors.push("Le prénom est obligatoire");
-        }
-        if(!email || email.length < 3 || email.includes('@') === false){
-            errors.push("L'adresse email n'est pas valide");
-        }
-        if(!service || !allowServiceValues.includes(service)){
-            errors.push("Vous devez faire partie d'un service existant.");
-        }
+        let errors = validateForm();
         if(errors.length > 0){ // il y a une ou plusieurs erreurs dans le formulaire
             setFormErrors(errors);
             setSubmitting(false);
@@ -68,18 +52,38 @@ export default function Profile(props){
                         title:'Profil mis à jour',
                     });
                 }
-                setFormErrors([]);
-                setSubmitting(false);
             }).catch(error => {
                 console.log(error);
                 MySwal.fire({
                     icon:'error',
                     title:'Une erreur est survenue. Mise à jour impossible',
                 });
+            }).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);
             });
         }
+    }
+
+    function validateForm() {
+        let allowServiceValues = [];
+        serviceOptions.forEach((one_service) => {
+            allowServiceValues.push(one_service.value);
+        });
+        let errors = [];
+        if(!lastName || lastName.length === 0){
+            errors.push("Le nom de famille est obligatoire");
+        }
+        if(!firstName || firstName.length === 0){
+            errors.push("Le prénom est obligatoire");
+        }
+        if(!email || email.length < 3 || email.includes('@') === false){
+            errors.push("L'adresse email n'est pas valide");
+        }
+        if(!service || !allowServiceValues.includes(service)){
+            errors.push("Vous devez faire partie d'un service existant.");
+        }
+        return errors;
     }
 
     return (

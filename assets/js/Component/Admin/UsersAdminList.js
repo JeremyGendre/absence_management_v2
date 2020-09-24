@@ -24,7 +24,6 @@ export default function UsersAdminList(props){
     let usersListFull = props.usersList;
     const [searchLoading,setSearchLoading] = useState(false);
     const [usersListDisplayed,setUsersListDisplayed] = useState([]);
-    const [usersBeingProcessed,setUsersBeingProcessed] = useState([]);
 
     let searching = setTimeout(() => {},100);
 
@@ -94,7 +93,7 @@ export default function UsersAdminList(props){
                     )}
                     {usersListDisplayed.length !== 0 && usersListDisplayed.map((data) => {
                         return(
-                            <RowUser user={data} servicesOptions={props.servicesOptions} key={data.id}/>
+                            <RowUser user={data} key={data.id}/>
                         );
                     })}
                 </TableBody>
@@ -104,6 +103,5 @@ export default function UsersAdminList(props){
 }
 
 UsersAdminList.propTypes = {
-    usersList:PropTypes.array,
-    servicesOptions:PropTypes.array
+    usersList:PropTypes.array
 };

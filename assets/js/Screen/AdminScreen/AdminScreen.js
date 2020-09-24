@@ -22,7 +22,6 @@ export default function AdminScreen(props){
     const [holidaysListFull,setHolidaysListFull] = useState([]);
     const [loadingUsers,setLoadingUsers] = useState(true);
     const [usersListFull,setUsersListFull] = useState([]);
-    const [services,setServices] = useState([]);
     const user = useContext(SessionContext);
 
     useEffect(() => {
@@ -46,22 +45,6 @@ export default function AdminScreen(props){
             console.log(error);
         }).finally(() => {
             setLoadingUsers(false);
-        })
-
-        axios.get('/api/service/all').then((result)=>{
-            if(isBadResult(result) === ''){
-                let newServiceList = [];
-                result.data.forEach(service => {
-                    newServiceList.push({
-                        key:service.id,
-                        value:service.id,
-                        text:service.name
-                    });
-                });
-                setServices(newServiceList);
-            }
-        }).catch((error)=>{
-            console.log(error);
         });
     },[]);
 
@@ -77,7 +60,7 @@ export default function AdminScreen(props){
             menuItem: { key: 'users', icon: 'users', content: 'Utilisateurs' },
             render: () =>
                 <Tab.Pane attached={false} loading={loadingUsers}>
-                    <UsersAdminList servicesOptions={services} usersList={usersListFull}/>
+                    <UsersAdminList usersList={usersListFull}/>
                 </Tab.Pane>
         },
     ];

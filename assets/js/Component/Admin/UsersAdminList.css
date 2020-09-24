@@ -4,9 +4,6 @@
 .users-list-admin-btn:hover{
     cursor:pointer;
 }
-.button-edit-user:hover{
-    color:var(--main-hover-color);
-}
 
 .button-delete-user{
     color: #c3361b;
