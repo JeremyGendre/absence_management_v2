@@ -36,21 +36,28 @@ export default function HolidaysAdminList(props){
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Oui, accepter'
-        }).then((result) => {
-            if (result.value) {
+            confirmButtonText: 'Oui, accepter',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
                 setHolidaysBeingProcessed([...holidaysBeingProcessed,holiday.key]);
-                axios.put('/api/holiday/accept/' + holiday.key).then(data => {
-                    MySwal.fire({icon:'success', title:'Demande acceptée'});
+                return axios.put(
+                    '/api/holiday/accept/' + holiday.key
+                ).then(data => {
                     holidaysListFull = removeFromArray(holiday,holidaysListFull);
                     setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                    return data.data;
                 }).catch(error => {
-                    console.error(error);
-                    MySwal.fire({icon:'error', title:'Action impossible', text: 'Une erreur est survenue'});
-                }).finally(() => {
-                    setHolidaysBeingProcessed(removeFromArray(holiday.key,holidaysBeingProcessed));
+                    Swal.showValidationMessage(`Request failed: ${error}`);
                 });
             }
+        }).then((result) => {
+            if(result.isConfirmed){
+                MySwal.fire({icon:'success',title:'Demande acceptée'});
+            }
+        }).finally(()=>{
+            setHolidaysBeingProcessed(removeFromArray(holiday.key,holidaysBeingProcessed));
         });
     }
 
@@ -61,20 +68,28 @@ export default function HolidaysAdminList(props){
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Oui, refuser'
-        }).then((result) => {
-            if (result.value) {
+            confirmButtonText: 'Oui, refuser',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
                 setHolidaysBeingProcessed([...holidaysBeingProcessed,holiday.key]);
-                axios.put('/api/holiday/reject/' + holiday.key).then(data => {
-                    MySwal.fire({icon:'success', title:'Demande refusée'});
+                return axios.put(
+                    '/api/holiday/reject/' + holiday.key
+                ).then(data => {
                     holidaysListFull = removeFromArray(holiday,holidaysListFull);
                     setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                    return data.data;
                 }).catch(error => {
-                    MySwal.fire({icon:'error', title:'Action impossible', text: 'Une erreur est survenue'});
-                }).finally(() => {
-                    setHolidaysBeingProcessed(removeFromArray(holiday.key,holidaysBeingProcessed));
+                    Swal.showValidationMessage(`Request failed: ${error}`);
                 });
             }
+        }).then((result) => {
+            if(result.isConfirmed){
+                MySwal.fire({icon:'success',title:'Demande refusée'});
+            }
+        }).finally(()=>{
+            setHolidaysBeingProcessed(removeFromArray(holiday.key,holidaysBeingProcessed));
         });
     }
 
