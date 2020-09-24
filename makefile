@@ -20,8 +20,16 @@ asset:
 
 install: composer yarn db cache asset
 
+i : install
+
 install-local: db cache asset
+
+il: install-local
+
+install-dataset: install dataset
+
+id: install-dataset
 
 install-local-dataset: install-local dataset
 
-install-dataset: install dataset
+ild: install-local-dataset
