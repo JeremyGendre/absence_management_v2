@@ -11,12 +11,15 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import {isBadResult} from "../../utils/server";
+import {SessionContext, userHasRole} from "../Context/session";
 
 const MySwal = withReactContent(Swal);
 
 export default function RowUser(props){
     const [user,setUser] = useState({});
     const [userBeingProcessed,setUserBeingProcessed] = useState(false);
+
+    const authUser = useContext(SessionContext);
 
     useEffect(()=>{
         setUser(props.user);
@@ -36,7 +39,13 @@ export default function RowUser(props){
             <TableCell>{user.username ?? ''}</TableCell>
             <TableCell>{user.created_at ?? ''}</TableCell>
             <TableCell>
-                <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="delete"/>
+                {
+                    (userHasRole(user,'ROLE_ADMIN') || authUser.user.id === user.id) ? (
+                        <></>
+                    ) : (
+                        <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="trash"/>
+                    )
+                }
             </TableCell>
         </TableRow>
     );
