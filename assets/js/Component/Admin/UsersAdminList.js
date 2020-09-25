@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {
+    Button,
     Grid,
     Icon,
-    Input, Select,
+    Input, Radio, Select,
     Table,
     TableBody,
     TableCell,
@@ -18,6 +19,7 @@ import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import {isBadResult} from "../../utils/server";
 import RowUser from "./RowUser";
+import {userHasRole} from "../Context/session";
 
 const MySwal = withReactContent(Swal);
 
@@ -27,6 +29,8 @@ export default function UsersAdminList(props){
     let usersListFull = props.usersList;
     const services = [noServiceOption,...props.services];
     const [searchLoading,setSearchLoading] = useState(false);
+    const [adminFilter,setAdminFilter] = useState(false);
+    const [filteredService,setFilteredService] = useState(noServiceOption.key);
     const [usersListDisplayed,setUsersListDisplayed] = useState([]);
     const [usersBeingProcessed,setUsersBeingProcessed] = useState([]);
 
@@ -103,6 +107,8 @@ export default function UsersAdminList(props){
     }
 
     function handleFilterByServiceChange(data){
+        setFilteredService(data);
+        setAdminFilter(false);
         if(data === noServiceOption.key){
             setUsersListDisplayed(usersListFull);
         }else{
@@ -120,6 +126,27 @@ export default function UsersAdminList(props){
         return usersList;
     }
 
+    function handleAdminFilterClick(isAdminFilter){
+        let newAdminFilterValue = !adminFilter;
+        setFilteredService(noServiceOption.key);
+        if(newAdminFilterValue === true){
+            setUsersListDisplayed(adminUsers(usersListFull));
+        }else{
+            setUsersListDisplayed(usersListFull);
+        }
+        setAdminFilter(newAdminFilterValue);
+    }
+
+    function adminUsers(users){
+        let usersList = [];
+        users.map(oneUser => {
+            if(userHasRole(oneUser,"ROLE_ADMIN")){
+                usersList.push(oneUser);
+            }
+        });
+        return usersList;
+    }
+
     return (
         <>
             <Grid columns={3}>
@@ -128,12 +155,14 @@ export default function UsersAdminList(props){
                         <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/>
                     </Grid.Column>
                     <Grid.Column>
-                        <Select placeholder="Tri sur un service" onChange={(e,data) => handleFilterByServiceChange(data.value)} options={services}/>
+                        <Select placeholder="Tri sur un service" value={filteredService} onChange={(e,data) => handleFilterByServiceChange(data.value)} options={services}/>
                     </Grid.Column>
-                    <Grid.Column/>
+                    <Grid.Column>
+                        <Radio toggle label="Administrateurs" checked={adminFilter} onClick={handleAdminFilterClick.bind(this,adminFilter)}/>
+                    </Grid.Column>
                 </Grid.Row>
             </Grid>
-            <br/><br/>
+            <br/>
             <Table selectable>
                 <TableHeader>
                     <TableRow>
