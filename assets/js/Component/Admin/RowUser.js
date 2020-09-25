@@ -17,7 +17,6 @@ const MySwal = withReactContent(Swal);
 
 export default function RowUser(props){
     const [user,setUser] = useState({});
-    const [userBeingProcessed,setUserBeingProcessed] = useState(false);
 
     const authUser = useContext(SessionContext);
 
@@ -26,12 +25,11 @@ export default function RowUser(props){
     },[props.user]);
 
     function handleDeleteUser(user){
-        setUserBeingProcessed(true);
-        console.log('delete '+user.last_name);
+        props.handleDelete(user);
     }
 
     return (
-        <TableRow disabled={userBeingProcessed}>
+        <TableRow disabled={props.processed}>
             <TableCell>{user.last_name ?? ''}</TableCell>
             <TableCell>{user.first_name ?? ''}</TableCell>
             <TableCell>{user.service ? user.service.name : ''}</TableCell>
@@ -40,7 +38,7 @@ export default function RowUser(props){
             <TableCell>{user.created_at ?? ''}</TableCell>
             <TableCell>
                 {
-                    (userHasRole(user,'ROLE_ADMIN') || authUser.user.id === user.id) ? (
+                    (authUser.user.id === user.id) ? (
                         <></>
                     ) : (
                         <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="trash"/>
@@ -52,5 +50,7 @@ export default function RowUser(props){
 }
 
 RowUser.propTypes = {
-    user:PropTypes.object
+    user:PropTypes.object,
+    processed: PropTypes.bool,
+    handleDelete: PropTypes.func
 };

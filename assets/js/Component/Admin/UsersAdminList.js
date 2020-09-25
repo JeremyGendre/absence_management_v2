@@ -24,6 +24,7 @@ export default function UsersAdminList(props){
     let usersListFull = props.usersList;
     const [searchLoading,setSearchLoading] = useState(false);
     const [usersListDisplayed,setUsersListDisplayed] = useState([]);
+    const [usersBeingProcessed,setUsersBeingProcessed] = useState([]);
 
     let searching = setTimeout(() => {},100);
 
@@ -61,7 +62,40 @@ export default function UsersAdminList(props){
     }
 
     function handleDeleteUser(user){
-        console.log('delete', user);
+        MySwal.fire({
+            title: 'Supprimer cet utilisateur ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
+                setUsersBeingProcessed([...usersBeingProcessed,user.id]);
+                return axios.delete(
+                    '/api/user/delete/' + user.id
+                ).then(data => {
+                    let messageResult = isBadResult(data);
+                    if(messageResult !== '') {
+                        Swal.showValidationMessage(`Request failed: ${messageResult}`);
+                    }else{
+                        return data.data;
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }).finally(()=>{
+                    setUsersBeingProcessed(removeFromArray(user.id,usersBeingProcessed));
+                });
+            }
+        }).then((result) => {
+            if(result.isConfirmed){
+                setUsersListDisplayed(removeFromArray(user,usersListDisplayed));
+                MySwal.fire({icon:'success',title:'Utilisateur supprimé'});
+            }
+        });
     }
 
     return (
@@ -93,7 +127,12 @@ export default function UsersAdminList(props){
                     )}
                     {usersListDisplayed.length !== 0 && usersListDisplayed.map((data) => {
                         return(
-                            <RowUser user={data} key={data.id}/>
+                            <RowUser
+                                user={data}
+                                key={data.id}
+                                processed={usersBeingProcessed.includes(data.id)}
+                                handleDelete={handleDeleteUser}
+                            />
                         );
                     })}
                 </TableBody>

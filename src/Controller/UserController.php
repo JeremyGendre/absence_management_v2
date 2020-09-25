@@ -134,6 +134,9 @@ class UserController extends AbstractController
         if($this->getUser() === $user){
             return $errorHandler->jsonResponseError("Vous ne pouvez pas vous supprimer vous-même");
         }
+        if($user->hasRole("ROLE_ADMIN")){
+            return $errorHandler->jsonResponseError("Vous ne pouvez pas supprimer un administrateur");
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
