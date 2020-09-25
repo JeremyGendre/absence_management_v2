@@ -38,8 +38,8 @@ export default function RowUser(props){
             <TableCell>{user.created_at ?? ''}</TableCell>
             <TableCell>
                 {
-                    (authUser.user.id === user.id) ? (
-                        <></>
+                    (userHasRole(user,"ROLE_ADMIN") || authUser.user.id === user.id) ? (
+                        <Icon title="Administrateur" name="user secret"/>
                     ) : (
                         <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="trash"/>
                     )
