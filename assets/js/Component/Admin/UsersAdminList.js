@@ -42,6 +42,8 @@ export default function UsersAdminList(props){
 
     function handleSearchChange(data){
         clearTimeout(searching);
+        setAdminFilter(false);
+        setFilteredService(noServiceOption.key);
         setSearchLoading(true);
         searching = setTimeout(function(){
             if(!data.value){
