@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {
+    Grid,
     Icon,
-    Input,
+    Input, Select,
     Table,
     TableBody,
     TableCell,
@@ -20,8 +21,11 @@ import RowUser from "./RowUser";
 
 const MySwal = withReactContent(Swal);
 
+const noServiceOption = { key: 0, value: 0, text: 'Tous les services' };
+
 export default function UsersAdminList(props){
     let usersListFull = props.usersList;
+    const services = [noServiceOption,...props.services];
     const [searchLoading,setSearchLoading] = useState(false);
     const [usersListDisplayed,setUsersListDisplayed] = useState([]);
     const [usersBeingProcessed,setUsersBeingProcessed] = useState([]);
@@ -98,9 +102,38 @@ export default function UsersAdminList(props){
         });
     }
 
+    function handleFilterByServiceChange(data){
+        if(data === noServiceOption.key){
+            setUsersListDisplayed(usersListFull);
+        }else{
+            setUsersListDisplayed(usersByService(usersListFull,data));
+        }
+    }
+
+    function usersByService(users,serviceId){
+        let usersList = [];
+        users.map(oneUser => {
+            if(oneUser.service.id === serviceId){
+                usersList.push(oneUser);
+            }
+        });
+        return usersList;
+    }
+
     return (
         <>
-            <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
+            <Grid columns={3}>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Select placeholder="Tri sur un service" onChange={(e,data) => handleFilterByServiceChange(data.value)} options={services}/>
+                    </Grid.Column>
+                    <Grid.Column/>
+                </Grid.Row>
+            </Grid>
+            <br/><br/>
             <Table selectable>
                 <TableHeader>
                     <TableRow>
@@ -142,5 +175,6 @@ export default function UsersAdminList(props){
 }
 
 UsersAdminList.propTypes = {
-    usersList:PropTypes.array
+    usersList: PropTypes.array,
+    services: PropTypes.array
 };
