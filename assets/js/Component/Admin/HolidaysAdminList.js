@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {
     Icon,
-    Input,
+    Input, Tab,
     Table,
     TableBody,
     TableCell,
@@ -14,20 +14,37 @@ import {removeFromArray} from "../../utils/functions";
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import {STATUS_ASKED} from "../../utils/holidaysStatus";
+import {isBadResult} from "../../utils/server";
+import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 
 const MySwal = withReactContent(Swal);
 
 export default function HolidaysAdminList(props){
-    let holidaysListFull = props.holidaysList;
     const [searchLoading,setSearchLoading] = useState(false);
     const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
     const [holidaysBeingProcessed,setHolidaysBeingProcessed] = useState([]);
+    const [loadingHolidays,setLoadingHolidays] = useState(true);
+    const [holidaysListFull,setHolidaysListFull] = useState([]);
 
     let searching = setTimeout(() => {},100);
 
     useEffect(()=>{
-        setHolidaysListDisplayed(props.holidaysList);
-    },[props.holidaysList]);
+        axios.get('/api/holiday/status/' + STATUS_ASKED).then(data => {
+            let returnedMessage = isBadResult(data);
+            if(returnedMessage !== ''){
+                MySwal.fire({icon:'error',title:returnedMessage});
+            }else{
+                let convertedHolidays = convertListToAdminListFormat(data.data);
+                setHolidaysListFull(convertedHolidays);
+                setHolidaysListDisplayed(convertedHolidays);
+            }
+        }).catch(error => {
+            console.error(error);
+        }).finally(()=>{
+            setLoadingHolidays(false);
+        });
+    },[]);
 
     function handleAcceptClick(holiday){
         MySwal.fire({
@@ -45,7 +62,7 @@ export default function HolidaysAdminList(props){
                 return axios.put(
                     '/api/holiday/accept/' + holiday.key
                 ).then(data => {
-                    holidaysListFull = removeFromArray(holiday,holidaysListFull);
+                    setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
                     setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
                     return data.data;
                 }).catch(error => {
@@ -77,7 +94,7 @@ export default function HolidaysAdminList(props){
                 return axios.put(
                     '/api/holiday/reject/' + holiday.key
                 ).then(data => {
-                    holidaysListFull = removeFromArray(holiday,holidaysListFull);
+                    setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
                     setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
                     return data.data;
                 }).catch(error => {
@@ -122,7 +139,7 @@ export default function HolidaysAdminList(props){
     }
 
     return (
-        <>
+        <Tab.Pane attached={false} loading={loadingHolidays}>
             <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
             <Table selectable>
                 <TableHeader>
@@ -163,10 +180,6 @@ export default function HolidaysAdminList(props){
                     })}
                 </TableBody>
             </Table>
-        </>
+        </Tab.Pane>
     );
 }
-
-HolidaysAdminList.propTypes = {
-    holidaysList:PropTypes.array
-};
