@@ -3,7 +3,7 @@ import {
     Button,
     Grid,
     Icon,
-    Input, Radio, Select,
+    Input, Radio, Select, Tab,
     Table,
     TableBody,
     TableCell,
@@ -26,19 +26,44 @@ const MySwal = withReactContent(Swal);
 const noServiceOption = { key: 0, value: 0, text: 'Tous les services' };
 
 export default function UsersAdminList(props){
-    let usersListFull = props.usersList;
-    const services = [noServiceOption,...props.services];
     const [searchLoading,setSearchLoading] = useState(false);
     const [adminFilter,setAdminFilter] = useState(false);
     const [filteredService,setFilteredService] = useState(noServiceOption.key);
     const [usersListDisplayed,setUsersListDisplayed] = useState([]);
     const [usersBeingProcessed,setUsersBeingProcessed] = useState([]);
+    const [loadingUsers,setLoadingUsers] = useState(true);
+    const [usersListFull,setUsersListFull] = useState([]);
+    const [services,setServices] = useState([]);
 
     let searching = setTimeout(() => {},100);
 
     useEffect(()=>{
-        setUsersListDisplayed(props.usersList);
-    },[props.usersList]);
+        axios.get('/api/user/all').then(data => {
+            setUsersListFull(data.data);
+            setUsersListDisplayed(data.data);
+        }).catch(error => {
+            console.log(error);
+        }).finally(() => {
+            setLoadingUsers(false);
+        });
+
+        axios.get('/api/service/all').then((result)=>{
+            if(isBadResult(result) === ''){
+                let newServiceList = [];
+                newServiceList.push(noServiceOption);
+                result.data.forEach(service => {
+                    newServiceList.push({
+                        key:service.id,
+                        value:service.id,
+                        text:service.name
+                    });
+                });
+                setServices(newServiceList);
+            }
+        }).catch((error)=>{
+            console.log(error);
+        });
+    },[]);
 
     function handleSearchChange(data){
         clearTimeout(searching);
@@ -103,6 +128,7 @@ export default function UsersAdminList(props){
         }).then((result) => {
             if(result.isConfirmed){
                 setUsersListDisplayed(removeFromArray(user,usersListDisplayed));
+                setUsersListFull(removeFromArray(user,usersListFull));
                 MySwal.fire({icon:'success',title:'Utilisateur supprimé'});
             }
         });
@@ -128,7 +154,7 @@ export default function UsersAdminList(props){
         return usersList;
     }
 
-    function handleAdminFilterClick(isAdminFilter){
+    function handleAdminFilterClick(){
         let newAdminFilterValue = !adminFilter;
         setFilteredService(noServiceOption.key);
         if(newAdminFilterValue === true){
@@ -150,7 +176,7 @@ export default function UsersAdminList(props){
     }
 
     return (
-        <>
+        <Tab.Pane attached={false} loading={loadingUsers}>
             <Grid columns={3}>
                 <Grid.Row>
                     <Grid.Column>
@@ -160,7 +186,7 @@ export default function UsersAdminList(props){
                         <Select placeholder="Tri sur un service" value={filteredService} onChange={(e,data) => handleFilterByServiceChange(data.value)} options={services}/>
                     </Grid.Column>
                     <Grid.Column>
-                        <Radio toggle label="Administrateurs" checked={adminFilter} onClick={handleAdminFilterClick.bind(this,adminFilter)}/>
+                        <Radio toggle label="Administrateurs" checked={adminFilter} onClick={handleAdminFilterClick}/>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
@@ -201,7 +227,7 @@ export default function UsersAdminList(props){
                     })}
                 </TableBody>
             </Table>
-        </>
+        </Tab.Pane>
     );
 }
 
