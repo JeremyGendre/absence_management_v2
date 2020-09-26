@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    Button,
     Grid,
-    Icon,
     Input, Radio, Select, Tab,
     Table,
     TableBody,
@@ -13,7 +11,6 @@ import {
 } from "semantic-ui-react";
 import axios from "axios";
 import {removeFromArray} from "../../utils/functions";
-import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
