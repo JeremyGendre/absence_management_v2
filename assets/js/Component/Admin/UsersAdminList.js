@@ -230,8 +230,3 @@ export default function UsersAdminList(props){
         </Tab.Pane>
     );
 }
-
-UsersAdminList.propTypes = {
-    usersList: PropTypes.array,
-    services: PropTypes.array
-};

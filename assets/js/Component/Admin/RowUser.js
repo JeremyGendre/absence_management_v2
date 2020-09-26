@@ -4,16 +4,9 @@ import {
     TableCell,
     TableRow
 } from "semantic-ui-react";
-import axios from "axios";
-import {removeFromArray} from "../../utils/functions";
 import PropTypes from 'prop-types';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
-import {isBadResult} from "../../utils/server";
 import {SessionContext, userHasRole} from "../Context/session";
-
-const MySwal = withReactContent(Swal);
 
 export default function RowUser(props){
     const [user,setUser] = useState({});
