@@ -25,15 +25,26 @@ const MySwal = withReactContent(Swal);
 
 const noServiceOption = { key: 0, value: 0, text: 'Tous les services' };
 
+const initialState = {
+    searchLoading: false,
+    adminFilter: false,
+    filteredService: noServiceOption.key,
+    usersListDisplayed: [],
+    usersBeingProcessed: [],
+    loadingUsers: true,
+    usersListFull: [],
+    services: [],
+};
+
 export default function UsersAdminList(props){
-    const [searchLoading,setSearchLoading] = useState(false);
-    const [adminFilter,setAdminFilter] = useState(false);
-    const [filteredService,setFilteredService] = useState(noServiceOption.key);
-    const [usersListDisplayed,setUsersListDisplayed] = useState([]);
-    const [usersBeingProcessed,setUsersBeingProcessed] = useState([]);
-    const [loadingUsers,setLoadingUsers] = useState(true);
-    const [usersListFull,setUsersListFull] = useState([]);
-    const [services,setServices] = useState([]);
+    const [searchLoading,setSearchLoading] = useState(initialState.searchLoading);
+    const [adminFilter,setAdminFilter] = useState(initialState.adminFilter);
+    const [filteredService,setFilteredService] = useState(initialState.filteredService);
+    const [usersListDisplayed,setUsersListDisplayed] = useState(initialState.usersListDisplayed);
+    const [usersBeingProcessed,setUsersBeingProcessed] = useState(initialState.usersBeingProcessed);
+    const [loadingUsers,setLoadingUsers] = useState(initialState.loadingUsers);
+    const [usersListFull,setUsersListFull] = useState(initialState.usersListFull);
+    const [services,setServices] = useState(initialState.services);
 
     let searching = setTimeout(() => {},100);
 
