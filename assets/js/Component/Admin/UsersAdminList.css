@@ -12,3 +12,11 @@
 .button-delete-user:hover{
     color: #f1634f;
 }
+
+.button-edit-user-roles{
+    color: #2c6680;
+}
+
+.button-edit-user-roles:hover{
+    color: #46a0bd;
+}

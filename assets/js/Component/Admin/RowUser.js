@@ -21,6 +21,10 @@ export default function RowUser(props){
         props.handleDelete(user);
     }
 
+    function handleEditRoleUser(user){
+        props.handleEditRoleUser(user);
+    }
+
     return (
         <TableRow disabled={props.processed}>
             <TableCell>{user.last_name ?? ''}</TableCell>
@@ -34,7 +38,10 @@ export default function RowUser(props){
                     (userHasRole(user,"ROLE_ADMIN") || authUser.user.id === user.id) ? (
                         <Icon title="Administrateur" name="user secret"/>
                     ) : (
-                        <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="trash"/>
+                        <>
+                            <Icon title="Modifier les droits" onClick={handleEditRoleUser.bind(this,user)} className="users-list-admin-btn button-edit-user-roles" name="unlock alternate"/>
+                            <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="trash"/>
+                        </>
                     )
                 }
             </TableCell>
@@ -45,5 +52,6 @@ export default function RowUser(props){
 RowUser.propTypes = {
     user:PropTypes.object,
     processed: PropTypes.bool,
-    handleDelete: PropTypes.func
+    handleDelete: PropTypes.func,
+    handleEditRoleUser: PropTypes.func
 };

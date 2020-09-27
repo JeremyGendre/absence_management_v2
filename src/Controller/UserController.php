@@ -41,7 +41,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/auth", name="get_authenticated_user", methods={"GET"})
+     * @Route(path="/auth", name="get_authenticated_user", methods={"GET"})
      * @return JsonResponse
      */
     public function getAuthUser():JsonResponse
@@ -195,6 +195,19 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
 
+        return new JsonResponse($user->serialize());
+    }
+
+    /**
+     * @Route(path="/edit/roles/{id}", name="user_edit_roles", methods={"PUT"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param User $user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editUserRoles(User $user, Request $request):JsonResponse{
+        $data = json_decode($request->getContent(),true);
+        dd($data);
         return new JsonResponse($user->serialize());
     }
 

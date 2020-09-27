@@ -10,7 +10,7 @@ import {
     TableRow
 } from "semantic-ui-react";
 import axios from "axios";
-import {removeFromArray} from "../../utils/functions";
+import {collectionOfSelectableObjects, removeFromArray} from "../../utils/functions";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
@@ -31,6 +31,8 @@ const initialState = {
     loadingUsers: true,
     usersListFull: [],
     services: [],
+    roles: [],
+    selectedRoles: [],
 };
 
 export default function UsersAdminList(props){
@@ -42,6 +44,8 @@ export default function UsersAdminList(props){
     const [loadingUsers,setLoadingUsers] = useState(initialState.loadingUsers);
     const [usersListFull,setUsersListFull] = useState(initialState.usersListFull);
     const [services,setServices] = useState(initialState.services);
+    const [roles,setRoles] = useState(initialState.roles);
+    const [selectedRoles,setSelectedRoles] = useState(initialState.selectedRoles);
 
     let searching = setTimeout(() => {},100);
 
@@ -68,6 +72,12 @@ export default function UsersAdminList(props){
                 });
                 setServices(newServiceList);
             }
+        }).catch((error)=>{
+            console.log(error);
+        });
+
+        axios.get('/api/role/all').then((result)=>{
+            setRoles(result.data);
         }).catch((error)=>{
             console.log(error);
         });
@@ -138,6 +148,52 @@ export default function UsersAdminList(props){
                 setUsersListDisplayed(removeFromArray(user,usersListDisplayed));
                 setUsersListFull(removeFromArray(user,usersListFull));
                 MySwal.fire({icon:'success',title:'Utilisateur supprimé'});
+            }
+        });
+    }
+
+    /**
+     * TODO : mettre dans Row user et passer les roles + la function usersbeingprocessed en props et faire une fonction là qui set le state du user being processed
+     * @param user
+     */
+    function handleEditRoleUser(user){
+        setSelectedRoles(user.roles);
+        MySwal.fire({
+            title: 'Modification des rôles',
+            html:<Select id="roles-select"
+                         options={collectionOfSelectableObjects(roles)}
+                         defaultValue={selectedRoles}
+                         onChange={(e,data) => {console.log(data.value);setSelectedRoles(data.value)}}
+                         multiple/>,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Modifier',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
+                console.log(selectedRoles);
+                setUsersBeingProcessed([...usersBeingProcessed,user.id]);
+                return axios.put(
+                    '/api/user/edit/roles/' + user.id
+                ).then(data => {
+                    let messageResult = isBadResult(data);
+                    if(messageResult !== '') {
+                        Swal.showValidationMessage(`Request failed: ${messageResult}`);
+                    }else{
+                        return data.data;
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }).finally(()=>{
+                    setUsersBeingProcessed(removeFromArray(user.id,usersBeingProcessed));
+                });
+            }
+        }).then((result) => {
+            if(result.isConfirmed){
+                MySwal.fire({icon:'success',title:"Rôles de l'utilisateur modifiés"});
             }
         });
     }
@@ -230,6 +286,7 @@ export default function UsersAdminList(props){
                                 key={data.id}
                                 processed={usersBeingProcessed.includes(data.id)}
                                 handleDelete={handleDeleteUser}
+                                handleEditRoleUser={handleEditRoleUser}
                             />
                         );
                     })}

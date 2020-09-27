@@ -30,7 +30,7 @@ class User implements UserInterface, MySerializerInterface
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [RoleHelper::ROLE_USER];
+    private $roles = [];
 
     /**
      * @var string The hashed password
@@ -117,8 +117,6 @@ class User implements UserInterface, MySerializerInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = RoleHelper::ROLE_USER;
 
         return array_unique($roles);
     }
