@@ -12,7 +12,7 @@ export default function ColleaguesCalendarScreen(props){
     const [loadingData, setLoadingData] = useState(true);
 
     useEffect(() => {
-        axios.get('/api/holiday/all/events').then(data => {
+        axios.get('/api/holiday/all/not/rejected/events').then(data => {
             setColleagueEvents(data.data);
             setLoadingData(false);
         }).catch(error => {

@@ -44,11 +44,25 @@ class HolidayRepository extends ServiceEntityRepository
     public function findByService(Service $service){
         return $this->createQueryBuilder('h')
             ->innerJoin('h.user','u')
+            ->andWhere('h.status <> :rejectedStatus')
+            ->setParameter('rejectedStatus',Holiday::STATUS_REJECTED)
             ->andWhere('u.service = :service')
             ->setParameter('service', $service)
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function findAllExceptRejected(){
+        return $this->createQueryBuilder('h')
+            ->andWhere('h.status <> :rejectedStatus')
+            ->setParameter('rejectedStatus',Holiday::STATUS_REJECTED)
+            ->orderBy('h.startDate','DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**

@@ -36,6 +36,19 @@ class HolidayController extends AbstractController
     }
 
     /**
+     * @Route(path="/all/not/rejected", name="holidays_all_but_not_rejected", methods={"GET"})
+     * @Route(path="/all/not/rejected/events", name="holidays_all_but_not_rejected_events", methods={"GET"})
+     * @param Request $request
+     * @param HolidayRepository $holidayRepository
+     * @return JsonResponse
+     */
+    public function getAllHolidaysExceptRejected(Request $request, HolidayRepository $holidayRepository){
+        $holidays = $holidayRepository->findAllExceptRejected();
+        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        return new JsonResponse($response);
+    }
+
+    /**
      * @Route(path="/user/{id}", name="holidays_by_user", methods={"GET"})
      * @Route(path="/user/{id}/events", name="holidays_events_by_user", methods={"GET"})
      * @param Request $request
