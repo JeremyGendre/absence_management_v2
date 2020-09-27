@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Helper\Holiday;
+namespace App\Service\Helper;
 
 use App\Entity\Holiday;
 use Symfony\Component\HttpFoundation\Request;

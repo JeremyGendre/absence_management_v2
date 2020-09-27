@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Service\Helper\RoleHelper;
 use App\Service\MySerializerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,7 +30,7 @@ class User implements UserInterface, MySerializerInterface
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = ['ROLE_USER'];
+    private $roles = [RoleHelper::ROLE_USER];
 
     /**
      * @var string The hashed password
@@ -117,13 +118,13 @@ class User implements UserInterface, MySerializerInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = RoleHelper::ROLE_USER;
 
         return array_unique($roles);
     }
 
     public function addRole(string $role){
-        if(array_search($role,$this->roles) === false){
+        if(in_array($role,RoleHelper::ROLES) && array_search($role,$this->roles) === false){
             $this->roles[] = $role;
         }
         return $this;
@@ -151,6 +152,14 @@ class User implements UserInterface, MySerializerInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin():bool
+    {
+        return $this->hasRole(RoleHelper::ROLE_ADMIN) || $this->hasRole(RoleHelper::ROLE_SUPER_ADMIN);
     }
 
     /**

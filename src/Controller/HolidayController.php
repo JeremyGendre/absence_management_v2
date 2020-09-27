@@ -7,7 +7,7 @@ use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\HolidayRepository;
 use App\Service\ErrorHandler;
-use App\Service\Helper\Holiday\HolidayHelper;
+use App\Service\Helper\HolidayHelper;
 use App\Service\Validator\HolidayValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
