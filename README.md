@@ -1,13 +1,13 @@
 ## Project Setup
 
-Make sure you have :
-- *yarn* / *npm* installed 
-- *composer* installed
-- *PHP* >= 7.2.5 installed
+**Requirements** :
+- [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable) / [npm](https://www.npmjs.com/get-npm) installed 
+- [composer](https://getcomposer.org/download/) installed
+- [PHP](https://www.php.net/manual/fr/install.php) >= 7.2.5 installed
 
 **optionally** :
-- install the *make* program in order to just have a single command to execute and setup the project.
-- install the *symfony* client to make development easier and faster.
+- install the [make](http://gnuwin32.sourceforge.net/packages/make.htm) program in order to just have a single command to execute and setup the project.
+- install the [symfony](https://symfony.com/download) client to make development easier and faster.
 
 Then, duplicate the .env file and create a .env.local file that you can override in order to fill in the right information about the database and so on.
 
