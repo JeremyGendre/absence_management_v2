@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {isBadResult} from "../../utils/server";
 import axios from 'axios';
-import {Redirect} from "react-router-dom";
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import {userHasRole, userIsAdmin} from "../../utils/user";
+import {userIsAdmin} from "../../utils/user";
 
 const MySwal = withReactContent(Swal);
 
@@ -31,12 +29,7 @@ export default function ApplicationSession(props){
 
     useEffect(()=>{
         axios.get('/api/user/auth').then((data)=>{
-            let messageResult = isBadResult(data);
-            if(messageResult !== ''){
-                logout();
-            }else{
-                updateUserState(data.data);
-            }
+            updateUserState(data.data);
         }).catch((error)=>{
             console.error(error);
             logout();

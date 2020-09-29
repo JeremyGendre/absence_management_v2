@@ -3,7 +3,7 @@
         headers : { Authorization: `Bearer ${token}` }
     };
 }*/
-
+/*
 export function isBadResult(result){
     let textReturned = '';
     if((result.data.success !== undefined && (result.data.success === 'false' || result.data.success === false))){
@@ -13,4 +13,4 @@ export function isBadResult(result){
         }
     }
     return textReturned;
-}
+}*/

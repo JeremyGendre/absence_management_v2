@@ -11,7 +11,6 @@ import {STATUS_ACCEPTED, STATUS_ASKED, STATUS_LABEL, STATUS_REJECTED} from "../.
 import MyLoader from "../../Component/MyLoader/MyLoader";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
-import {isBadResult} from "../../utils/server";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {getShortType} from "../../utils/holidaysTypes";
@@ -27,31 +26,25 @@ export default function HolidayListScreen(props){
 
     useEffect(()=>{
         axios.get('/api/holiday/user/'+user.user.id).then(result => {
-            let messageResult = isBadResult(result);
-            if(messageResult !== ''){// erreur
-                MySwal.fire({icon:'error', title:messageResult});
-                setLoadingData(false);
-            }else{ // ok
-                let holidays = result.data;
-                let newHolidaysList = [];
-                holidays.forEach(holiday => {
-                    let startDate = new Date(holiday.start_date.date);
-                    let endDate = new Date(holiday.end_date.date);
-                    newHolidaysList.push({
-                        key:holiday.id,
-                        start:startDate,
-                        end:endDate,
-                        duration:getTimeBetweenTwoDates(startDate,endDate),
-                        type: getShortType(holiday.type),
-                        status:holiday.status
-                    });
+            let holidays = result.data;
+            let newHolidaysList = [];
+            holidays.forEach(holiday => {
+                let startDate = new Date(holiday.start_date.date);
+                let endDate = new Date(holiday.end_date.date);
+                newHolidaysList.push({
+                    key:holiday.id,
+                    start:startDate,
+                    end:endDate,
+                    duration:getTimeBetweenTwoDates(startDate,endDate),
+                    type: getShortType(holiday.type),
+                    status:holiday.status
                 });
-                setLoadingData(false);
-                setListHolidays(newHolidaysList);
-            }
+            });
+            setListHolidays(newHolidaysList);
         }).catch(error => {// erreur
-            MySwal.fire({icon:'error', title:"Une erreur est survenue"});
+            MySwal.fire({icon:'error', title:"Une erreur est survenue : " + error.message});
             console.log(error);
+        }).finally(() => {
             setLoadingData(false);
         })
     },[]);
@@ -68,21 +61,16 @@ export default function HolidayListScreen(props){
             if (result.value) {
                 setHolidaysBeingDeleted([...holidaysBeingDeleted,holiday.key]);
                 axios.delete('/api/holiday/delete/'+holiday.key).then(result => {
-                    let messageResult = isBadResult(result);
-                    if(messageResult !== ''){//erreur
-                        MySwal.fire({icon:'error', title:messageResult});
-                    }else{//ok
-                        let newHolidaysList = [];
-                        listHolidays.forEach(oneHoliday => {
-                            if(oneHoliday.key !== holiday.key){
-                                newHolidaysList.push(oneHoliday);
-                            }
-                        });
-                        setListHolidays(newHolidaysList);
-                        MySwal.fire({icon:'success', title:'Congés annulés'});
-                    }
+                    let newHolidaysList = [];
+                    listHolidays.forEach(oneHoliday => {
+                        if(oneHoliday.key !== holiday.key){
+                            newHolidaysList.push(oneHoliday);
+                        }
+                    });
+                    setListHolidays(newHolidaysList);
+                    MySwal.fire({icon:'success', title:'Congés annulés'});
                 }).catch(error => {
-                    MySwal.fire({icon:'error', title:'Une erreur est survenue'});
+                    MySwal.fire({icon:'error', title:'Une erreur est survenue : '+ error.message});
                     console.log(error);
                 }).finally(() => {
                     setHolidaysBeingDeleted(removeFromArray(holiday.key,holidaysBeingDeleted));

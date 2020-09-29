@@ -6,7 +6,6 @@ import {
 import './ProfileScreen.css';
 import MyLoader from "../../Component/MyLoader/MyLoader";
 import axios from "axios";
-import {isBadResult} from "../../utils/server";
 import Profile from "../../Component/User/Profile";
 import {SessionContext} from "../../Component/Context/session";
 import PasswordForm from "../../Component/User/PasswordForm";
@@ -25,21 +24,19 @@ export default function ProfileScreen(props){
 
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
-            if(isBadResult(result) === ''){
-                let newServiceList = [];
-                result.data.forEach(service => {
-                    newServiceList.push({
-                        key:service.id,
-                        value:service.id,
-                        text:service.name
-                    });
+            let newServiceList = [];
+            result.data.forEach(service => {
+                newServiceList.push({
+                    key:service.id,
+                    value:service.id,
+                    text:service.name
                 });
-                setServices(newServiceList);
-                setLoadingData(false);
-            }
+            });
+            setServices(newServiceList);
         }).catch((error)=>{
-            setLoadingData(false);
             console.log(error);
+        }).finally(()=>{
+            setLoadingData(false);
         });
     },[]);
 

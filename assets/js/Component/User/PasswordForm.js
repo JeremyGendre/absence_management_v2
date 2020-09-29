@@ -4,7 +4,6 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {SessionContext} from "../Context/session";
-import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -25,15 +24,10 @@ export default function PasswordForm(props){
             setSubmitting(true);
             setFormErrors([]);
             axios.put('/api/user/edit/password/'+user.user.id,{oldPassword:oldPassword,password:password}).then(data => {
-                let messageResult = isBadResult(data);
-                if(messageResult !== ''){
-                    setFormErrors([messageResult]);
-                }else{
-                    MySwal.fire({icon:'success',title:'Mot de passe modifié'});
-                }
+                MySwal.fire({icon:'success',title:'Mot de passe modifié'});
             }).catch(error => {
                 console.error(error);
-                setFormErrors(['Une erreur est survenue, modification impossible. Réessayez plus tard, si le problème persiste, contactez un administrateur.']);
+                setFormErrors(['Une erreur est survenue : ' + error.message]);
             }).finally(()=>{
                 setSubmitting(false);
             });

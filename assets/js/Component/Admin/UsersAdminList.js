@@ -14,9 +14,8 @@ import {collectionOfSelectableObjects, removeFromArray} from "../../utils/functi
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
-import {isBadResult} from "../../utils/server";
 import RowUser from "./RowUser";
-import {editUserRoleInList, userHasRole, userIsAdmin} from "../../utils/user";
+import {editUserRoleInList, userIsAdmin} from "../../utils/user";
 
 const MySwal = withReactContent(Swal);
 
@@ -59,18 +58,16 @@ export default function UsersAdminList(props){
         });
 
         axios.get('/api/service/all').then((result)=>{
-            if(isBadResult(result) === ''){
-                let newServiceList = [];
-                newServiceList.push(noServiceOption);
-                result.data.forEach(service => {
-                    newServiceList.push({
-                        key:service.id,
-                        value:service.id,
-                        text:service.name
-                    });
+            let newServiceList = [];
+            newServiceList.push(noServiceOption);
+            result.data.forEach(service => {
+                newServiceList.push({
+                    key:service.id,
+                    value:service.id,
+                    text:service.name
                 });
-                setServices(newServiceList);
-            }
+            });
+            setServices(newServiceList);
         }).catch((error)=>{
             console.log(error);
         });
@@ -129,12 +126,7 @@ export default function UsersAdminList(props){
                 return axios.delete(
                     '/api/user/delete/' + user.id
                 ).then(data => {
-                    let messageResult = isBadResult(data);
-                    if(messageResult !== '') {
-                        Swal.showValidationMessage(`Request failed: ${messageResult}`);
-                    }else{
-                        return data.data;
-                    }
+                    return data.data;
                 }).catch(error => {
                     console.error(error);
                     Swal.showValidationMessage(`Request failed: ${error}`);

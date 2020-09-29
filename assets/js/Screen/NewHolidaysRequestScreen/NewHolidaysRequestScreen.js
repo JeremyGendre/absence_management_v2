@@ -17,7 +17,6 @@ import {
 } from "../../utils/holidaysTypes";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import {isBadResult} from "../../utils/server";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
 import {displayEnglishDate, isSameDay} from "../../utils/date";
@@ -137,18 +136,13 @@ export default function NewHolidaysRequestScreen(props){
             status: user.isAdmin ? STATUS_ACCEPTED : STATUS_ASKED,
             cause:cause
         }).then(result => {
-            setSubmitting(false);
-            let messageResult = isBadResult(result);
-            if(messageResult !== ''){//erreur
-                MySwal.fire({icon:'error',title:messageResult});
-            }else{//ok
-                MySwal.fire({icon:'success', title:'Demande créée',});
-                backToInitialState();
-            }
+            MySwal.fire({icon:'success', title:'Demande créée',});
+            backToInitialState();
         }).catch(error => {//erreur
-            setSubmitting(false);
-            MySwal.fire({icon:'error',title:'Une erreur est survenue. Création impossible.'});
+            MySwal.fire({icon:'error',title:'Une erreur est survenue : ' + error.message});
             console.log(error);
+        }).finally(()=>{
+            setSubmitting(false);
         });
     }
 

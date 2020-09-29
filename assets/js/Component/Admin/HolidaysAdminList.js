@@ -14,7 +14,6 @@ import {removeFromArray} from "../../utils/functions";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
-import {isBadResult} from "../../utils/server";
 import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 
 const MySwal = withReactContent(Swal);
@@ -30,16 +29,12 @@ export default function HolidaysAdminList(props){
 
     useEffect(()=>{
         axios.get('/api/holiday/status/' + STATUS_ASKED).then(data => {
-            let returnedMessage = isBadResult(data);
-            if(returnedMessage !== ''){
-                MySwal.fire({icon:'error',title:returnedMessage});
-            }else{
-                let convertedHolidays = convertListToAdminListFormat(data.data);
-                setHolidaysListFull(convertedHolidays);
-                setHolidaysListDisplayed(convertedHolidays);
-            }
+            let convertedHolidays = convertListToAdminListFormat(data.data);
+            setHolidaysListFull(convertedHolidays);
+            setHolidaysListDisplayed(convertedHolidays);
         }).catch(error => {
             console.error(error);
+            MySwal.fire({icon:'error', title:'Une erreur est survenue : ' + error.message});
         }).finally(()=>{
             setLoadingHolidays(false);
         });
