@@ -33,7 +33,7 @@ class RoleHelper
      * @param User $user
      * @return bool
      */
-    public function userIsAdmin(User $user): bool
+    public static function userIsAdmin(User $user): bool
     {
         return $user->isAdmin();
     }

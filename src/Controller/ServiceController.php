@@ -52,19 +52,18 @@ class ServiceController extends AbstractController
      * @Route(path="/new", name="services_new", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
-     * @param ErrorHandler $errorHandler
      * @param ServiceValidator $serviceValidator
      * @return JsonResponse
+     * @throws \Exception
      */
     public function postService(
         Request $request,
-        ErrorHandler $errorHandler,
         ServiceValidator $serviceValidator
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
 
         if(!$serviceValidator->validate($data)){
-            return $errorHandler->jsonResponseError("Les données transmises ne sont pas valides");
+            throw new \Exception("Les données transmises ne sont pas valides");
         }
 
         $service = new Service($data['name']);

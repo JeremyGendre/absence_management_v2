@@ -1,14 +1,11 @@
 <?php
 
-
 namespace App\Controller;
-
 
 use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
-use App\Service\ErrorHandler;
 use App\Service\Helper\RoleHelper;
 use App\Service\Validator\UserValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -67,19 +64,18 @@ class UserController extends AbstractController
      * @Route(path="/username/{username}", name="user_one_by_username", methods={"GET"})
      * @param string $username
      * @param UserRepository $userRepository
-     * @param ErrorHandler $errorHandler
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getOneUserByUsername(
         string $username,
-        UserRepository $userRepository,
-        ErrorHandler $errorHandler
+        UserRepository $userRepository
     ):JsonResponse{
         $user = $userRepository->findOneBy([
             "username" => $username
         ]);
         if($user === null){
-            return $errorHandler->jsonResponseError("Aucun utilisateur trouvé avec le nom '".$username."'.");
+            throw new \Exception("Aucun utilisateur trouvé avec le nom '".$username."'.");
         }
         return new JsonResponse($user->serialize());
     }
@@ -88,22 +84,21 @@ class UserController extends AbstractController
      * @Route(path="/new", name="user_new", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
-     * @param ErrorHandler $errorHandler
      * @param UserValidator $userValidator
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param ServiceRepository $serviceRepository
      * @return JsonResponse
+     * @throws \Exception
      */
     public function postUser(
         Request $request,
-        ErrorHandler $errorHandler,
         UserValidator $userValidator,
         UserPasswordEncoderInterface $passwordEncoder,
         ServiceRepository $serviceRepository
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
         if(!$userValidator->validate($data) || empty($data['password']) || !$userValidator->checkPassword($data['password'])){
-            return $errorHandler->jsonResponseError("Les données envoyées ne sont pas valides");
+            throw new \Exception("Les données envoyées ne sont pas valides");
         }
         $user = new User();
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
@@ -125,18 +120,17 @@ class UserController extends AbstractController
      * @Route(path="/delete/{id}", name="user_delete", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      * @param User $user
-     * @param ErrorHandler $errorHandler
      * @return JsonResponse
+     * @throws \Exception
      */
     public function deleteUser(
-        User $user,
-        ErrorHandler $errorHandler
+        User $user
     ):JsonResponse{
         if($this->getUser() === $user){
-            return $errorHandler->jsonResponseError("Vous ne pouvez pas vous supprimer vous-même");
+            throw new \Exception("Vous ne pouvez pas vous supprimer vous-même");
         }
-        if($user->hasRole("ROLE_ADMIN")){
-            return $errorHandler->jsonResponseError("Vous ne pouvez pas supprimer un administrateur");
+        if($user->isAdmin()){
+            throw new \Exception("Vous ne pouvez pas supprimer un administrateur");
         }
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
@@ -151,35 +145,34 @@ class UserController extends AbstractController
      * @Route(path="/edit/{id}", name="user_edit", methods={"PUT"})
      * @param User $user
      * @param Request $request
-     * @param ErrorHandler $errorHandler
      * @param UserValidator $userValidator
      * @param ServiceRepository $serviceRepository
      * @return JsonResponse
+     * @throws \Exception
      */
     public function editUser(
         User $user,
         Request $request,
-        ErrorHandler $errorHandler,
         UserValidator $userValidator,
         ServiceRepository $serviceRepository
     ):JsonResponse{
         /** @var User $authUser */
         $authUser = $this->getUser();
-        if($user->hasRole("ROLE_ADMIN") && $user !== $authUser){
-            return $errorHandler->jsonResponseError("Vous ne pouvez pas modifier un autre administrateur.");
+        if($user->isAdmin() && $user !== $authUser){
+            throw new \Exception("Vous ne pouvez pas modifier un autre administrateur.");
         }
-        if(!$authUser->hasRole("ROLE_ADMIN") && $authUser !== $user){
-            return $errorHandler->jsonResponseError("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
+        if(!$authUser->isAdmin() && $authUser !== $user){
+            throw new \Exception("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
         }
         $data = json_decode($request->getContent(),true);
         if(!$userValidator->validate($data)){
-            return $errorHandler->jsonResponseError("Les données envoyées ne sont pas valides");
+            throw new \Exception("Les données envoyées ne sont pas valides");
         }
 
         if($data['username'] !== $user->getUsername()){
             $usernameUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(["username"=>$data['username']]);
             if($usernameUser !== null){
-                return $errorHandler->jsonResponseError("Le nom d'utilisateur existe déjà.");
+                throw new \Exception("Le nom d'utilisateur existe déjà.");
             }
             $user->setUsername($data['username']);
         }
@@ -227,28 +220,27 @@ class UserController extends AbstractController
      * @Route(path="/edit/password/{id}", name="user_edit_password", methods={"PUT"})
      * @param User $user
      * @param Request $request
-     * @param ErrorHandler $errorHandler
      * @param UserValidator $userValidator
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return JsonResponse
+     * @throws \Exception
      */
     public function editUserPassword(
         User $user,
         Request $request,
-        ErrorHandler $errorHandler,
         UserValidator $userValidator,
         UserPasswordEncoderInterface $passwordEncoder
     ):JsonResponse{
         if($this->getUser() !== $user){
-            return $errorHandler->jsonResponseError("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
+            throw new \Exception("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
         }
         $data = json_decode($request->getContent(),true);
         $formError = $userValidator->changePasswordFormError($data);
         if($formError !== null){
-            return $errorHandler->jsonResponseError($formError);
+            throw new \Exception($formError);
         }
         if(!$passwordEncoder->isPasswordValid($user, $data['oldPassword'])){
-            return $errorHandler->jsonResponseError("L'ancien mot de passe ne correspond pas.");
+            throw new \Exception("L'ancien mot de passe ne correspond pas.");
         }
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
         $em = $this->getDoctrine()->getManager();
