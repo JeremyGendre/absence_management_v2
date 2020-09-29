@@ -9,6 +9,7 @@ import axios from "axios";
 import Profile from "../../Component/User/Profile";
 import {SessionContext} from "../../Component/Context/session";
 import PasswordForm from "../../Component/User/PasswordForm";
+import {servicesToSelectable} from "../../utils/service";
 
 export default function ProfileScreen(props){
     const [loadingData,setLoadingData] = useState(true);
@@ -24,15 +25,7 @@ export default function ProfileScreen(props){
 
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
-            let newServiceList = [];
-            result.data.forEach(service => {
-                newServiceList.push({
-                    key:service.id,
-                    value:service.id,
-                    text:service.name
-                });
-            });
-            setServices(newServiceList);
+            setServices(servicesToSelectable(result.data));
         }).catch((error)=>{
             console.log(error);
         }).finally(()=>{

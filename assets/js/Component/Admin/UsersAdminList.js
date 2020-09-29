@@ -16,6 +16,7 @@ import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import RowUser from "./RowUser";
 import {editUserRoleInList, userIsAdmin} from "../../utils/user";
+import {servicesToSelectable} from "../../utils/service";
 
 const MySwal = withReactContent(Swal);
 
@@ -58,15 +59,8 @@ export default function UsersAdminList(props){
         });
 
         axios.get('/api/service/all').then((result)=>{
-            let newServiceList = [];
-            newServiceList.push(noServiceOption);
-            result.data.forEach(service => {
-                newServiceList.push({
-                    key:service.id,
-                    value:service.id,
-                    text:service.name
-                });
-            });
+            let newServiceList = servicesToSelectable(result.data);
+            newServiceList = [noServiceOption,...newServiceList];
             setServices(newServiceList);
         }).catch((error)=>{
             console.log(error);

@@ -1,15 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Form, Message, Tab} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PropTypes from 'prop-types';
+import {objectToSelectable} from "../../utils/functions";
+import {servicesToSelectable} from "../../utils/service";
 
 const MySwal = withReactContent(Swal);
 
 export default function NewUser(props){
-    const serviceOptions = props.services;
-
     const [newUser,setNewUser] = useState({
         lastName: '',
         firstName: '',
@@ -20,7 +20,19 @@ export default function NewUser(props){
         password: '',
     });
     const [submitting,setSubmitting] = useState(false);
+    const [serviceLoading,setServiceLoading] = useState(true);
+    const [services,setServices] = useState([]);
     const [formErrors,setFormErrors] = useState([]);
+
+    useEffect(()=>{
+        axios.get('/api/service/all').then((result)=>{
+            setServices(servicesToSelectable(result.data));
+        }).catch((error)=>{
+            console.log(error);
+        }).finally(()=>{
+            setServiceLoading(false);
+        });
+    },[]);
 
     function handleFormSubmit(){
         setSubmitting(true);
@@ -82,7 +94,7 @@ export default function NewUser(props){
     }
 
     return (
-        <Tab.Pane attached={false}>
+        <Tab.Pane attached={false} loading={serviceLoading}>
             <Form onSubmit={handleFormSubmit}>
                 {(formErrors.length > 0) ? (
                     <Message negative>
@@ -104,7 +116,7 @@ export default function NewUser(props){
                     <Form.Input fluid icon='at' iconPosition='left' type="email" required label="Email" placeholder='Email' defaultValue={newUser.email} onChange={(e,data) => setNewUser({...newUser,email:data.value})} width={8}/>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Select fluid label="Service" required options={serviceOptions} onChange={(e,data) =>setNewUser({...newUser,service:data.value})} value={newUser.service} width={8}/>
+                    <Form.Select fluid label="Service" required options={services} onChange={(e,data) =>setNewUser({...newUser,service:data.value})} value={newUser.service} width={8}/>
                     <Form.Input fluid icon="id badge" iconPosition='left' label="Intitulé de poste" required
                                 placeholder='Intitulé de poste' defaultValue={newUser.title} onChange={(e,data) => setNewUser({...newUser,title:data.value})} width={8}/>
                 </Form.Group>
@@ -115,7 +127,3 @@ export default function NewUser(props){
         </Tab.Pane>
     );
 }
-
-NewUser.propTypes = {
-    services:PropTypes.array
-};
