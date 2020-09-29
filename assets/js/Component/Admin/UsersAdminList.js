@@ -16,7 +16,7 @@ import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import {isBadResult} from "../../utils/server";
 import RowUser from "./RowUser";
-import {editUserRoleInList, userHasRole} from "../../utils/user";
+import {editUserRoleInList, userHasRole, userIsAdmin} from "../../utils/user";
 
 const MySwal = withReactContent(Swal);
 
@@ -224,7 +224,7 @@ export default function UsersAdminList(props){
     function adminUsers(users){
         let usersList = [];
         users.map(oneUser => {
-            if(userHasRole(oneUser,"ROLE_ADMIN")){
+            if(userIsAdmin(oneUser)){
                 usersList.push(oneUser);
             }
         });
