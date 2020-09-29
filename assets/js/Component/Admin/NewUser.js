@@ -3,8 +3,6 @@ import axios from "axios";
 import {Form, Message, Tab} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import PropTypes from 'prop-types';
-import {objectToSelectable} from "../../utils/functions";
 import {servicesToSelectable} from "../../utils/service";
 
 const MySwal = withReactContent(Swal);
