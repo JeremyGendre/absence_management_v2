@@ -146,7 +146,7 @@ export default function UsersAdminList(props){
     function handleEditRoleUser(user){
         let selectedRoles = [];
         MySwal.fire({
-            title: 'Modification des rôles',
+            title: 'Modification des rôles pour '+user.last_name + ' ' + user.first_name,
             html:<Select id="roles-select"
                          options={collectionOfSelectableObjects(roles)}
                          defaultValue={user.roles}
