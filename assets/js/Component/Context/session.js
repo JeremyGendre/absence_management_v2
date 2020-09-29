@@ -5,6 +5,7 @@ import {Redirect} from "react-router-dom";
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import {userHasRole, userIsAdmin} from "../../utils/user";
 
 const MySwal = withReactContent(Swal);
 
@@ -15,13 +16,6 @@ const sessionDefaultValues = {
 
 export const SessionContext = React.createContext(sessionDefaultValues);
 
-export function userHasRole(user,role){
-    if(user === null || user.roles === undefined || Array.isArray(user.roles) === false){
-        return false;
-    }
-    return user.roles.includes(role);
-}
-
 export function redirectToLogout(){
     window.location.href = document.getElementById('logout-url').getAttribute('data-href');
 }
@@ -31,7 +25,7 @@ export default function ApplicationSession(props){
 
     const [user, setUser] = useState({
         user: userInfos,
-        isAdmin: userHasRole(userInfos,'ROLE_ADMIN'),
+        isAdmin: userIsAdmin(userInfos),
         updateUser: updateUserState
     });
 
@@ -62,7 +56,7 @@ export default function ApplicationSession(props){
     function updateUserState(userData) {
         setUser({
             user: userData,
-            isAdmin: userHasRole(userData,"ROLE_ADMIN"),
+            isAdmin: userIsAdmin(userData),
             updateUser: updateUserState
         });
     }

@@ -6,7 +6,8 @@ import {
 } from "semantic-ui-react";
 import PropTypes from 'prop-types';
 import './UsersAdminList.css';
-import {SessionContext, userHasRole} from "../Context/session";
+import {SessionContext} from "../Context/session";
+import {userIsAdmin} from "../../utils/user";
 
 export default function RowUser(props){
     const [user,setUser] = useState({});
@@ -35,7 +36,7 @@ export default function RowUser(props){
             <TableCell>{user.created_at ?? ''}</TableCell>
             <TableCell>
                 {
-                    (userHasRole(user,"ROLE_ADMIN") || authUser.user.id === user.id) ? (
+                    (userIsAdmin(user) || authUser.user.id === user.id) ? (
                         <Icon title="Administrateur" name="user secret"/>
                     ) : (
                         <>

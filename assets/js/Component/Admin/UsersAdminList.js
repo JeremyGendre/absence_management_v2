@@ -16,7 +16,7 @@ import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import {isBadResult} from "../../utils/server";
 import RowUser from "./RowUser";
-import {userHasRole} from "../Context/session";
+import {editUserRoleInList, userHasRole} from "../../utils/user";
 
 const MySwal = withReactContent(Swal);
 
@@ -45,7 +45,6 @@ export default function UsersAdminList(props){
     const [usersListFull,setUsersListFull] = useState(initialState.usersListFull);
     const [services,setServices] = useState(initialState.services);
     const [roles,setRoles] = useState(initialState.roles);
-    const [selectedRoles,setSelectedRoles] = useState(initialState.selectedRoles);
 
     let searching = setTimeout(() => {},100);
 
@@ -152,18 +151,14 @@ export default function UsersAdminList(props){
         });
     }
 
-    /**
-     * TODO : mettre dans Row user et passer les roles + la function usersbeingprocessed en props et faire une fonction là qui set le state du user being processed
-     * @param user
-     */
     function handleEditRoleUser(user){
-        setSelectedRoles(user.roles);
+        let selectedRoles = [];
         MySwal.fire({
             title: 'Modification des rôles',
             html:<Select id="roles-select"
                          options={collectionOfSelectableObjects(roles)}
-                         defaultValue={selectedRoles}
-                         onChange={(e,data) => {console.log(data.value);setSelectedRoles(data.value)}}
+                         defaultValue={user.roles}
+                         onChange={(e,data) => {selectedRoles = data.value;}}
                          multiple/>,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -173,17 +168,14 @@ export default function UsersAdminList(props){
             showLoaderOnConfirm: true,
             allowOutsideClick: () => !Swal.isLoading(),
             preConfirm: () => {
-                console.log(selectedRoles);
                 setUsersBeingProcessed([...usersBeingProcessed,user.id]);
                 return axios.put(
-                    '/api/user/edit/roles/' + user.id
+                    '/api/user/edit/roles/' + user.id,{roles: selectedRoles}
                 ).then(data => {
-                    let messageResult = isBadResult(data);
-                    if(messageResult !== '') {
-                        Swal.showValidationMessage(`Request failed: ${messageResult}`);
-                    }else{
-                        return data.data;
-                    }
+                    user.roles = data.data.roles;
+                    setUsersListFull(editUserRoleInList(usersListFull,user.id,data.data.roles));
+                    setUsersListDisplayed(editUserRoleInList(usersListDisplayed,user.id,data.data.roles));
+                    return data.data;
                 }).catch(error => {
                     console.error(error);
                     Swal.showValidationMessage(`Request failed: ${error}`);

@@ -37,4 +37,40 @@ class RoleHelper
     {
         return $user->isAdmin();
     }
+
+    /**
+     * @param string $role
+     * @return bool
+     */
+    public static function roleExists(string $role): bool
+    {
+        return in_array($role,self::ROLES);
+    }
+
+    /**
+     * @param array $roles
+     * @return bool
+     */
+    public static function rolesExists(array $roles): bool
+    {
+        foreach ($roles as $role){
+            if(self::roleExists($role) === false){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param $roles
+     * @throws \Exception
+     */
+    public static function validateRoles($roles){
+        if(is_array($roles) === false){
+            throw new \Exception("Le format des rôles n'est pas le bon (un tableau de valeurs es requis)");
+        }
+        if(RoleHelper::rolesExists($roles) === false){
+            throw new \Exception("Un ou plusieurs rôle(s) soumis n'existe(nt) pas");
+        }
+    }
 }

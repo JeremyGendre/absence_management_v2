@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
 use App\Service\ErrorHandler;
+use App\Service\Helper\RoleHelper;
 use App\Service\Validator\UserValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -204,10 +205,21 @@ class UserController extends AbstractController
      * @param User $user
      * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function editUserRoles(User $user, Request $request):JsonResponse{
         $data = json_decode($request->getContent(),true);
-        dd($data);
+        if(array_key_exists('roles',$data) === false){
+            throw new \Exception("Le format de données n'est pas correct");
+        }
+
+        $roles = $data['roles'];
+        RoleHelper::validateRoles($roles);
+        $user->setRoles($roles);
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($user);
+        $manager->flush();
         return new JsonResponse($user->serialize());
     }
 

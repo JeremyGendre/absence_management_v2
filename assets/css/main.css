@@ -27,3 +27,7 @@
 .hr-custom{
     opacity:0.4;
 }
+
+.swal2-actions{
+    z-index:unset !important;
+}
