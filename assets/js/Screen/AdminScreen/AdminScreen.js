@@ -8,6 +8,7 @@ import {Redirect} from "react-router-dom";
 import {SessionContext} from "../../Component/Context/session";
 import HolidaysAdminList from "../../Component/Admin/HolidaysAdminList";
 import UsersAdminList from "../../Component/Admin/UsersAdminList";
+import NewUser from "../../Component/Admin/NewUser";
 
 export default function AdminScreen(props){
     const user = useContext(SessionContext);
@@ -22,6 +23,11 @@ export default function AdminScreen(props){
             menuItem: { key: 'users', icon: 'users', content: 'Utilisateurs' },
             render: () =>
                 <UsersAdminList/>
+        },
+        {
+            menuItem: { key: 'newUser', icon: 'user plus', content: 'Nouvel Utilisateur' },
+            render: () =>
+                <NewUser services={[]}/>
         },
     ];
 
