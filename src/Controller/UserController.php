@@ -101,8 +101,11 @@ class UserController extends AbstractController
             throw new \Exception("Les données envoyées ne sont pas valides");
         }
         $user = new User();
-        $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
+        if(!$userValidator->checkUsername($data['username'])){
+            throw new \Exception("Le nom d'utilisateur existe déjà");
+        }
         $user->setUsername($data['username']);
+        $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
         $user->setFirstName($data['first_name']);
         $user->setLastName($data['last_name']);
         $user->setEmail($data['email']);

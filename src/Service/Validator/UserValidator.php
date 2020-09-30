@@ -4,7 +4,9 @@
 namespace App\Service\Validator;
 
 
+use App\Entity\User;
 use App\Repository\ServiceRepository;
+use App\Repository\UserRepository;
 
 class UserValidator implements MyValidatorInterface
 {
@@ -12,14 +14,20 @@ class UserValidator implements MyValidatorInterface
      * @var ServiceRepository
      */
     private $serviceRepository;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * UserValidator constructor.
      * @param ServiceRepository $serviceRepository
+     * @param UserRepository $userRepository
      */
-    public function __construct(ServiceRepository $serviceRepository)
+    public function __construct(ServiceRepository $serviceRepository, UserRepository $userRepository)
     {
         $this->serviceRepository = $serviceRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -88,7 +96,7 @@ class UserValidator implements MyValidatorInterface
      * @param $password
      * @return bool
      */
-    function checkPassword($password)
+    function checkPassword($password): bool
     {
         return (
             !empty($password) &&
@@ -113,5 +121,35 @@ class UserValidator implements MyValidatorInterface
             return "Le nouveau mot de passe n'est pas valide (au moins 6 charactères)";
         }
         return null;
+    }
+
+    /**
+     * @param string $username
+     * @return bool
+     */
+    public function checkUsername(string $username): bool
+    {
+        $usersByUsername = $this->userRepository->findBy(['username' => $username]);
+        return count($usersByUsername) === 0;
+    }
+
+    /**
+     * @param string $username
+     * @param User $user
+     * @return bool
+     */
+    public function checkUsernameWithExistingUser(string $username, User $user): bool
+    {
+        $usersByUsername = $this->userRepository->findBy(['username' => $username]);
+        $numberResults = count($usersByUsername);
+        if($numberResults > 0){
+            if($numberResults === 1){
+                if($usersByUsername[0] === $user){
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 }
