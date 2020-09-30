@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Form, Message, Tab} from "semantic-ui-react";
+import {Form, Input, Message, Tab} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {servicesToSelectable} from "../../utils/service";
@@ -40,7 +40,7 @@ export default function NewUser(props){
             setSubmitting(false);
             return false;
         } else { // formulaire ok
-            axios.put('/api/user/new',
+            axios.post('/api/user/new',
                 {
                     first_name: newUser.firstName,
                     last_name: newUser.lastName,
@@ -66,7 +66,7 @@ export default function NewUser(props){
 
     function validateForm() {
         let allowServiceValues = [];
-        serviceOptions.forEach((one_service) => {
+        services.forEach((one_service) => {
             allowServiceValues.push(one_service.value);
         });
         let errors = [];
@@ -80,7 +80,7 @@ export default function NewUser(props){
             errors.push("Le nom d'utilisateur est obligatoire");
         }
         if(!newUser.password || newUser.password.length < 6){
-            errors.push("Le mot de passe doit faire plus de 6 charactères");
+            errors.push("Le mot de passe doit faire au moins 6 charactères");
         }
         if(!newUser.email || newUser.email.length < 3 || newUser.email.includes('@') === false){
             errors.push("L'adresse email n'est pas valide");
@@ -112,6 +112,14 @@ export default function NewUser(props){
                     <Form.Input fluid icon='user outline' iconPosition='left' label="Nom" required placeholder='Nom de famille' defaultValue={newUser.lastName} onChange={(e,data) => setNewUser({...newUser,lastName:data.value})} width={8}/>
                     <Form.Input fluid icon='user outline' iconPosition='left' label="Prénom" required placeholder='Prénom' defaultValue={newUser.firstName} onChange={(e,data) => setNewUser({...newUser,firstName:data.value})} width={8}/>
                     <Form.Input fluid icon='at' iconPosition='left' type="email" required label="Email" placeholder='Email' defaultValue={newUser.email} onChange={(e,data) => setNewUser({...newUser,email:data.value})} width={8}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Input fluid icon='user' iconPosition='left' label="Nom d'utilisateur" required
+                                placeholder="Nom d'utilisateur" defaultValue={newUser.username}
+                                onChange={(e,data) => setNewUser({...newUser,username:data.value})} width={6}/>
+                    <Form.Input fluid icon='user secret' iconPosition='left' label="Mot de passe (provisoire)" required
+                                placeholder='Mot de passe' type="password" minLength={6} maxLength={100}
+                                defaultValue={newUser.password} onChange={(e,data) => setNewUser({...newUser,password:data.value})} width={6}/>
                 </Form.Group>
                 <Form.Group>
                     <Form.Select fluid label="Service" required options={services} onChange={(e,data) =>setNewUser({...newUser,service:data.value})} value={newUser.service} width={8}/>

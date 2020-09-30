@@ -107,6 +107,7 @@ class UserController extends AbstractController
         $user->setLastName($data['last_name']);
         $user->setEmail($data['email']);
         $user->setTitle($data['title']);
+        $user->setRoles([RoleHelper::ROLE_USER]);
         /** @var Service $service */
         $service = $serviceRepository->findOneBy(['id' => $data['service']]);
         $user->setService($service);
