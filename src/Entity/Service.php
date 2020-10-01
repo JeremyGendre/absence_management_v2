@@ -35,7 +35,7 @@ class Service implements MySerializerInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDeletable;
+    private $isDeletable = true;
 
     public function __construct(?string $name = null)
     {

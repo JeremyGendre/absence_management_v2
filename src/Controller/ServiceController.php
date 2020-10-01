@@ -67,6 +67,7 @@ class ServiceController extends AbstractController
         }
 
         $service = new Service($data['name']);
+        $service->setIsDeletable(true);
         $em = $this->getDoctrine()->getManager();
         $em->persist($service);
         $em->flush();
