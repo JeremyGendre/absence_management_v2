@@ -13,3 +13,20 @@ export function servicesToSelectable(services)
     });
     return newServiceList;
 }
+
+/**
+ * Allow to replace an old service value with the new
+ * @param services
+ * @param service
+ * @returns {*}
+ */
+export function editServiceInList(services,service)
+{
+    for(let i = 0; i < services.length; i++){
+        if(services[i].id === service.id){
+            services[i] = service;
+            break;
+        }
+    }
+    return services;
+}

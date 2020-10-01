@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Grid, Icon, Tab, Table} from "semantic-ui-react";
+import {Grid, Icon, Input, Select, Tab, Table} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './ServiceAdminList.css';
+import {collectionOfSelectableObjects, removeFromArray} from "../../utils/functions";
+import {editUserRoleInList} from "../../utils/user";
+import {editServiceInList} from "../../utils/service";
 
 const MySwal = withReactContent(Swal);
 
 export default function ServiceAdminList(props){
     const [services, setServices] = useState([]);
     const [loadingServices, setLoadingServices] = useState(true);
+    const [servicesBeingProcessed, setServicesBeingProcessed] = useState([]);
 
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
@@ -23,7 +27,45 @@ export default function ServiceAdminList(props){
     },[]);
 
     function handleEditService(oneService){
-        console.log('edit ',oneService);
+        let newName = oneService.name;
+        MySwal.fire({
+            title: 'Modification du service ' + oneService.id,
+            html:<Input label="Nom du service" minLength="1" maxLength="100" defaultValue={oneService.name} onChange={(e,data) => newName = data.value} />,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Modifier',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
+                if(checkServiceName(newName) === false){
+                    Swal.showValidationMessage('Le nom doit être compris entre 1 et 100 charactères');
+                }else{
+                    setServicesBeingProcessed([...servicesBeingProcessed,oneService.id]);
+                    return axios.put(
+                        '/api/service/'+ oneService.id +'/edit',{name: newName}
+                    ).then(data => {
+                        setServices(editServiceInList(services,data.data));
+                        return data.data;
+                    }).catch(error => {
+                        console.error(error);
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }).finally(()=>{
+                        setServicesBeingProcessed(removeFromArray(oneService.id,servicesBeingProcessed));
+                    });
+                }
+            }
+        }).then((result) => {
+            if(result.isConfirmed){
+                MySwal.fire({icon:'success',title:"Service modifié"});
+            }
+        });
+    }
+
+    function checkServiceName(serviceName)
+    {
+        return serviceName.length > 0 && serviceName.length < 100;
     }
 
     function handleDeleteService(oneService){
@@ -46,7 +88,7 @@ export default function ServiceAdminList(props){
                             <Table.Body>
                                 {services.map(oneService => {
                                     return (
-                                        <Table.Row key={oneService.id}>
+                                        <Table.Row key={oneService.id} disabled={servicesBeingProcessed.includes(oneService.id)}>
                                             <Table.Cell>{oneService.id}</Table.Cell>
                                             <Table.Cell>{oneService.name}</Table.Cell>
                                             <Table.Cell>
