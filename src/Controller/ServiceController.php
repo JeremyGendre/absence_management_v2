@@ -97,12 +97,21 @@ class ServiceController extends AbstractController
      * @Route(path="/delete/{id}", name="services_delete", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      * @param Service $service
+     * @param ServiceRepository $serviceRepository
      * @return JsonResponse
      */
     public function deleteService(
-        Service $service
+        Service $service,
+        ServiceRepository $serviceRepository
     ):JsonResponse{
         $em = $this->getDoctrine()->getManager();
+        $defaultService = $serviceRepository->findOneBy([]);
+        if($defaultService !== null){
+            foreach ($service->getUsers() as $user) {
+                $user->setService($defaultService);
+                $em->persist($user);
+            }
+        }
         $em->remove($service);
         $em->flush();
         return new JsonResponse([

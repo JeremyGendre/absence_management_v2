@@ -69,7 +69,34 @@ export default function ServiceAdminList(props){
     }
 
     function handleDeleteService(oneService){
-        console.log('delete ',oneService);
+        MySwal.fire({
+            title: 'Supprimer ce service ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
+                setServicesBeingProcessed([...servicesBeingProcessed,oneService.id]);
+                return axios.delete(
+                    '/api/service/delete/' + oneService.id
+                ).then(data => {
+                    setServices(removeFromArray(oneService,services));
+                    return data.data;
+                }).catch(error => {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                });
+            }
+        }).then((result) => {
+            if(result.isConfirmed){
+                MySwal.fire({icon:'success',title:'Service supprimé'});
+            }
+        }).finally(()=>{
+            setServicesBeingProcessed(removeFromArray(oneService.id,servicesBeingProcessed));
+        });
     }
 
     return (
