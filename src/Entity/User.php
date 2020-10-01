@@ -80,15 +80,24 @@ class User implements UserInterface, MySerializerInterface
         $this->createdAt = new \DateTimeImmutable();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getName();
     }
 
+    /**
+     * @return string
+     */
     public function getName(){
         return $this->firstName . ' ' . $this->lastName;
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +113,10 @@ class User implements UserInterface, MySerializerInterface
         return (string) $this->username;
     }
 
+    /**
+     * @param string $username
+     * @return User
+     */
     public function setUsername(string $username): self
     {
         $this->username = $username;
@@ -121,6 +134,10 @@ class User implements UserInterface, MySerializerInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param string $role
+     * @return $this
+     */
     public function addRole(string $role){
         if(in_array($role,RoleHelper::ROLES) && array_search($role,$this->roles) === false){
             $this->roles[] = $role;
@@ -128,6 +145,9 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @param string $role
+     */
     public function removeRole(string $role){
         $newRoles = [];
         foreach ($this->roles as $key => $value) {
@@ -138,6 +158,10 @@ class User implements UserInterface, MySerializerInterface
         $this->roles = $newRoles;
     }
 
+    /**
+     * @param string $role
+     * @return bool
+     */
     public function hasRole(string $role){
         if(in_array($role,$this->roles)){
             return true;
@@ -145,6 +169,10 @@ class User implements UserInterface, MySerializerInterface
         return false;
     }
 
+    /**
+     * @param array $roles
+     * @return User
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -168,6 +196,10 @@ class User implements UserInterface, MySerializerInterface
         return (string) $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return User
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -192,11 +224,18 @@ class User implements UserInterface, MySerializerInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
+    /**
+     * @param string $firstName
+     * @return User
+     */
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
@@ -204,11 +243,18 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
+    /**
+     * @param string $lastName
+     * @return User
+     */
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
@@ -216,11 +262,18 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
+    /**
+     * @param \DateTimeInterface $createdAt
+     * @return User
+     */
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
@@ -228,11 +281,18 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return User
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -240,11 +300,18 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /**
+     * @param string $title
+     * @return User
+     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -252,11 +319,18 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return Service|null
+     */
     public function getService(): ?Service
     {
         return $this->service;
     }
 
+    /**
+     * @param Service|null $service
+     * @return User
+     */
     public function setService(?Service $service): self
     {
         $this->service = $service;
@@ -272,6 +346,10 @@ class User implements UserInterface, MySerializerInterface
         return $this->holidays;
     }
 
+    /**
+     * @param Holiday $holiday
+     * @return User
+     */
     public function addHoliday(Holiday $holiday): self
     {
         if (!$this->holidays->contains($holiday)) {
@@ -282,6 +360,10 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @param Holiday $holiday
+     * @return User
+     */
     public function removeHoliday(Holiday $holiday): self
     {
         if ($this->holidays->contains($holiday)) {
@@ -295,6 +377,9 @@ class User implements UserInterface, MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function serialize(): array
     {
         return [
@@ -310,6 +395,9 @@ class User implements UserInterface, MySerializerInterface
         ];
     }
 
+    /**
+     * @return array
+     */
     public function serializeForHoliday():array{
         return [
             "id" => $this->id,

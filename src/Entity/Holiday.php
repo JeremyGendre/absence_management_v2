@@ -119,16 +119,26 @@ class Holiday implements MySerializerInterface
         $this->status = self::STATUS_PENDING;
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
     }
 
+    /**
+     * @param \DateTimeInterface $startDate
+     * @return Holiday
+     */
     public function setStartDate(\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
@@ -136,11 +146,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
     }
 
+    /**
+     * @param \DateTimeInterface $endDate
+     * @return Holiday
+     */
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
@@ -148,11 +165,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
+    /**
+     * @param \DateTimeInterface $createdAt
+     * @return Holiday
+     */
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
@@ -160,11 +184,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getType(): ?int
     {
         return $this->type;
     }
 
+    /**
+     * @param int $type
+     * @return Holiday
+     */
     public function setType(int $type): self
     {
         $this->type = $type;
@@ -172,11 +203,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getPeriodType(): ?int
     {
         return $this->periodType;
     }
 
+    /**
+     * @param int|null $periodType
+     * @return Holiday
+     */
     public function setPeriodType(?int $periodType): self
     {
         $this->periodType = $periodType;
@@ -184,11 +222,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getCause(): ?string
     {
         return $this->cause;
     }
 
+    /**
+     * @param string|null $cause
+     * @return Holiday
+     */
     public function setCause(?string $cause): self
     {
         $this->cause = $cause;
@@ -196,11 +241,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getStatus(): ?int
     {
         return $this->status;
     }
 
+    /**
+     * @param int $status
+     * @return Holiday
+     */
     public function setStatus(int $status): self
     {
         $this->status = $status;
@@ -208,11 +260,18 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
+    /**
+     * @param User|null $user
+     * @return Holiday
+     */
     public function setUser(?User $user): self
     {
         $this->user = $user;
@@ -220,6 +279,9 @@ class Holiday implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function serialize(): array
     {
         return [
@@ -235,6 +297,10 @@ class Holiday implements MySerializerInterface
         ];
     }
 
+    /**
+     * @param bool $isPersonalEvent
+     * @return array
+     */
     public function serializeAsEvent(bool $isPersonalEvent = false){
         $color = self::STATUS_EVENTS_COLORS[$this->status];
         return [

@@ -32,6 +32,11 @@ class Service implements MySerializerInterface
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeletable;
+
     public function __construct(?string $name = null)
     {
         $this->users = new ArrayCollection();
@@ -40,21 +45,34 @@ class Service implements MySerializerInterface
         }
     }
 
+    /**
+     * @return string|null
+     */
     public function __toString()
     {
         return $this->name;
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return Service
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -70,6 +88,10 @@ class Service implements MySerializerInterface
         return $this->users;
     }
 
+    /**
+     * @param User $user
+     * @return Service
+     */
     public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
@@ -80,6 +102,10 @@ class Service implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @param User $user
+     * @return Service
+     */
     public function removeUser(User $user): self
     {
         if ($this->users->contains($user)) {
@@ -93,11 +119,34 @@ class Service implements MySerializerInterface
         return $this;
     }
 
+    /**
+     * @return bool|null
+     */
+    public function getIsDeletable(): ?bool
+    {
+        return $this->isDeletable;
+    }
+
+    /**
+     * @param bool $isDeletable
+     * @return Service
+     */
+    public function setIsDeletable(bool $isDeletable): self
+    {
+        $this->isDeletable = $isDeletable;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
     public function serialize(): array
     {
         return [
             "id" => $this->id,
-            "name" => $this->name
+            "name" => $this->name,
+            "isDeletable" => $this->isDeletable
         ];
     }
 }

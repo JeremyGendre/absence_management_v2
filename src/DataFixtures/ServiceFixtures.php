@@ -10,17 +10,20 @@ use Doctrine\Persistence\ObjectManager;
 class ServiceFixtures extends BaseFixture
 {
     /**
-     * @var string[]
+     * @var array
      */
     private $services = [
-        Service::DEFAULT_SERVICE_NAME,
-        "Informatique",
-        "Commercial",
-        "Comptabilité",
-        "CFML RA",
-        "CFML RT",
-        "CR",
-        "Direction",
+        [
+            "name" => Service::DEFAULT_SERVICE_NAME,
+            "deletable" => false
+        ],
+        ["name" => "Informatique", "deletable" => true],
+        ["name" => "Commercial", "deletable" => true],
+        ["name" => "Comptabilité", "deletable" => true],
+        ["name" => "CFML RA", "deletable" => true],
+        ["name" => "CFML RT", "deletable" => true],
+        ["name" => "CR", "deletable" => true],
+        ["name" => "Direction", "deletable" => true]
     ];
 
     /**
@@ -29,8 +32,9 @@ class ServiceFixtures extends BaseFixture
      */
     protected function loadData(ObjectManager $manager)
     {
-        foreach ($this->services as $serviceName) {
-            $service = new Service($serviceName);
+        foreach ($this->services as $serviceOptions) {
+            $service = new Service($serviceOptions['name']);
+            $service->setIsDeletable($serviceOptions['deletable']);
             $manager->persist($service);
         }
         $manager->flush();
