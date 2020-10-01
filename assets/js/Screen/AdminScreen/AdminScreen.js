@@ -9,6 +9,7 @@ import {SessionContext} from "../../Component/Context/session";
 import HolidaysAdminList from "../../Component/Admin/HolidaysAdminList";
 import UsersAdminList from "../../Component/Admin/UsersAdminList";
 import NewUser from "../../Component/Admin/NewUser";
+import ServiceAdminList from "../../Component/Admin/ServiceAdminList";
 
 export default function AdminScreen(props){
     const user = useContext(SessionContext);
@@ -28,6 +29,11 @@ export default function AdminScreen(props){
             menuItem: { key: 'newUser', icon: 'user plus', content: 'Nouvel Utilisateur' },
             render: () =>
                 <NewUser services={[]}/>
+        },
+        {
+            menuItem: { key: 'services', icon: 'sitemap', content: 'Services' },
+            render: () =>
+                <ServiceAdminList/>
         },
     ];
 
