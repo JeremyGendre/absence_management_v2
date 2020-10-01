@@ -13,6 +13,7 @@ class ServiceFixtures extends BaseFixture
      * @var string[]
      */
     private $services = [
+        Service::DEFAULT_SERVICE_NAME,
         "Informatique",
         "Commercial",
         "Comptabilité",

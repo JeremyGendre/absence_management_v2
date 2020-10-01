@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {
-    Icon,
+    Icon, Label,
     TableCell,
     TableRow
 } from "semantic-ui-react";
@@ -28,7 +28,12 @@ export default function RowUser(props){
 
     return (
         <TableRow disabled={props.processed}>
-            <TableCell>{user.last_name ?? ''}</TableCell>
+            <TableCell>
+                {userIsAdmin(user) ? <Label color="orange" ribbon>Administrateur</Label> : <Label ribbon>Utilisateur</Label>}
+            </TableCell>
+            <TableCell>
+                {user.last_name ?? ''}
+            </TableCell>
             <TableCell>{user.first_name ?? ''}</TableCell>
             <TableCell>{user.service ? user.service.name : ''}</TableCell>
             <TableCell>{user.email ?? ''}</TableCell>

@@ -236,6 +236,7 @@ export default function UsersAdminList(props){
             <Table selectable>
                 <TableHeader>
                     <TableRow>
+                        <TableHeaderCell>Status</TableHeaderCell>
                         <TableHeaderCell>Nom</TableHeaderCell>
                         <TableHeaderCell>Prénom</TableHeaderCell>
                         <TableHeaderCell>Service</TableHeaderCell>
@@ -252,6 +253,7 @@ export default function UsersAdminList(props){
                             <TableCell/>
                             <TableCell/>
                             <TableCell>Aucunes données</TableCell>
+                            <TableCell/>
                             <TableCell/>
                             <TableCell/>
                             <TableCell/>

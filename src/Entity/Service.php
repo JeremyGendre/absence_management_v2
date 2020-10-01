@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Service implements MySerializerInterface
 {
+    public const DEFAULT_SERVICE_NAME = "Service par défaut";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
