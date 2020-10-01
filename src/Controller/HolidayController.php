@@ -207,14 +207,12 @@ class HolidayController extends AbstractController
      * @Route(path="/new/user/{id}", name="holiday_new_by_user", methods={"POST"})
      * @param User $user
      * @param Request $request
-     * @param HolidayValidator $holidayValidator
      * @return JsonResponse
      * @throws \Exception
      */
     public function postByUser(
         User $user,
-        Request $request,
-        HolidayValidator $holidayValidator
+        Request $request
     ):JsonResponse{
         /** @var User $authUser */
         $authUser = $this->getUser();
@@ -222,7 +220,7 @@ class HolidayController extends AbstractController
             throw new \Exception("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
         }
         $data = json_decode($request->getContent(),true);
-        if(!$holidayValidator->validate($data)){
+        if(!HolidayValidator::validate($data)){
             throw new \Exception("Les données transmises ne sont pas valides");
         }
 

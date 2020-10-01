@@ -6,32 +6,47 @@ namespace App\Service\Validator;
 
 class ServiceValidator implements MyValidatorInterface
 {
-
-    function validate(?array $data): bool
+    /**
+     * @param array|null $data
+     * @return bool
+     */
+    public static function validate(?array $data): bool
     {
         return (
             !empty($data) &&
-            $this->checkFieldsPresence($data) &&
-            $this->checkFieldTypes($data) &&
-            $this->checkFieldValues($data)
+            self::checkFieldsPresence($data) &&
+            self::checkFieldTypes($data) &&
+            self::checkFieldValues($data)
         );
     }
 
-    function checkFieldsPresence(array $data): bool
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldsPresence(array $data): bool
     {
         return (
             !empty($data['name'])
         );
     }
 
-    function checkFieldTypes(array $data): bool
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldTypes(array $data): bool
     {
         return (
             is_string($data['name'])
         );
     }
 
-    function checkFieldValues(array $data): bool
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldValues(array $data): bool
     {
         return (
             strlen($data['name']) < 100

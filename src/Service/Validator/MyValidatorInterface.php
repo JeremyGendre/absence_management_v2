@@ -3,14 +3,33 @@
 
 namespace App\Service\Validator;
 
-
+/**
+ * Interface MyValidatorInterface
+ * @package App\Service\Validator
+ */
 interface MyValidatorInterface
 {
-    function validate(?array $data):bool;
+    /**
+     * @param array|null $data
+     * @return bool
+     */
+    public static function validate(?array $data):bool;
 
-    function checkFieldsPresence(array $data):bool;
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldsPresence(array $data):bool;
 
-    function checkFieldTypes(array $data):bool;
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldTypes(array $data):bool;
 
-    function checkFieldValues(array $data):bool;
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldValues(array $data):bool;
 }

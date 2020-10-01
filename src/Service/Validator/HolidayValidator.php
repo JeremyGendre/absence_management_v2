@@ -9,18 +9,26 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class HolidayValidator implements MyValidatorInterface
 {
-    public function validate(?array $data):bool {
+    /**
+     * @param array|null $data
+     * @return bool
+     */
+    public static function validate(?array $data):bool {
         return (
             !empty($data) &&
-            $this->checkFieldsPresence($data) &&
-            $this->checkFieldTypes($data) &&
-            $this->checkFieldValues($data) &&
-            $this->checkDate($data['start_date']) &&
-            $this->checkDate($data['end_date'])
+            self::checkFieldsPresence($data) &&
+            self::checkFieldTypes($data) &&
+            self::checkFieldValues($data) &&
+            self::checkDate($data['start_date']) &&
+            self::checkDate($data['end_date'])
         );
     }
 
-    public function checkFieldsPresence(array $data):bool {
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldsPresence(array $data):bool {
         return (
             !empty($data['start_date']) &&
             !empty($data['end_date']) &&
@@ -31,7 +39,11 @@ class HolidayValidator implements MyValidatorInterface
         );
     }
 
-    public function checkFieldTypes(array $data):bool {
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldTypes(array $data):bool {
         return (
             is_string($data['start_date']) &&
             is_string($data['end_date']) &&
@@ -40,7 +52,11 @@ class HolidayValidator implements MyValidatorInterface
         );
     }
 
-    function checkFieldValues(array $data): bool
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public static function checkFieldValues(array $data): bool
     {
         return (
             $data['start_date'] !== '' &&
@@ -49,7 +65,11 @@ class HolidayValidator implements MyValidatorInterface
         );
     }
 
-    private function checkDate(string $stringDate):bool {
+    /**
+     * @param string $stringDate
+     * @return bool
+     */
+    public static function checkDate(string $stringDate):bool {
         try {
             $date = new \DateTime($stringDate);
             return true;

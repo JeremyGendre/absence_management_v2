@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\Service;
 use App\Repository\ServiceRepository;
-use App\Service\ErrorHandler;
 use App\Service\Validator\ServiceValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,22 +51,42 @@ class ServiceController extends AbstractController
      * @Route(path="/new", name="services_new", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
-     * @param ServiceValidator $serviceValidator
      * @return JsonResponse
      * @throws \Exception
      */
     public function postService(
-        Request $request,
-        ServiceValidator $serviceValidator
+        Request $request
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
 
-        if(!$serviceValidator->validate($data)){
+        if(!ServiceValidator::validate($data)){
             throw new \Exception("Les données transmises ne sont pas valides");
         }
 
         $service = new Service($data['name']);
         $service->setIsDeletable(true);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($service);
+        $em->flush();
+        return new JsonResponse($service->serialize());
+    }
+
+    /**
+     * @Route(path="/{id}/edit", name="services_edit", methods={"PUT"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Service $service
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function editService(Service $service, Request $request):JsonResponse{
+        $data = json_decode($request->getContent(),true);
+
+        if(!ServiceValidator::validate($data)){
+            throw new \Exception("Les données transmises ne sont pas valides");
+        }
+
+        $service->setName($data['name']);
         $em = $this->getDoctrine()->getManager();
         $em->persist($service);
         $em->flush();

@@ -34,13 +34,13 @@ class UserValidator implements MyValidatorInterface
      * @param array|null $data
      * @return bool
      */
-    function validate(?array $data): bool
+    public static function validate(?array $data): bool
     {
         return (
             !empty($data) &&
-            $this->checkFieldsPresence($data) &&
-            $this->checkFieldTypes($data) &&
-            $this->checkFieldValues($data)
+            self::checkFieldsPresence($data) &&
+            self::checkFieldTypes($data) &&
+            self::checkFieldValues($data)
         );
     }
 
@@ -48,7 +48,7 @@ class UserValidator implements MyValidatorInterface
      * @param array $data
      * @return bool
      */
-    function checkFieldsPresence(array $data): bool
+    public static function checkFieldsPresence(array $data): bool
     {
         return (
             array_key_exists("first_name",$data) && !empty($data['first_name']) &&
@@ -64,7 +64,7 @@ class UserValidator implements MyValidatorInterface
      * @param array $data
      * @return bool
      */
-    function checkFieldTypes(array $data): bool
+    public static function checkFieldTypes(array $data): bool
     {
         return (
             is_string($data['first_name']) &&
@@ -80,24 +80,24 @@ class UserValidator implements MyValidatorInterface
      * @param array $data
      * @return bool
      */
-    function checkFieldValues(array $data): bool
+    public static function checkFieldValues(array $data): bool
     {
         return (
             strlen($data['first_name']) < 100 &&
             strlen($data['last_name']) < 100 &&
             strlen($data['email']) < 100 && filter_var($data['email'],FILTER_VALIDATE_EMAIL) &&
             strlen($data['username']) < 20 &&
-            strlen($data['title']) < 255 &&
-            ($this->serviceRepository->findOneBy(['id' => $data['service']]) !== null)
+            strlen($data['title']) < 255
         );
     }
 
     /**
-     * @param $password
+     * @param array $data
      * @return bool
      */
-    function checkPassword($password): bool
+    public static function checkPassword(array $data): bool
     {
+        $password = $data['password'];
         return (
             !empty($password) &&
             is_string($password) &&
@@ -109,7 +109,7 @@ class UserValidator implements MyValidatorInterface
      * @param array $data
      * @return string|null
      */
-    function changePasswordFormError(array $data)
+    public static function changePasswordFormError(array $data)
     {
         if(empty($data)){
             return 'Les données envoyées sont vides, impossible de modifier le mot de passe';
@@ -117,7 +117,7 @@ class UserValidator implements MyValidatorInterface
         elseif(empty($data['oldPassword'])){
             return "L'ancien mot de passe n'est pas valide.";
         }
-        elseif(empty($data['password']) || !$this->checkPassword($data['password'])){
+        elseif(empty($data['password']) || !self::checkPassword($data['password'])){
             return "Le nouveau mot de passe n'est pas valide (au moins 6 charactères)";
         }
         return null;
@@ -131,6 +131,15 @@ class UserValidator implements MyValidatorInterface
     {
         $usersByUsername = $this->userRepository->findBy(['username' => $username]);
         return count($usersByUsername) === 0;
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function checkServiceExistence(array $data): bool
+    {
+        return $this->serviceRepository->findOneBy(['id' => $data['service']]) !== null;
     }
 
     /**

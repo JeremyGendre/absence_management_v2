@@ -97,7 +97,7 @@ class UserController extends AbstractController
         ServiceRepository $serviceRepository
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
-        if(!$userValidator->validate($data) || empty($data['password']) || !$userValidator->checkPassword($data['password'])){
+        if(!UserValidator::validate($data) || $userValidator->checkServiceExistence($data) || !UserValidator::checkPassword($data)){
             throw new \Exception("Les données envoyées ne sont pas valides");
         }
         $user = new User();
@@ -149,7 +149,6 @@ class UserController extends AbstractController
      * @Route(path="/edit/{id}", name="user_edit", methods={"PUT"})
      * @param User $user
      * @param Request $request
-     * @param UserValidator $userValidator
      * @param ServiceRepository $serviceRepository
      * @return JsonResponse
      * @throws \Exception
@@ -157,7 +156,6 @@ class UserController extends AbstractController
     public function editUser(
         User $user,
         Request $request,
-        UserValidator $userValidator,
         ServiceRepository $serviceRepository
     ):JsonResponse{
         /** @var User $authUser */
@@ -169,7 +167,7 @@ class UserController extends AbstractController
             throw new \Exception("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
         }
         $data = json_decode($request->getContent(),true);
-        if(!$userValidator->validate($data)){
+        if(!UserValidator::validate($data)){
             throw new \Exception("Les données envoyées ne sont pas valides");
         }
 
@@ -224,7 +222,6 @@ class UserController extends AbstractController
      * @Route(path="/edit/password/{id}", name="user_edit_password", methods={"PUT"})
      * @param User $user
      * @param Request $request
-     * @param UserValidator $userValidator
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return JsonResponse
      * @throws \Exception
@@ -232,14 +229,13 @@ class UserController extends AbstractController
     public function editUserPassword(
         User $user,
         Request $request,
-        UserValidator $userValidator,
         UserPasswordEncoderInterface $passwordEncoder
     ):JsonResponse{
         if($this->getUser() !== $user){
             throw new \Exception("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
         }
         $data = json_decode($request->getContent(),true);
-        $formError = $userValidator->changePasswordFormError($data);
+        $formError = UserValidator::changePasswordFormError($data);
         if($formError !== null){
             throw new \Exception($formError);
         }
