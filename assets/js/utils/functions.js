@@ -16,6 +16,25 @@ export function removeFromArray(needle,array)
 }
 
 /**
+ * Check if the given variable is dividable by the given divider
+ * @param variable
+ * @param divider
+ * @returns {boolean}
+ */
+export function isDividableBy(variable, divider)
+{
+    if(typeof variable !== "number"){
+        try{
+            variable = parseInt(variable);
+        }catch(e){
+            console.error(e);
+            return false;
+        }
+    }
+    return variable % divider === 0;
+}
+
+/**
  * Makes an object usable with semantic-ui's Select component
  * @param key
  * @param value

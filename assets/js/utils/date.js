@@ -1,3 +1,5 @@
+import {isDividableBy} from "./functions";
+
 export const numberDayInMonth = {
     january : 31,
     february : 28,
@@ -14,11 +16,34 @@ export const numberDayInMonth = {
 };
 
 /**
+ * Give february month's number of days for the given year
+ * @param actualYear
+ * @returns {boolean|number}
+ */
+export function getFebruaryDaysMaxNumber(actualYear)
+{
+    if(typeof actualYear !== "number"){
+        try{
+            actualYear = parseInt(actualYear);
+        }catch(e){
+            console.error(e);
+            return false;
+        }
+    }
+    let numberFebruaryDays = 28;
+    if((isDividableBy(actualYear,4) && !isDividableBy(actualYear,100)) || isDividableBy(actualYear,400)){
+        numberFebruaryDays = 29;
+    }
+    return numberFebruaryDays;
+}
+
+/**
  * Display a date to the french format
  * @param date
  * @returns {string|boolean}
  */
-export function displayDate(date){
+export function displayDate(date)
+{
     if(!(date instanceof Date)){
         return false;
     }
@@ -30,7 +55,8 @@ export function displayDate(date){
  * @param date
  * @returns {string|boolean}
  */
-export function displayEnglishDate(date){
+export function displayEnglishDate(date)
+{
     if(!(date instanceof Date)){
         return false;
     }
@@ -42,7 +68,8 @@ export function displayEnglishDate(date){
  * @param date
  * @returns {string|boolean}
  */
-export function displayDateForCalendar(date){
+export function displayDateForCalendar(date)
+{
     if(!(date instanceof Date)){
         try{
             date = new Date(date);
@@ -62,7 +89,8 @@ export function displayDateForCalendar(date){
  * @param date2
  * @returns {boolean}
  */
-export function isSameDay(date1, date2){
+export function isSameDay(date1, date2)
+{
     if(!(date1 instanceof Date) || !(date2 instanceof Date)){
         try{
             date1 = new Date(date1);
@@ -79,7 +107,8 @@ export function isSameDay(date1, date2){
  * @param date
  * @returns {boolean}
  */
-export function isDatePassed(date){
+export function isDatePassed(date)
+{
     if(!(date instanceof Date)){
         try{
             date = new Date(date);
@@ -96,7 +125,8 @@ export function isDatePassed(date){
  * @param date2
  * @returns {string|boolean}
  */
-export function getTimeBetweenTwoDates(date1,date2){
+export function getTimeBetweenTwoDates(date1,date2)
+{
     if(!(date1 instanceof Date) || !(date2 instanceof Date)){
         try{
             date1 = new Date(date1);
@@ -115,7 +145,8 @@ export function getTimeBetweenTwoDates(date1,date2){
  * @param number
  * @returns {string}
  */
-function getRealNumberForTime(number){
+function getRealNumberForTime(number)
+{
     if(number < 0){
         return '00';
     }
@@ -130,8 +161,9 @@ function getRealNumberForTime(number){
  * @param date
  * @returns {string|number}
  */
-function getRealMonth(date){
-    if(!(date instanceof Date)){
+function getRealMonth(date)
+{
+    if(!(date instanceof Date)) {
         return '00';
     }
     let month = date.getMonth() + 1;
@@ -146,7 +178,8 @@ function getRealMonth(date){
  * @param date
  * @returns {string|number}
  */
-function getRealDay(date){
+function getRealDay(date)
+{
     if(!(date instanceof Date)){
         return '00';
     }
