@@ -22,19 +22,28 @@ export const numberDayInMonth = {
  */
 export function getFebruaryDaysMaxNumber(actualYear)
 {
-    if(typeof actualYear !== "number"){
+    if(isBisextileYear(actualYear)){
+        return 29;
+    }
+    return 28;
+}
+
+/**
+ * Check if the given year is bisextile
+ * @param year
+ * @returns {boolean}
+ */
+export function isBisextileYear(year)
+{
+    if(typeof year !== "number"){
         try{
-            actualYear = parseInt(actualYear);
+            year = parseInt(year);
         }catch(e){
             console.error(e);
             return false;
         }
     }
-    let numberFebruaryDays = 28;
-    if((isDividableBy(actualYear,4) && !isDividableBy(actualYear,100)) || isDividableBy(actualYear,400)){
-        numberFebruaryDays = 29;
-    }
-    return numberFebruaryDays;
+    return (isDividableBy(year,4) && !isDividableBy(year,100)) || isDividableBy(year,400);
 }
 
 /**
