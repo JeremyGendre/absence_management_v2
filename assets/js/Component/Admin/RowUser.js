@@ -56,8 +56,8 @@ export default function RowUser(props){
 }
 
 RowUser.propTypes = {
-    user:PropTypes.object,
-    processed: PropTypes.bool,
-    handleDelete: PropTypes.func,
-    handleEditRoleUser: PropTypes.func
+    user:PropTypes.object.isRequired,
+    processed: PropTypes.bool.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    handleEditRoleUser: PropTypes.func.isRequired
 };

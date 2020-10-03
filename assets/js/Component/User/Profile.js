@@ -106,6 +106,6 @@ export default function Profile(props){
 }
 
 Profile.propTypes = {
-    user:PropTypes.object,
-    services:PropTypes.array
+    user:PropTypes.object.isRequired,
+    services:PropTypes.array.isRequired
 };

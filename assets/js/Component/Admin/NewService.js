@@ -75,5 +75,5 @@ export default function NewService(props){
 }
 
 NewService.propTypes = {
-    addService: PropTypes.func
+    addService: PropTypes.func.isRequired
 };
