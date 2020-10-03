@@ -1,0 +1,7 @@
+.select-month-btn{
+    transition: all 0.1s ease-in-out;
+}
+
+.select-month-btn:hover{
+    cursor:pointer;
+}

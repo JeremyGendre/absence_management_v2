@@ -1,18 +1,54 @@
 import {isDividableBy} from "./functions";
 
-export const numberDayInMonth = {
-    january : 31,
-    february : 28,
-    march : 31,
-    april : 30,
-    may : 31,
-    june : 30,
-    july : 31,
-    august : 31,
-    september : 30,
-    october : 31,
-    november : 30,
-    december : 31,
+export const defaultNumberDaysInMonth = {
+    january : {
+        index : 0,
+        days : 31
+    },
+    february : {
+        index : 1,
+        days : 28
+    },
+    march : {
+        index : 2,
+        days : 31
+    },
+    april : {
+        index : 3,
+        days : 30
+    },
+    may : {
+        index : 4,
+        days : 31
+    },
+    june : {
+        index : 5,
+        days : 30
+    },
+    july : {
+        index : 6,
+        days : 31
+    },
+    august : {
+        index : 7,
+        days : 31
+    },
+    september : {
+        index : 8,
+        days : 30
+    },
+    october : {
+        index : 9,
+        days : 31
+    },
+    november : {
+        index : 10,
+        days : 30
+    },
+    december : {
+        index : 11,
+        days : 31
+    },
 };
 
 /**
@@ -20,12 +56,28 @@ export const numberDayInMonth = {
  * @param actualYear
  * @returns {boolean|number}
  */
-export function getFebruaryDaysMaxNumber(actualYear)
+export function getFebruaryDaysNumber(actualYear)
 {
     if(isBisextileYear(actualYear)){
         return 29;
     }
     return 28;
+}
+
+/**
+ * Get for each months their number of days for the given year
+ * @param year
+ * @returns {{november, june, september, may, august, january, february: {days: *}, july, december, october, april, march}}
+ */
+export function getYearMonthsDaysNumber(year)
+{
+    return {
+        ...defaultNumberDaysInMonth,
+        february: {
+            ...defaultNumberDaysInMonth.february,
+            days : getFebruaryDaysNumber(year)
+        }
+    };
 }
 
 /**
