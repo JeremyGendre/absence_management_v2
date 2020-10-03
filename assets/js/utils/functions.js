@@ -51,15 +51,15 @@ export function objectToSelectable(key,value,text)
 }
 
 /**
- * Makes an array usable with semantic-ui's Select component
+ * Makes an array (of non-objects) usable with semantic-ui's Select component
  * @param haystack
  * @returns {[]}
  */
 export function collectionOfSelectableObjects(haystack)
 {
     let returnedArray = [];
-    haystack.map(value => {
-        returnedArray.push(objectToSelectable(value, value, value));
+    haystack.map((value,index) => {
+        returnedArray.push(objectToSelectable(index, value, value));
     });
     return returnedArray;
 }
