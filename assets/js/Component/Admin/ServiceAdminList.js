@@ -4,9 +4,9 @@ import {Grid, Icon, Input, Select, Tab, Table} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './ServiceAdminList.css';
-import {collectionOfSelectableObjects, removeFromArray} from "../../utils/functions";
-import {editUserRoleInList} from "../../utils/user";
+import {removeFromArray} from "../../utils/functions";
 import {editServiceInList} from "../../utils/service";
+import NewService from "./NewService";
 
 const MySwal = withReactContent(Swal);
 
@@ -99,6 +99,10 @@ export default function ServiceAdminList(props){
         });
     }
 
+    function addService(oneService){
+        setServices([...services,oneService]);
+    }
+
     return (
         <Tab.Pane attached={false} loading={loadingServices}>
             <Grid columns={2}>
@@ -119,11 +123,14 @@ export default function ServiceAdminList(props){
                                             <Table.Cell>{oneService.id}</Table.Cell>
                                             <Table.Cell>{oneService.name}</Table.Cell>
                                             <Table.Cell>
-                                                <Icon title="Modifier le nom" onClick={handleEditService.bind(this,oneService)} className="admin-service-btn button-edit-service" name="edit"/>
                                                 {
                                                     (oneService.isDeletable === true)
-                                                    &&
-                                                    <Icon title="Supprimer le service" onClick={handleDeleteService.bind(this,oneService)} className="admin-service-btn button-delete-service" name="trash"/>
+                                                    && (
+                                                        <>
+                                                            <Icon title="Modifier le nom" onClick={handleEditService.bind(this,oneService)} className="admin-service-btn button-edit-service" name="edit"/>
+                                                            <Icon title="Supprimer le service" onClick={handleDeleteService.bind(this,oneService)} className="admin-service-btn button-delete-service" name="trash"/>
+                                                        </>
+                                                    )
                                                 }
                                             </Table.Cell>
                                         </Table.Row>
@@ -141,7 +148,7 @@ export default function ServiceAdminList(props){
                     </Table>
                 </Grid.Column>
                 <Grid.Column width={8}>
-                    ouais
+                    <NewService addService={addService}/>
                 </Grid.Column>
             </Grid>
         </Tab.Pane>
