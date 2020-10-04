@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {getMonth} from "../../utils/date";
+import {getDaysOfMonth, getMonth, WEEK_DAYS} from "../../utils/date";
 
 import './TabularCalendar.css';
 
@@ -38,12 +38,35 @@ export default function TabularCalendar(props){
         });
     }
 
+    const daysOfMonth = getDaysOfMonth(period.month.index + 1, period.year, period.month.days);
+
     return (
         <div id="tabular-calendar-container">
-            <div className="tabular-calendar-header">
+            <div className="tabular-calendar-container-header">
                 <div className="current-month">{period.month.label} {period.year}</div>
                 <div className="select-month-btn" onClick={handlePrevClick}><b>{'<'}</b> Précédent</div>
                 <div className="select-month-btn" onClick={handleNextClick}>Suivant <b>{'>'}</b></div>
+            </div>
+            <div className="tabular-calendar">
+                <table className="tabular-calendar-table">
+                    <thead>
+                        <tr>
+                            <th/>
+                            {daysOfMonth.map((day,index) => {
+                                return (
+                                    <th key={index}>
+                                        {index + 1}
+                                    </th>
+                                )
+                            })}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>tg</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     );

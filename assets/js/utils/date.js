@@ -67,6 +67,16 @@ export const defaultMonths = [
     },
 ];
 
+export const WEEK_DAYS = [
+    "Dimanche",
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi",
+    "Samedi"
+];
+
 /**
  * Gives the month corresponding to the month index from the given year
  * @param year
@@ -133,6 +143,28 @@ export function isBisextileYear(year)
         }
     }
     return (isDividableBy(year,4) && !isDividableBy(year,100)) || isDividableBy(year,400);
+}
+
+/**
+ * Get the days order for the given month of the given year
+ * @param month
+ * @param year
+ * @param numberOfDaysInMonth
+ * @returns {[]}
+ */
+export function getDaysOfMonth(month,year, numberOfDaysInMonth)
+{
+    let day = (new Date(year + '-'+ month +'-01')).getDay();
+    let result = [];
+    for(let i = 0; i < numberOfDaysInMonth; i++){
+        result.push(day);
+        if(day === 6){
+            day = 0 ;
+        }else{
+            day++;
+        }
+    }
+    return result;
 }
 
 /**
