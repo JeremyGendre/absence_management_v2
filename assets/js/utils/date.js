@@ -1,55 +1,108 @@
 import {isDividableBy} from "./functions";
 
-export const defaultNumberDaysInMonth = {
-    january : {
+let today = new Date();
+
+const FEBRUARY_INDEX = 1;
+
+export const defaultMonths = [
+    {
         index : 0,
-        days : 31
+        days : 31,
+        label: "Janvier"
     },
-    february : {
-        index : 1,
-        days : 28
+    {
+        index : FEBRUARY_INDEX,
+        days : 28,
+        label: "Février"
     },
-    march : {
+    {
         index : 2,
-        days : 31
+        days : 31,
+        label: "Mars"
     },
-    april : {
+    {
         index : 3,
-        days : 30
+        days : 30,
+        label: "Avril"
     },
-    may : {
+    {
         index : 4,
-        days : 31
+        days : 31,
+        label: "Mai"
     },
-    june : {
+    {
         index : 5,
-        days : 30
+        days : 30,
+        label: "Juin"
     },
-    july : {
+    {
         index : 6,
-        days : 31
+        days : 31,
+        label: "Juillet"
     },
-    august : {
+    {
         index : 7,
-        days : 31
+        days : 31,
+        label: "Août"
     },
-    september : {
+    {
         index : 8,
-        days : 30
+        days : 30,
+        label: "Septembre"
     },
-    october : {
+    {
         index : 9,
-        days : 31
+        days : 31,
+        label: "Octobre"
     },
-    november : {
+    {
         index : 10,
-        days : 30
+        days : 30,
+        label: "Novembre"
     },
-    december : {
+    {
         index : 11,
-        days : 31
+        days : 31,
+        label: "Décembre"
     },
-};
+];
+
+/**
+ * Gives the month corresponding to the month index from the given year
+ * @param year
+ * @param index
+ */
+export function getMonth(index, year = today.getFullYear())
+{
+    let monthList = getYearMonths(year);
+    for(let i = 0; i < monthList.length; i++){
+        if(monthList[i].index === index){
+            return monthList[i];
+        }
+    }
+    return null;
+}
+
+/**
+ * Get for each months their number of days for the given year
+ * @param year
+ * @returns {[]}
+ */
+export function getYearMonths(year)
+{
+    let monthList = [];
+    defaultMonths.map(month => {
+        if(month.index === FEBRUARY_INDEX) {
+            monthList.push({
+                ...month,
+                days:getFebruaryDaysNumber(year)
+            });
+        }else{
+            monthList.push(month);
+        }
+    });
+    return monthList;
+}
 
 /**
  * Give february month's number of days for the given year
@@ -62,22 +115,6 @@ export function getFebruaryDaysNumber(actualYear)
         return 29;
     }
     return 28;
-}
-
-/**
- * Get for each months their number of days for the given year
- * @param year
- * @returns {{november, june, september, may, august, january, february: {days: *}, july, december, october, april, march}}
- */
-export function getYearMonthsDaysNumber(year)
-{
-    return {
-        ...defaultNumberDaysInMonth,
-        february: {
-            ...defaultNumberDaysInMonth.february,
-            days : getFebruaryDaysNumber(year)
-        }
-    };
 }
 
 /**
