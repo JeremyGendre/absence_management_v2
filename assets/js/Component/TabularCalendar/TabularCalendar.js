@@ -1,20 +1,16 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {getMonth, getYearMonths} from "../../utils/date";
+import {getMonth} from "../../utils/date";
 
 import './TabularCalendar.css';
 
 const today = new Date();
-
-const months = getYearMonths(today.getFullYear());
 
 export default function TabularCalendar(props){
     const [period,setPeriod] = useState({
         month: getMonth(today.getMonth(), today.getFullYear()),
         year: today.getFullYear()
     });
-
-    console.log(period);
 
     function handleNextClick(){
         let newYear = period.year;
@@ -44,6 +40,7 @@ export default function TabularCalendar(props){
 
     return (
         <div id="tabular-calendar-container">
+            {period.month.label} {period.year}
             <div className="select-month-btn" onClick={handlePrevClick}>Précédent</div>
             <div className="select-month-btn" onClick={handleNextClick}>Suivant</div>
         </div>
