@@ -40,9 +40,11 @@ export default function TabularCalendar(props){
 
     return (
         <div id="tabular-calendar-container">
-            {period.month.label} {period.year}
-            <div className="select-month-btn" onClick={handlePrevClick}>Précédent</div>
-            <div className="select-month-btn" onClick={handleNextClick}>Suivant</div>
+            <div className="tabular-calendar-header">
+                <div className="current-month">{period.month.label} {period.year}</div>
+                <div className="select-month-btn" onClick={handlePrevClick}><b>{'<'}</b> Précédent</div>
+                <div className="select-month-btn" onClick={handleNextClick}>Suivant <b>{'>'}</b></div>
+            </div>
         </div>
     );
 }
