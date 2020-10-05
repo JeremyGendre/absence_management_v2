@@ -58,7 +58,7 @@ export default function TabularCalendar(props){
                                 {daysOfMonth.map((dayOfWeek,index) => {
                                     return (
                                         <th key={index}>
-                                            {index + 1}
+                                            {(index + 1) < 10 ? ('0' + (index + 1)) : (index + 1) }
                                         </th>
                                     )
                                 })}
@@ -69,6 +69,11 @@ export default function TabularCalendar(props){
                                 return (
                                     <tr key={index}>
                                         <td>{dataInfos.userName}</td>
+                                        {daysOfMonth.map((dayOfWeek,index) => {
+                                            return (
+                                                <th className="event-cell" style={{backgroundColor:'none'}} key={index}/>
+                                            )
+                                        })}
                                     </tr>
                                 )
                             })}

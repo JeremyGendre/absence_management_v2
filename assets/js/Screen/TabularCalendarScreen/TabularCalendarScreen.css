@@ -1,0 +1,10 @@
+.tabular-container{
+    transition: all 0.2s ease-in-out !important;
+    width:90% !important;
+}
+
+@media(max-width:1000px){
+    .tabular-container{
+        width:100% !important;
+    }
+}

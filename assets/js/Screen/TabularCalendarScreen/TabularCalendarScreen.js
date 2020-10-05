@@ -23,7 +23,7 @@ export default function TabularCalendarScreen(props){
     },[]);
 
     return(
-        <Container className="custom-containers">
+        <Container className="custom-containers tabular-container">
             <SemanticHeader as="h1" className="text-center">Calendrier tabulaire</SemanticHeader>
             <TabularCalendar data={datas} loading={datasLoading}/>
         </Container>
