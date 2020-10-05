@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
 use App\Service\Helper\RoleHelper;
+use App\Service\Serializer\MySerializer;
 use App\Service\Validator\UserValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,16 +27,28 @@ class UserController extends AbstractController
      * @Route(path="/all", name="users_all", methods={"GET"})
      * @param UserRepository $userRepository
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getAllUsers(
         UserRepository $userRepository
     ):JsonResponse{
         $users = $userRepository->findAll();
-        $response = [];
-        foreach ($users as $user){
-            $response[] = $user->serialize();
-        }
+        $response = MySerializer::serializeMany($users);
         return new JsonResponse($response);
+    }
+
+    /**
+     * @Route(path="/all/{id}", name="users_all_by_service", methods={"GET"})
+     * @param Service $service
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function getUsersByService(
+        Service $service
+    ):JsonResponse{
+        $users = $service->getUsers();
+        $response = MySerializer::serializeMany($users);
+        return new JsonResponse();
     }
 
     /**

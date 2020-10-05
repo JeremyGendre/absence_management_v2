@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Service;
 use App\Repository\ServiceRepository;
+use App\Service\Serializer\MySerializer;
 use App\Service\Validator\ServiceValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,15 +25,13 @@ class ServiceController extends AbstractController
      * @Route(path="/all", name="services_all", methods={"GET"})
      * @param ServiceRepository $serviceRepository
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getAllServices(
         ServiceRepository $serviceRepository
     ):JsonResponse{
         $services = $serviceRepository->findAll();
-        $response = [];
-        foreach ($services as $service) {
-            $response[] = $service->serialize();
-        }
+        $response = MySerializer::serializeMany($services);
         return new JsonResponse($response);
     }
 

@@ -11,10 +11,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(path="/api/role")
- * Class RoleContoller
+ * Class RoleController
  * @package App\Controller
  */
-class RoleContoller extends AbstractController
+class RoleController extends AbstractController
 {
     /**
      * @Route(path="/all", name="all_roles", methods={"GET"})

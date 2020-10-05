@@ -48,31 +48,40 @@ export default function TabularCalendar(props){
                 <div className="select-month-btn" onClick={handleNextClick}>Suivant <b>{'>'}</b></div>
             </div>
             <div className="tabular-calendar">
-                <table className="tabular-calendar-table">
-                    <thead>
-                        <tr>
-                            <th/>
-                            {daysOfMonth.map((day,index) => {
+                {props.loading ? (
+                    <div>Chargement ...</div>
+                ) : (
+                    <table className="tabular-calendar-table">
+                        <thead>
+                            <tr>
+                                <th/>
+                                {daysOfMonth.map((dayOfWeek,index) => {
+                                    return (
+                                        <th key={index}>
+                                            {index + 1}
+                                        </th>
+                                    )
+                                })}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {props.data.map((dataInfos,index) => {
                                 return (
-                                    <th key={index}>
-                                        {index + 1}
-                                    </th>
+                                    <tr key={index}>
+                                        <td>{dataInfos.userName}</td>
+                                    </tr>
                                 )
                             })}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>tg</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );
 }
 
 TabularCalendar.propTypes = {
-    users: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
+    loading: PropTypes.bool
 };
 

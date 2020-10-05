@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\HolidayRepository;
-use App\Service\MySerializerInterface;
+use App\Service\Serializer\MySerializerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
