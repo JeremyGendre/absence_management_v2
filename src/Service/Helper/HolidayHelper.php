@@ -5,9 +5,7 @@ namespace App\Service\Helper;
 use App\Entity\Holiday;
 use App\Entity\User;
 use App\Service\Serializer\MySerializer;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use mysql_xdevapi\Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class HolidayHelper
