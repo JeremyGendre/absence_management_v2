@@ -4,23 +4,33 @@ namespace App\Service\Helper;
 
 use App\Entity\Holiday;
 use App\Entity\User;
+use App\Service\Serializer\MySerializer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 
 class HolidayHelper
 {
     /**
-     * @param array $holidays
+     * @param array|Collection $holidays
      * @param bool $eventSerialization
      * @param bool $isPersonal
      * @return array
      */
-    public static function holidaysSerialization(array $holidays, bool $eventSerialization, bool $isPersonal = false)
+    public static function holidaysSerialization($holidays, bool $eventSerialization, bool $isPersonal = false)
     {
         $response = [];
-        /** @var Holiday $holiday */
-        foreach ($holidays as $holiday){
-            $response[] = $eventSerialization ? $holiday->serializeAsEvent($isPersonal) : $holiday->serialize();
+        if(is_iterable($holidays) === false){
+            try{
+                $response = MySerializer::serializeOne($holidays);
+            }catch(\Exception $e){
+                return [];
+            }
+        }else{
+            /** @var Holiday $holiday */
+            foreach ($holidays as $holiday){
+                $response[] = $eventSerialization ? $holiday->serializeAsEvent($isPersonal) : $holiday->serialize();
+            }
         }
         return $response;
     }
@@ -56,10 +66,10 @@ class HolidayHelper
 
 
     /**
-     * @param ArrayCollection|User[] $users
+     * @param Collection|User[] $users
      * @return array
      */
-    public static function dataForTabularCalendar(ArrayCollection $users):array
+    public static function dataForTabularCalendar(Collection $users):array
     {
         $response = [];
         foreach ($users as $user){
