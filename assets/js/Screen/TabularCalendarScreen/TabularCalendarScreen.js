@@ -4,6 +4,7 @@ import './TabularCalendarScreen.css';
 import {Container, Header as SemanticHeader} from "semantic-ui-react";
 import TabularCalendar from "../../Component/TabularCalendar/TabularCalendar";
 import {SessionContext} from "../../Component/Context/session";
+import {displayErrorPopup} from "../../utils/error";
 
 export default function TabularCalendarScreen(props){
     const userContext = useContext(SessionContext);
@@ -14,6 +15,7 @@ export default function TabularCalendarScreen(props){
         axios.get('/api/holiday/service/tabular/'+userContext.user.service.id).then(result => {
             setDatas(result.data);
         }).catch(error => {
+            displayErrorPopup(error);
             console.error(error);
         }).finally(()=>{
             setDatasLoading(false);
