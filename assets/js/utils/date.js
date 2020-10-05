@@ -250,6 +250,37 @@ export function isDatePassed(date)
 }
 
 /**
+ * Assert if the given date is between the 2 others
+ * @param date
+ * @param startDate
+ * @param endDate
+ * @returns {boolean}
+ */
+export function isDateBetween(date, startDate, endDate)
+{
+    if(!(date instanceof Date) || !(startDate instanceof Date) || !(endDate instanceof Date)){
+        try{
+            date = new Date(date);
+            startDate = new Date(startDate);
+            endDate = new Date(endDate);
+        }catch(e){
+            return false;
+        }
+    }
+    return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
+}
+
+/**
+ * check if it's a saturday (6) or a sunday (0)
+ * @param day
+ * @returns {boolean}
+ */
+export function isItAWeekEndDay(day)
+{
+    return day === 6 || day === 0;
+}
+
+/**
  * Get the time difference between two dates
  * @param date1
  * @param date2

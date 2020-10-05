@@ -1,4 +1,4 @@
-import {displayDate, getTimeBetweenTwoDates} from "./date";
+import {displayDate, getTimeBetweenTwoDates, isDateBetween} from "./date";
 
 export function convertListToAdminListFormat(holidays){
     let result = [];
@@ -19,4 +19,15 @@ export function convertOneToAdminListFormat(holiday){
         end: displayDate(newEndDate),
         duration: getTimeBetweenTwoDates(newStartDate,newEndDate)
     };
+}
+
+export function checkHolidayForCellColor(events, date){
+    for(let i = 0; i < events.length; i++){
+        let startDate = new Date(events[i].start);
+        let endDate = new Date(events[i].end);
+        if(isDateBetween(date,startDate,endDate)){
+            return events[i].backgroundColor;
+        }
+    }
+    return 'transparent';
 }

@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {getDaysOfMonth, getMonth, WEEK_DAYS} from "../../utils/date";
+import {getDaysOfMonth, getMonth, isItAWeekEndDay, WEEK_DAYS} from "../../utils/date";
 
 import './TabularCalendar.css';
+import {checkHolidayForCellColor} from "../../utils/holidayFormat";
 
 const today = new Date();
 
@@ -23,6 +24,10 @@ export default function TabularCalendar(props){
             month: newMonth,
             year: newYear
         });
+    }
+
+    function getCurrentMonth(){
+        return period.month.index + 1;
     }
 
     function handlePrevClick(){
@@ -66,12 +71,17 @@ export default function TabularCalendar(props){
                         </thead>
                         <tbody>
                             {props.data.map((dataInfos,index) => {
+                                let bgColor = 'transparent';
                                 return (
                                     <tr key={index}>
-                                        <td>{dataInfos.userName}</td>
+                                        <td className="tabular-user-name-cell">{dataInfos.userName}</td>
                                         {daysOfMonth.map((dayOfWeek,index) => {
+                                            bgColor = checkHolidayForCellColor(dataInfos.events,new Date(period.year + '-' + getCurrentMonth() + '-' + (index + 1) ));
+                                            if(bgColor === 'transparent' && isItAWeekEndDay(dayOfWeek)){
+                                                bgColor = 'grey';
+                                            }
                                             return (
-                                                <th className="event-cell" style={{backgroundColor:'none'}} key={index}/>
+                                                <th className="event-cell" style={{backgroundColor:bgColor}} key={index}/>
                                             )
                                         })}
                                     </tr>
