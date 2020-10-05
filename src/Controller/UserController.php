@@ -38,20 +38,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route(path="/all/{id}", name="users_all_by_service", methods={"GET"})
-     * @param Service $service
-     * @return JsonResponse
-     * @throws \Exception
-     */
-    public function getUsersByService(
-        Service $service
-    ):JsonResponse{
-        $users = $service->getUsers();
-        $response = MySerializer::serializeMany($users);
-        return new JsonResponse($response);
-    }
-
-    /**
      * @Route(path="/auth", name="get_authenticated_user", methods={"GET"})
      * @return JsonResponse
      */

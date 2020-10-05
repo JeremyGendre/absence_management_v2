@@ -30,7 +30,7 @@ class HolidayController extends AbstractController
      */
     public function getAllHolidays(Request $request, HolidayRepository $holidayRepository) :JsonResponse {
         $holidays = $holidayRepository->findBy([],["startDate"=>"DESC"]);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
         return new JsonResponse($response);
     }
 
@@ -43,7 +43,7 @@ class HolidayController extends AbstractController
      */
     public function getAllHolidaysExceptRejected(Request $request, HolidayRepository $holidayRepository){
         $holidays = $holidayRepository->findAllExceptRejected();
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
         return new JsonResponse($response);
     }
 
@@ -57,7 +57,7 @@ class HolidayController extends AbstractController
      */
     public function getByUser(Request $request, User $user,HolidayRepository $holidayRepository) : JsonResponse{
         $holidays = $holidayRepository->findBy(["user" => $user],["startDate"=>"DESC"]);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays,($user === $this->getUser()));
+        $response = HolidayHelper::holidaysSerialization($holidays,HolidayHelper::isHolidayEventSerialization($request),($user === $this->getUser()));
         return new JsonResponse($response);
     }
 
@@ -118,7 +118,7 @@ class HolidayController extends AbstractController
             throw new \Exception("Un problème est survenu lors de la récupération des dates");
         }
         $holidays = $holidayRepository->findByUserAndDates($user,$start,$end);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
         return new JsonResponse($response);
     }
 
@@ -151,7 +151,7 @@ class HolidayController extends AbstractController
             throw new \Exception("Un problème est survenu lors de la récupération des dates");
         }
         $holidays = $holidayRepository->findByServiceAndDates($service,$start,$end);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
         return new JsonResponse($response);
     }
 
@@ -169,7 +169,20 @@ class HolidayController extends AbstractController
         Service $service
     ):JsonResponse{
         $holidays = $holidayRepository->findByService($service);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @Route(path="/service/tabular/{id}", name="holidays_by_service_for_tabular", methods={"GET"})
+     * @param Service $service
+     * @return JsonResponse
+     */
+    public function getByServiceForTabular(
+        Service $service
+    ):JsonResponse{
+        $users = $service->getUsers();
+        $response = HolidayHelper::dataForTabularCalendar($users);
         return new JsonResponse($response);
     }
 
@@ -199,7 +212,7 @@ class HolidayController extends AbstractController
             throw new \Exception("Un problème est survenu lors de la récupération des dates");
         }
         $holidays = $holidayRepository->findByDates($start,$end);
-        $response = HolidayHelper::holidaysSerialization($request,$holidays);
+        $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
         return new JsonResponse($response);
     }
 
