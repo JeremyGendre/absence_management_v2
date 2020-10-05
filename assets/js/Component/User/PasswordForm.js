@@ -25,6 +25,9 @@ export default function PasswordForm(props){
             setFormErrors([]);
             axios.put('/api/user/edit/password/'+user.user.id,{oldPassword:oldPassword,password:password}).then(data => {
                 MySwal.fire({icon:'success',title:'Mot de passe modifié'});
+                setOldPassword('');
+                setPassword('');
+                setConfirmPassword('');
             }).catch(error => {
                 console.error(error);
                 setFormErrors(['Une erreur est survenue : ' + error.message]);
@@ -66,20 +69,20 @@ export default function PasswordForm(props){
             <FormGroup>
                 <Form.Field>
                     <label>Ancien mot de passe :</label>
-                    <Input icon="eye slash" defaultValue={oldPassword} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setOldPassword(data.value)} type="password" />
+                    <Input icon="eye slash" value={oldPassword} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setOldPassword(data.value)} type="password" />
                 </Form.Field>
             </FormGroup>
             <hr className="hr-custom"/><br/>
             <FormGroup>
                 <Form.Field>
                     <label>Nouveau mot de passe :</label>
-                    <Input icon="eye slash" defaultValue={password} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setPassword(data.value)} type="password" />
+                    <Input icon="eye slash" value={password} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setPassword(data.value)} type="password" />
                 </Form.Field>
             </FormGroup>
             <FormGroup>
                 <Form.Field>
                     <label>Confirmer le nouveau mot de passe :</label>
-                    <Input icon="eye slash" defaultValue={confirmPassword} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setConfirmPassword(data.value)} type="password" />
+                    <Input icon="eye slash" value={confirmPassword} autoComplete='off' required minLength={6} maxLength={100} onChange={(e,data)=>setConfirmPassword(data.value)} type="password" />
                 </Form.Field>
             </FormGroup>
             <Form.Group>

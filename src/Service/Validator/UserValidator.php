@@ -117,7 +117,7 @@ class UserValidator implements MyValidatorInterface
         elseif(empty($data['oldPassword'])){
             return "L'ancien mot de passe n'est pas valide.";
         }
-        elseif(empty($data['password']) || !self::checkPassword($data['password'])){
+        elseif(empty($data['password']) || !self::checkPassword($data)){
             return "Le nouveau mot de passe n'est pas valide (au moins 6 charactères)";
         }
         return null;
