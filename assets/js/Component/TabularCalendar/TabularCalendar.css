@@ -37,6 +37,10 @@
 /***************** END CONTAINER HEADER *******************/
 /**********************************************************/
 
+.loading-text{
+    font-size: 1.5em;
+}
+
 .tabular-calendar-table{
     width:100%;
     font-size: 1.2em;

@@ -54,7 +54,7 @@ export default function TabularCalendar(props){
             </div>
             <div className="tabular-calendar">
                 {props.loading ? (
-                    <div>Chargement ...</div>
+                    <div className="text-center loading-text">Chargement ...</div>
                 ) : (
                     <table className="tabular-calendar-table">
                         <thead>
