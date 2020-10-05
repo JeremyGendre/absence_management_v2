@@ -48,7 +48,7 @@ class UserController extends AbstractController
     ):JsonResponse{
         $users = $service->getUsers();
         $response = MySerializer::serializeMany($users);
-        return new JsonResponse();
+        return new JsonResponse($response);
     }
 
     /**

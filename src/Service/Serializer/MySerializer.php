@@ -7,26 +7,21 @@ namespace App\Service\Serializer;
 class MySerializer
 {
     /**
-     * @param array $haystack
+     * @param $haystack
      * @return array
      * @throws \Exception
      */
-    public static function serializeMany(array $haystack)
+    public static function serializeMany($haystack)
     {
         $response = [];
-        foreach($haystack as $value){
-            $response[] = self::serializeOne($value);
+        if(is_iterable($haystack) === false){
+            $response = self::serializeOne($haystack);
+        }else{
+            foreach($haystack as $value){
+                $response[] = self::serializeOne($value);
+            }
         }
         return $response;
-    }
-
-    /**
-     * @param $value
-     * @return bool
-     */
-    public static function isSerializable($value):bool
-    {
-        return (is_object($value) === false || method_exists($value,'serialize') === true);
     }
 
     /**
@@ -44,5 +39,14 @@ class MySerializer
         }else{
             return  $value->serialize();
         }
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public static function isSerializable($value):bool
+    {
+        return (is_object($value) === false || method_exists($value,'serialize') === true);
     }
 }
