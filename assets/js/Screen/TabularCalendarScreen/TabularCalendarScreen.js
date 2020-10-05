@@ -12,7 +12,7 @@ export default function TabularCalendarScreen(props){
 
     useEffect(() => {
         axios.get('/api/holiday/service/tabular/'+userContext.user.service.id).then(result => {
-            console.log(result);
+            setDatas(result.data);
         }).catch(error => {
             console.error(error);
         }).finally(()=>{

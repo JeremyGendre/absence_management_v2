@@ -4,6 +4,7 @@ import {Form, Input, Message, Tab} from "semantic-ui-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {servicesToSelectable} from "../../utils/service";
+import {displayErrorPopup} from "../../utils/error";
 
 const MySwal = withReactContent(Swal);
 
@@ -56,7 +57,7 @@ export default function NewUser(props){
                 });
             }).catch(error => {
                 console.log(error);
-                MySwal.fire({icon:'error', title:'Une erreur est survenue : ' + error.message});
+                displayErrorPopup(error);
             }).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);

@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {getShortType} from "../../utils/holidaysTypes";
 import {removeFromArray} from "../../utils/functions";
+import {displayErrorPopup} from "../../utils/error";
 
 const MySwal = withReactContent(Swal);
 
@@ -42,7 +43,7 @@ export default function HolidayListScreen(props){
             });
             setListHolidays(newHolidaysList);
         }).catch(error => {// erreur
-            MySwal.fire({icon:'error', title:"Une erreur est survenue : " + error.message});
+            displayErrorPopup(error);
             console.log(error);
         }).finally(() => {
             setLoadingData(false);
@@ -70,7 +71,7 @@ export default function HolidayListScreen(props){
                     setListHolidays(newHolidaysList);
                     MySwal.fire({icon:'success', title:'Congés annulés'});
                 }).catch(error => {
-                    MySwal.fire({icon:'error', title:'Une erreur est survenue : '+ error.message});
+                    displayErrorPopup(error);
                     console.log(error);
                 }).finally(() => {
                     setHolidaysBeingDeleted(removeFromArray(holiday.key,holidaysBeingDeleted));

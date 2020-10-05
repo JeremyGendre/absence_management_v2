@@ -21,6 +21,7 @@ import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
 import {displayEnglishDate, isSameDay} from "../../utils/date";
 import {STATUS_ACCEPTED, STATUS_ASKED} from "../../utils/holidaysStatus";
+import {displayErrorPopup} from "../../utils/error";
 
 const MySwal = withReactContent(Swal);
 
@@ -139,7 +140,7 @@ export default function NewHolidaysRequestScreen(props){
             MySwal.fire({icon:'success', title:'Demande créée',});
             backToInitialState();
         }).catch(error => {//erreur
-            MySwal.fire({icon:'error',title:'Une erreur est survenue : ' + error.message});
+            displayErrorPopup(error);
             console.log(error);
         }).finally(()=>{
             setSubmitting(false);

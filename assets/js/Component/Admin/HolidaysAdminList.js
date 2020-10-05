@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {convertListToAdminListFormat} from "../../utils/holidayFormat";
+import {displayErrorPopup} from "../../utils/error";
 
 const MySwal = withReactContent(Swal);
 
@@ -34,7 +35,7 @@ export default function HolidaysAdminList(props){
             setHolidaysListDisplayed(convertedHolidays);
         }).catch(error => {
             console.error(error);
-            MySwal.fire({icon:'error', title:'Une erreur est survenue : ' + error.message});
+            displayErrorPopup(error);
         }).finally(()=>{
             setLoadingHolidays(false);
         });

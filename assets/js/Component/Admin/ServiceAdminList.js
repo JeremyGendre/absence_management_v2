@@ -7,6 +7,7 @@ import './ServiceAdminList.css';
 import {removeFromArray} from "../../utils/functions";
 import {editServiceInList} from "../../utils/service";
 import NewService from "./NewService";
+import {displayErrorPopup} from "../../utils/error";
 
 const MySwal = withReactContent(Swal);
 
@@ -20,7 +21,7 @@ export default function ServiceAdminList(props){
             setServices(result.data);
         }).catch((error)=>{
             console.log(error);
-            MySwal.fire({icon:'error',title:'Une erreur est survenue : ' + error.message});
+            displayErrorPopup(error);
         }).finally(()=>{
             setLoadingServices(false);
         });
