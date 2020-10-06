@@ -21,13 +21,21 @@ export function convertOneToAdminListFormat(holiday){
     };
 }
 
+/**
+ * @param events
+ * @param date
+ * @returns {{bgColor: string, title: string}|{bgColor: Property.BackgroundColor | string | StringConstructor | string, title: *}}
+ */
 export function checkHolidayForCellColor(events, date){
     for(let i = 0; i < events.length; i++){
-        let startDate = new Date(events[i].start);
-        let endDate = new Date(events[i].end);
+        const startDate = new Date(events[i].start);
+        const endDate = new Date(events[i].end);
         if(isDateBetween(date,startDate,endDate)){
-            return events[i].backgroundColor;
+            return {
+                bgColor : events[i].backgroundColor,
+                title : events[i].title
+            };
         }
     }
-    return 'transparent';
+    return {bgColor : 'transparent',title:''};
 }

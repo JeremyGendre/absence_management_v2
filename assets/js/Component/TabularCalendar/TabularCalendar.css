@@ -5,6 +5,10 @@
     text-align: right;
 }
 
+.tabular-header{
+    height:2em;
+}
+
 .current-month{
     display:inline-block;
     font-weight: bold;

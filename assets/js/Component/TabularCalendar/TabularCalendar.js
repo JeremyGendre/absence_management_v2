@@ -49,8 +49,8 @@ export default function TabularCalendar(props){
         <div id="tabular-calendar-container">
             <div className="tabular-calendar-container-header">
                 <div className="current-month">{period.month.label} {period.year}</div>
-                <div className="select-month-btn" onClick={handlePrevClick}><b>{'<'}</b> Précédent</div>
-                <div className="select-month-btn" onClick={handleNextClick}>Suivant <b>{'>'}</b></div>
+                <div className="select-month-btn" onClick={handlePrevClick}>Précédent</div>
+                <div className="select-month-btn" onClick={handleNextClick}>Suivant</div>
             </div>
             <div className="tabular-calendar">
                 {props.loading ? (
@@ -58,7 +58,7 @@ export default function TabularCalendar(props){
                 ) : (
                     <table className="tabular-calendar-table">
                         <thead>
-                            <tr>
+                            <tr className="tabular-header">
                                 <th/>
                                 {daysOfMonth.map((dayOfWeek,index) => {
                                     return (
@@ -71,17 +71,17 @@ export default function TabularCalendar(props){
                         </thead>
                         <tbody>
                             {props.data.map((dataInfos,index) => {
-                                let bgColor = 'transparent';
+                                let returnedResult = {bgColor:'transparent',title:''};
                                 return (
-                                    <tr key={index}>
+                                    <tr key={index} className="tabular-calendar-user">
                                         <td className="tabular-user-name-cell">{dataInfos.userName}</td>
                                         {daysOfMonth.map((dayOfWeek,index) => {
-                                            bgColor = checkHolidayForCellColor(dataInfos.events,new Date(period.year + '-' + getCurrentMonth() + '-' + (index + 1) ));
-                                            if(bgColor === 'transparent' && isItAWeekEndDay(dayOfWeek)){
-                                                bgColor = 'grey';
+                                            returnedResult = checkHolidayForCellColor(dataInfos.events,new Date(period.year + '-' + getCurrentMonth() + '-' + (index + 1) ));
+                                            if(returnedResult.bgColor === 'transparent' && isItAWeekEndDay(dayOfWeek)){
+                                                returnedResult.bgColor = 'grey';
                                             }
                                             return (
-                                                <th className="event-cell" style={{backgroundColor:bgColor}} key={index}/>
+                                                <td title={returnedResult.title} className="event-cell" style={{backgroundColor:returnedResult.bgColor}} key={index}/>
                                             )
                                         })}
                                     </tr>
