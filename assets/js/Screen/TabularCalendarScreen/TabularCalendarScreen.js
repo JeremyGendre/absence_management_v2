@@ -5,6 +5,7 @@ import {Container, Header as SemanticHeader} from "semantic-ui-react";
 import TabularCalendar from "../../Component/TabularCalendar/TabularCalendar";
 import {SessionContext} from "../../Component/Context/session";
 import {displayErrorPopup} from "../../utils/error";
+import MyLoader from "../../Component/MyLoader/MyLoader";
 
 export default function TabularCalendarScreen(props){
     const userContext = useContext(SessionContext);
@@ -25,7 +26,11 @@ export default function TabularCalendarScreen(props){
     return(
         <Container className="custom-containers tabular-container">
             <SemanticHeader as="h1" className="text-center">Calendrier tabulaire</SemanticHeader>
-            <TabularCalendar data={datas} loading={datasLoading}/>
+            {datasLoading ? (
+                <MyLoader size="big"/>
+            ) : (
+                <TabularCalendar data={datas} loading={datasLoading}/>
+            )}
         </Container>
     );
 }
