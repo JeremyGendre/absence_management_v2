@@ -301,14 +301,33 @@ class Holiday implements MySerializerInterface
      * @param bool $isPersonalEvent
      * @return array
      */
-    public function serializeAsEvent(bool $isPersonalEvent = false){
+    public function serializeAsEvent(bool $isPersonalEvent = false)
+    {
         $color = self::STATUS_EVENTS_COLORS[$this->status];
         return [
             "start" => $this->getStartDate()->format('Y-m-d'),
             "end" => $this->getEndDate()->format('Y-m-d'),
             "title" => $isPersonalEvent ? ($this->cause ?? '') : $this->getUser()->getName(),
+            "halfDay" => $this->isHalfDay(),
+            "periodType" => $this->periodType,
             "backgroundColor" => $color,
             "borderColor" => $color,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSameDay():bool
+    {
+        return $this->getStartDate()->format('Y-m-d') === $this->getEndDate()->format('Y-m-d');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHalfDay():bool
+    {
+        return $this->isSameDay() && ($this->periodType !== self::PERIOD_TYPE_ALL_DAY);
     }
 }

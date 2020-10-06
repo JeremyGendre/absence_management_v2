@@ -267,6 +267,9 @@ export function isDateBetween(date, startDate, endDate)
             return false;
         }
     }
+    if(isSameDay(startDate,endDate)){
+        return isSameDay(date,startDate);
+    }
     return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
 }
 
