@@ -1,6 +1,10 @@
 import {displayDate, getTimeBetweenTwoDates, isDateBetween, isItAWeekEndDay, isSameDay} from "./date";
 import {PERIOD_TYPE_ALL_DAY, PERIOD_TYPE_MORNING} from "./holidaysTypes";
 
+/**
+ * @param holidays
+ * @returns {[]}
+ */
 export function convertListToAdminListFormat(holidays){
     let result = [];
     holidays.map(holiday => {
@@ -9,6 +13,10 @@ export function convertListToAdminListFormat(holidays){
     return result;
 }
 
+/**
+ * @param holiday
+ * @returns {{duration: *, person: *, service: *, start: *, end: *, key: *}}
+ */
 export function convertOneToAdminListFormat(holiday){
     let newStartDate = new Date(holiday.start_date.date);
     let newEndDate = new Date(holiday.end_date.date);
@@ -56,7 +64,7 @@ export function checkHolidayForCellColor(events, date){
 }
 
 /**
- * Return the correct value (which will be displayed) for a given event of the tabular calendar
+ * Return the correct backgroundColor (which will be displayed) for a given event of the tabular calendar
  * @param eventResult
  * @param dayOfWeek
  * @returns {string}
@@ -74,4 +82,25 @@ export function adjustTabularEventBackgroundColor(eventResult,dayOfWeek)
         }
     }
     return backgroundColor;
+}
+
+/**
+ * Return the correct title (which will be displayed) for a given event of the tabular calendar
+ * @param eventResult
+ * @param isAdmin
+ * @returns {string}
+ */
+export function adjustTabularEventTitle(eventResult, isAdmin)
+{
+    let title = eventResult.title;
+    if(eventResult.start !== null && eventResult.end !== null){
+        if(title === '' || isAdmin !== true){
+            if(isSameDay(eventResult.start,eventResult.end)){
+                title = "Le " + displayDate(eventResult.start);
+            }else{
+                title = "Du " + displayDate(eventResult.start) + " au " + displayDate(eventResult.end);
+            }
+        }
+    }
+    return title
 }
