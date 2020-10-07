@@ -9,12 +9,19 @@ import {PERIOD_TYPE_ALL_DAY, PERIOD_TYPE_MORNING} from "../../utils/holidaysType
 
 const today = new Date();
 
+const defaultTooltip = {
+    text: '',
+    posX : 0,
+    posY: 0
+};
+
 export default function TabularCalendar(props){
     const userInfos = useContext(SessionContext);
     const [period,setPeriod] = useState({
         month: getMonth(today.getMonth(), today.getFullYear()),
         year: today.getFullYear()
     });
+    const [tooltip,setTooltip] = useState(defaultTooltip);
 
     function handleNextClick(){
         let newYear = period.year;
@@ -43,6 +50,27 @@ export default function TabularCalendar(props){
         setPeriod({
             month: newMonth,
             year: newYear
+        });
+    }
+
+    function cellEnter(e){
+        const element = e.currentTarget;
+        const elementText = element.getAttribute('data-title');
+        if(elementText !== ''){
+            setTooltip({...tooltip,text : elementText});
+        }
+    }
+
+    function cellLeave(){
+        setTooltip(defaultTooltip);
+    }
+
+
+    function cellMouseMove(e){
+        setTooltip({
+            ...tooltip,
+            posX : (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft),
+            posY :(window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
         });
     }
 
@@ -81,9 +109,13 @@ export default function TabularCalendar(props){
                                         {daysOfMonth.map((dayOfWeek,index) => {
                                             eventResult = checkHolidayForCellColor(dataInfos.events,new Date(period.year + '-' + getCurrentMonth() + '-' + (index + 1) ));
                                             eventResult.bgColor = adjustTabularEventBackgroundColor(eventResult,dayOfWeek);
-                                            return (
-                                                <td title={userInfos.isAdmin ? eventResult.title : ''} className="event-cell" style={{background:eventResult.bgColor}} key={index}/>
-                                            )
+                                            const element = (userInfos.isAdmin && eventResult.title !== '') ?
+                                                <td data-title={eventResult.title} onMouseMove={cellMouseMove}
+                                                    onMouseEnter={cellEnter} onMouseLeave={cellLeave}
+                                                    className="event-cell" style={{background:eventResult.bgColor}} key={index}/>
+                                                :
+                                                <td className="event-cell" style={{background:eventResult.bgColor}} key={index}/>;
+                                            return (element);
                                         })}
                                     </tr>
                                 )
@@ -92,6 +124,7 @@ export default function TabularCalendar(props){
                     </table>
                 )}
             </div>
+            { tooltip.text !== '' && <div className="tooltip-event" style={{top: tooltip.posY + 'px', left: (tooltip.posX+20) + 'px'}}>{tooltip.text}</div> }
         </div>
     );
 }

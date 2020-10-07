@@ -69,3 +69,14 @@
 .tabular-calendar-user:hover > .tabular-user-name-cell{
     background-color: lightgray;
 }
+
+.tooltip-event{
+    position:absolute;
+    top:50%;
+    left:50%;
+    background-color: lightgray;
+    color: black;
+    border:solid 1px grey;
+    box-shadow: 1px 1px 5px grey;
+    padding: 0.7em;
+}
