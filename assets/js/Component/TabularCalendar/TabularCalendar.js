@@ -7,7 +7,6 @@ import {
     isDateBetween, isItAWeekEndDay,
     isSameDay
 } from "../../utils/date";
-
 import './TabularCalendar.css';
 import {SessionContext} from "../Context/session";
 import {PERIOD_TYPE_ALL_DAY, PERIOD_TYPE_MORNING} from "../../utils/holidaysTypes";
@@ -144,7 +143,6 @@ export default function TabularCalendar(props){
     function cellLeave(){
         setTooltip(defaultTooltip);
     }
-
 
     function cellMouseMove(e){
         setTooltip({
