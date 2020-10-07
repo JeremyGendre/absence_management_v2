@@ -29,7 +29,7 @@ export function convertOneToAdminListFormat(holiday){
  * @returns {{bgColor: *, halfDay: boolean, title: *}|{bgColor: string, halfDay: boolean, title: string}}
  */
 export function checkHolidayForCellColor(events, date){
-    let defaultResult = {bgColor : 'transparent',title:'',halfDay : false, periodType: PERIOD_TYPE_ALL_DAY};
+    let defaultResult = {bgColor : 'transparent',title:'',halfDay : false, periodType: PERIOD_TYPE_ALL_DAY, end: null, start: null};
     for(let i = 0; i < events.length; i++){
         const startDate = new Date(events[i].start);
         const endDate = new Date(events[i].end);
@@ -38,13 +38,17 @@ export function checkHolidayForCellColor(events, date){
                 bgColor : events[i].backgroundColor,
                 title : events[i].title,
                 halfDay : events[i].halfDay,
-                periodType : events[i].periodType
+                periodType : events[i].periodType,
+                end: endDate,
+                start: startDate
             };
         } else if(isDateBetween(date,startDate,endDate)){
             return {
                 ...defaultResult,
                 bgColor : events[i].backgroundColor,
                 title : events[i].title,
+                end: endDate,
+                start: startDate
             };
         }
     }

@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import PropTypes from 'prop-types';
-import {getDaysOfMonth, getMonth, isItAWeekEndDay, WEEK_DAYS} from "../../utils/date";
+import {displayDate, getDaysOfMonth, getMonth, isItAWeekEndDay, isSameDay, WEEK_DAYS} from "../../utils/date";
 
 import './TabularCalendar.css';
 import {adjustTabularEventBackgroundColor, checkHolidayForCellColor} from "../../utils/holidayFormat";
@@ -109,7 +109,16 @@ export default function TabularCalendar(props){
                                         {daysOfMonth.map((dayOfWeek,index) => {
                                             eventResult = checkHolidayForCellColor(dataInfos.events,new Date(period.year + '-' + getCurrentMonth() + '-' + (index + 1) ));
                                             eventResult.bgColor = adjustTabularEventBackgroundColor(eventResult,dayOfWeek);
-                                            const element = (userInfos.isAdmin && eventResult.title !== '') ?
+                                            if(eventResult.start !== null && eventResult.end !== null){
+                                                if(eventResult.title === '' || userInfos.isAdmin !== true){
+                                                    if(isSameDay(eventResult.start,eventResult.end)){
+                                                        eventResult.title = "Le " + displayDate(eventResult.start);
+                                                    }else{
+                                                        eventResult.title = "Du " + displayDate(eventResult.start) + " au " + displayDate(eventResult.end);
+                                                    }
+                                                }
+                                            }
+                                            const element = (eventResult.title !== '') ?
                                                 <td data-title={eventResult.title} onMouseMove={cellMouseMove}
                                                     onMouseEnter={cellEnter} onMouseLeave={cellLeave}
                                                     className="event-cell" style={{background:eventResult.bgColor}} key={index}/>
