@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\History;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
+use App\Service\Helper\HistoryHelper;
 use App\Service\Helper\RoleHelper;
 use App\Service\Serializer\MySerializer;
 use App\Service\Validator\UserValidator;
@@ -96,7 +98,7 @@ class UserController extends AbstractController
         ServiceRepository $serviceRepository
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
-        if(!UserValidator::validate($data) || $userValidator->checkServiceExistence($data) || !UserValidator::checkPassword($data)){
+        if(!UserValidator::validate($data) || !$userValidator->checkServiceExistence($data) || !UserValidator::checkPassword($data)){
             throw new \Exception("Les données envoyées ne sont pas valides");
         }
         $user = new User();
@@ -113,8 +115,13 @@ class UserController extends AbstractController
         /** @var Service $service */
         $service = $serviceRepository->findOneBy(['id' => $data['service']]);
         $user->setService($service);
+
+        /** @var History $userHistory */
+        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_CREATE);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
+        $em->persist($userHistory);
         $em->flush();
         return new JsonResponse($user->serialize());
     }
@@ -135,7 +142,12 @@ class UserController extends AbstractController
         if($user->isAdmin()){
             throw new \Exception("Vous ne pouvez pas supprimer un administrateur");
         }
+
+        /** @var History $userHistory */
+        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_DELETE);
+
         $em = $this->getDoctrine()->getManager();
+        $em->persist($userHistory);
         $em->remove($user);
         $em->flush();
         return new JsonResponse([
@@ -186,8 +198,13 @@ class UserController extends AbstractController
             $service = $serviceRepository->findOneBy(['id' => $data['service']]);
             $user->setService($service);
         }
+
+        /** @var History $userHistory */
+        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_EDIT);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
+        $em->persist($userHistory);
         $em->flush();
 
         return new JsonResponse($user->serialize());
@@ -211,8 +228,12 @@ class UserController extends AbstractController
         RoleHelper::validateRoles($roles);
         $user->setRoles($roles);
 
+        /** @var History $userHistory */
+        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_EDIT);
+
         $manager = $this->getDoctrine()->getManager();
         $manager->persist($user);
+        $manager->persist($userHistory);
         $manager->flush();
         return new JsonResponse($user->serialize());
     }
@@ -242,8 +263,13 @@ class UserController extends AbstractController
             throw new \Exception("L'ancien mot de passe ne correspond pas.");
         }
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
+
+        /** @var History $userHistory */
+        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_EDIT);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
+        $em->persist($userHistory);
         $em->flush();
         return new JsonResponse($user->serialize());
     }

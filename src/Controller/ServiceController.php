@@ -4,8 +4,10 @@
 namespace App\Controller;
 
 
+use App\Entity\History;
 use App\Entity\Service;
 use App\Repository\ServiceRepository;
+use App\Service\Helper\HistoryHelper;
 use App\Service\Serializer\MySerializer;
 use App\Service\Validator\ServiceValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -64,8 +66,13 @@ class ServiceController extends AbstractController
 
         $service = new Service($data['name']);
         $service->setIsDeletable(true);
+
+        /** @var History $serviceHistory */
+        $serviceHistory = HistoryHelper::historize($service, $this->getUser()->getId(),History::TYPE_CREATE);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($service);
+        $em->persist($serviceHistory);
         $em->flush();
         return new JsonResponse($service->serialize());
     }
@@ -86,8 +93,13 @@ class ServiceController extends AbstractController
         }
 
         $service->setName($data['name']);
+
+        /** @var History $serviceHistory */
+        $serviceHistory = HistoryHelper::historize($service, $this->getUser()->getId(),History::TYPE_EDIT);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($service);
+        $em->persist($serviceHistory);
         $em->flush();
         return new JsonResponse($service->serialize());
     }
@@ -98,6 +110,7 @@ class ServiceController extends AbstractController
      * @param Service $service
      * @param ServiceRepository $serviceRepository
      * @return JsonResponse
+     * @throws \Exception
      */
     public function deleteService(
         Service $service,
@@ -111,6 +124,11 @@ class ServiceController extends AbstractController
                 $em->persist($user);
             }
         }
+
+        /** @var History $serviceHistory */
+        $serviceHistory = HistoryHelper::historize($service, $this->getUser()->getId(),History::TYPE_DELETE);
+
+        $em->persist($serviceHistory);
         $em->remove($service);
         $em->flush();
         return new JsonResponse([

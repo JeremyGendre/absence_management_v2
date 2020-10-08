@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\History;
 use App\Entity\Holiday;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\HolidayRepository;
+use App\Service\Helper\HistoryHelper;
 use App\Service\Helper\HolidayHelper;
 use App\Service\Validator\HolidayValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -252,8 +254,12 @@ class HolidayController extends AbstractController
             $holiday->setStatus(Holiday::STATUS_ACCEPTED);
         }
 
+        /** @var History $holidayHistory */
+        $holidayHistory = HistoryHelper::historize($holiday, $authUser->getId(),History::TYPE_CREATE);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($holiday);
+        $em->persist($holidayHistory);
         $em->flush();
         return new JsonResponse($holiday->serialize());
     }
@@ -262,13 +268,19 @@ class HolidayController extends AbstractController
      * @Route(path="/accept/{id}", name="holiday_accept", methods={"PUT"})
      * @param Holiday $holiday
      * @return JsonResponse
+     * @throws \Exception
      */
     public function acceptHoliday(
         Holiday $holiday
     ):JsonResponse{
         $holiday->setStatus(Holiday::STATUS_ACCEPTED);
+
+        /** @var History $holidayHistory */
+        $holidayHistory = HistoryHelper::historize($holiday, $this->getUser()->getId(),History::TYPE_EDIT);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($holiday);
+        $em->persist($holidayHistory);
         $em->flush();
         return new JsonResponse($holiday->serialize());
     }
@@ -277,13 +289,19 @@ class HolidayController extends AbstractController
      * @Route(path="/reject/{id}", name="holiday_reject", methods={"PUT"})
      * @param Holiday $holiday
      * @return JsonResponse
+     * @throws \Exception
      */
     public function rejectHoliday(
         Holiday $holiday
     ):JsonResponse{
         $holiday->setStatus(Holiday::STATUS_REJECTED);
+
+        /** @var History $holidayHistory */
+        $holidayHistory = HistoryHelper::historize($holiday, $this->getUser()->getId(),History::TYPE_EDIT);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($holiday);
+        $em->persist($holidayHistory);
         $em->flush();
         return new JsonResponse($holiday->serialize());
     }
@@ -302,7 +320,12 @@ class HolidayController extends AbstractController
         if($holiday->getUser() !== $authUser && !$authUser->isAdmin()){
             throw new \Exception("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
         }
+
+        /** @var History $holidayHistory */
+        $holidayHistory = HistoryHelper::historize($holiday, $authUser->getId(),History::TYPE_DELETE);
+
         $em = $this->getDoctrine()->getManager();
+        $em->persist($holidayHistory);
         $em->remove($holiday);
         $em->flush();
         return new JsonResponse([
