@@ -17,6 +17,8 @@ import './UsersAdminList.css';
 import RowUser from "./RowUser";
 import {editUserRoleInList, userIsAdmin} from "../../utils/user";
 import {servicesToSelectable} from "../../utils/service";
+import {isBadResult} from "../../utils/server";
+import {displayErrorPopup} from "../../utils/error";
 
 const MySwal = withReactContent(Swal);
 
@@ -119,8 +121,13 @@ export default function UsersAdminList(props){
                 setUsersBeingProcessed([...usersBeingProcessed,user.id]);
                 return axios.delete(
                     '/api/user/delete/' + user.id
-                ).then(data => {
-                    return data.data;
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        return result.data;
+                    }
                 }).catch(error => {
                     console.error(error);
                     Swal.showValidationMessage(`Request failed: ${error}`);
@@ -157,11 +164,16 @@ export default function UsersAdminList(props){
                 setUsersBeingProcessed([...usersBeingProcessed,user.id]);
                 return axios.put(
                     '/api/user/edit/roles/' + user.id,{roles: selectedRoles}
-                ).then(data => {
-                    user.roles = data.data.roles;
-                    setUsersListFull(editUserRoleInList(usersListFull,user.id,data.data.roles));
-                    setUsersListDisplayed(editUserRoleInList(usersListDisplayed,user.id,data.data.roles));
-                    return data.data;
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        user.roles = result.data.roles;
+                        setUsersListFull(editUserRoleInList(usersListFull,user.id,result.data.roles));
+                        setUsersListDisplayed(editUserRoleInList(usersListDisplayed,user.id,result.data.roles));
+                        return result.data;
+                    }
                 }).catch(error => {
                     console.error(error);
                     Swal.showValidationMessage(`Request failed: ${error}`);

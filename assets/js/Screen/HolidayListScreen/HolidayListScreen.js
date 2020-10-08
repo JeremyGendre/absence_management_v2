@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {
     Button,
     Container,
-    Header as SemanticHeader, Icon, Loader,
+    Header as SemanticHeader, Icon,
     Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow,
 } from 'semantic-ui-react';
 import {displayDate, getTimeBetweenTwoDates, isDatePassed} from "../../utils/date";
@@ -16,6 +16,7 @@ import withReactContent from 'sweetalert2-react-content';
 import {getShortType} from "../../utils/holidaysTypes";
 import {removeFromArray} from "../../utils/functions";
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -62,14 +63,19 @@ export default function HolidayListScreen(props){
             if (result.value) {
                 setHolidaysBeingDeleted([...holidaysBeingDeleted,holiday.key]);
                 axios.delete('/api/holiday/delete/'+holiday.key).then(result => {
-                    let newHolidaysList = [];
-                    listHolidays.forEach(oneHoliday => {
-                        if(oneHoliday.key !== holiday.key){
-                            newHolidaysList.push(oneHoliday);
-                        }
-                    });
-                    setListHolidays(newHolidaysList);
-                    MySwal.fire({icon:'success', title:'Congés annulés'});
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        displayErrorPopup(errorMessage);
+                    }else{
+                        let newHolidaysList = [];
+                        listHolidays.forEach(oneHoliday => {
+                            if(oneHoliday.key !== holiday.key){
+                                newHolidaysList.push(oneHoliday);
+                            }
+                        });
+                        setListHolidays(newHolidaysList);
+                        MySwal.fire({icon:'success', title:'Congés annulés'});
+                    }
                 }).catch(error => {
                     displayErrorPopup(error);
                     console.log(error);

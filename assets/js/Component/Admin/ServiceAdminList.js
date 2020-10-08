@@ -8,6 +8,7 @@ import {removeFromArray} from "../../utils/functions";
 import {editServiceInList} from "../../utils/service";
 import NewService from "./NewService";
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -46,9 +47,14 @@ export default function ServiceAdminList(props){
                     setServicesBeingProcessed([...servicesBeingProcessed,oneService.id]);
                     return axios.put(
                         '/api/service/'+ oneService.id +'/edit',{name: newName}
-                    ).then(data => {
-                        setServices(editServiceInList(services,data.data));
-                        return data.data;
+                    ).then(result => {
+                        const errorMessage = isBadResult(result);
+                        if(errorMessage !== ''){
+                            Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                        }else{
+                            setServices(editServiceInList(services,result.data));
+                            return result.data;
+                        }
                     }).catch(error => {
                         console.error(error);
                         Swal.showValidationMessage(`Request failed: ${error}`);
@@ -84,9 +90,14 @@ export default function ServiceAdminList(props){
                 setServicesBeingProcessed([...servicesBeingProcessed,oneService.id]);
                 return axios.delete(
                     '/api/service/delete/' + oneService.id
-                ).then(data => {
-                    setServices(removeFromArray(oneService,services));
-                    return data.data;
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        setServices(removeFromArray(oneService,services));
+                        return result.data;
+                    }
                 }).catch(error => {
                     Swal.showValidationMessage(`Request failed: ${error}`);
                 });

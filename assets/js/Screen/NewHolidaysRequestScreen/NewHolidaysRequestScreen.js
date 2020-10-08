@@ -22,6 +22,7 @@ import {SessionContext} from "../../Component/Context/session";
 import {displayEnglishDate, isSameDay} from "../../utils/date";
 import {STATUS_ACCEPTED, STATUS_ASKED} from "../../utils/holidaysStatus";
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -137,8 +138,13 @@ export default function NewHolidaysRequestScreen(props){
             status: user.isAdmin ? STATUS_ACCEPTED : STATUS_ASKED,
             cause:cause
         }).then(result => {
-            MySwal.fire({icon:'success', title:'Demande créée',});
-            backToInitialState();
+            const errorMessage = isBadResult(result);
+            if(errorMessage !== ''){
+                displayErrorPopup(errorMessage);
+            }else{
+                MySwal.fire({icon:'success', title:'Demande créée',});
+                backToInitialState();
+            }
         }).catch(error => {//erreur
             displayErrorPopup(error);
             console.log(error);

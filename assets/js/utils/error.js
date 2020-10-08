@@ -9,5 +9,5 @@ const MySwal = withReactContent(Swal);
  */
 export function displayErrorPopup(error)
 {
-    MySwal.fire({icon:'error',title:'Une erreur est survenue : ' + error.message});
+    MySwal.fire({icon:'error',title:'Erreur : ' + error.message});
 }

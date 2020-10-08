@@ -16,6 +16,7 @@ import withReactContent from 'sweetalert2-react-content';
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -56,10 +57,15 @@ export default function HolidaysAdminList(props){
                 setHolidaysBeingProcessed([...holidaysBeingProcessed,holiday.key]);
                 return axios.put(
                     '/api/holiday/accept/' + holiday.key
-                ).then(data => {
-                    setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
-                    setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
-                    return data.data;
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
+                        setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                        return result.data;
+                    }
                 }).catch(error => {
                     Swal.showValidationMessage(`Request failed: ${error}`);
                 });
@@ -88,10 +94,15 @@ export default function HolidaysAdminList(props){
                 setHolidaysBeingProcessed([...holidaysBeingProcessed,holiday.key]);
                 return axios.put(
                     '/api/holiday/reject/' + holiday.key
-                ).then(data => {
-                    setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
-                    setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
-                    return data.data;
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
+                        setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                        return result.data;
+                    }
                 }).catch(error => {
                     Swal.showValidationMessage(`Request failed: ${error}`);
                 });

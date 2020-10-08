@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PropTypes from 'prop-types';
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -28,7 +29,8 @@ export default function Profile(props){
             setSubmitting(false);
             return false;
         } else { // formulaire ok
-            axios.put('/api/user/edit/'+user.user.id,
+            axios.put(
+                '/api/user/edit/'+user.user.id,
                 {
                     first_name:firstName,
                     last_name:lastName,
@@ -37,12 +39,17 @@ export default function Profile(props){
                     title:title,
                     username:user.user.username
                 }).then(result => {
-                let userData = result.data;
-                user.updateUser(userData);
-                MySwal.fire({
-                    icon:'success',
-                    title:'Profil mis à jour',
-                });
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        displayErrorPopup(errorMessage);
+                    }else{
+                        let userData = result.data;
+                        user.updateUser(userData);
+                        MySwal.fire({
+                            icon:'success',
+                            title:'Profil mis à jour',
+                        });
+                    }
             }).catch(error => {
                 console.log(error);
                 displayErrorPopup(error);

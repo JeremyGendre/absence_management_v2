@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PropTypes from 'prop-types';
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -25,11 +26,16 @@ export default function NewService(props){
                 '/api/service/new',
                 {name: newServiceName}
             ).then(result => {
-                props.addService(result.data);
-                MySwal.fire({
-                    icon:'success',
-                    title:'Service créé',
-                });
+                const errorMessage = isBadResult(result);
+                if(errorMessage !== ''){
+                    displayErrorPopup(errorMessage);
+                }else{
+                    props.addService(result.data);
+                    MySwal.fire({
+                        icon:'success',
+                        title:'Service créé',
+                    });
+                }
             }).catch(error => {
                 console.log(error);
                 displayErrorPopup(error);

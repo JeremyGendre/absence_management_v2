@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {servicesToSelectable} from "../../utils/service";
 import {displayErrorPopup} from "../../utils/error";
+import {isBadResult} from "../../utils/server";
 
 const MySwal = withReactContent(Swal);
 
@@ -51,10 +52,15 @@ export default function NewUser(props){
                     username: newUser.username,
                     password: newUser.password
                 }).then(result => {
-                MySwal.fire({
-                    icon:'success',
-                    title:'Utilisateur créé',
-                });
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        displayErrorPopup(errorMessage);
+                    }else{
+                        MySwal.fire({
+                            icon:'success',
+                            title:'Utilisateur créé',
+                        });
+                    }
             }).catch(error => {
                 console.log(error);
                 displayErrorPopup(error);
