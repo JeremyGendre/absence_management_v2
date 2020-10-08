@@ -158,8 +158,12 @@ export default function TabularCalendar(props){
         <div id="tabular-calendar-container">
             <div className="tabular-calendar-container-header">
                 <div className="current-month">{period.month.label} {period.year}</div>
-                <div className="select-month-btn" onClick={handlePrevClick}>Précédent</div>
-                <div className="select-month-btn" onClick={handleNextClick}>Suivant</div>
+                <div className="select-month-btn" onClick={handlePrevClick}>
+                    {props.prevButton ?? <div className="default-select-month-btn">Précédent</div>}
+                </div>
+                <div className="select-month-btn" onClick={handleNextClick}>
+                    {props.nextButton ?? <div className="default-select-month-btn">Suivant</div>}
+                </div>
             </div>
             <div className="tabular-calendar">
                 {props.loading ? (

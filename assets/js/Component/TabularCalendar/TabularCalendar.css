@@ -15,10 +15,11 @@
     font-size: 1.2em;
     margin-right:0.5em;
 }
-
 .select-month-btn{
-    transition: all 0.1s ease-in-out;
     display: inline-block;
+}
+.default-select-month-btn{
+    transition: all 0.1s ease-in-out;
     background-color: var(--main-color);
     color:var(--main-background-color);
     padding: 0.5em 0.7em;
@@ -30,13 +31,13 @@
     -ms-user-select: none; /* IE10+/Edge */
 }
 
-.select-month-btn:hover{
+.default-select-month-btn:hover{
     cursor:pointer;
     box-shadow: 1px 1px 8px grey;
     background-color: var(--main-hover-color);
 }
 
-.select-month-btn:active{
+.default-select-month-btn:active{
     transform: scale(0.95);
 }
 /***************** END CONTAINER HEADER *******************/
