@@ -7,6 +7,7 @@ use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
+use App\Service\Handler\ResponseHandler;
 use App\Service\Helper\HistoryHelper;
 use App\Service\Helper\RoleHelper;
 use App\Service\Serializer\MySerializer;
@@ -76,7 +77,7 @@ class UserController extends AbstractController
             "username" => $username
         ]);
         if($user === null){
-            throw new \Exception("Aucun utilisateur trouvé avec le nom '".$username."'.");
+            return ResponseHandler::errorResponse("Aucun utilisateur trouvé avec le nom '".$username."'.");
         }
         return new JsonResponse($user->serialize());
     }
@@ -99,11 +100,11 @@ class UserController extends AbstractController
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
         if(!UserValidator::validate($data) || !$userValidator->checkServiceExistence($data) || !UserValidator::checkPassword($data)){
-            throw new \Exception("Les données envoyées ne sont pas valides");
+            return ResponseHandler::errorResponse("Les données envoyées ne sont pas valides");
         }
         $user = new User();
         if(!$userValidator->checkUsername($data['username'])){
-            throw new \Exception("Le nom d'utilisateur existe déjà");
+            return ResponseHandler::errorResponse("Le nom d'utilisateur existe déjà");
         }
         $user->setUsername($data['username']);
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
@@ -137,10 +138,10 @@ class UserController extends AbstractController
         User $user
     ):JsonResponse{
         if($this->getUser() === $user){
-            throw new \Exception("Vous ne pouvez pas vous supprimer vous-même");
+            return ResponseHandler::errorResponse("Vous ne pouvez pas vous supprimer vous-même");
         }
         if($user->isAdmin()){
-            throw new \Exception("Vous ne pouvez pas supprimer un administrateur");
+            return ResponseHandler::errorResponse("Vous ne pouvez pas supprimer un administrateur");
         }
 
         /** @var History $userHistory */
@@ -172,20 +173,20 @@ class UserController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if($user->isAdmin() && $user !== $authUser){
-            throw new \Exception("Vous ne pouvez pas modifier un autre administrateur.");
+            return ResponseHandler::errorResponse("Vous ne pouvez pas modifier un autre administrateur.");
         }
         if(!$authUser->isAdmin() && $authUser !== $user){
-            throw new \Exception("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
+            return ResponseHandler::errorResponse("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
         }
         $data = json_decode($request->getContent(),true);
         if(!UserValidator::validate($data)){
-            throw new \Exception("Les données envoyées ne sont pas valides");
+            return ResponseHandler::errorResponse("Les données envoyées ne sont pas valides");
         }
 
         if($data['username'] !== $user->getUsername()){
             $usernameUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(["username"=>$data['username']]);
             if($usernameUser !== null){
-                throw new \Exception("Le nom d'utilisateur existe déjà.");
+                return ResponseHandler::errorResponse("Le nom d'utilisateur existe déjà.");
             }
             $user->setUsername($data['username']);
         }
@@ -221,7 +222,7 @@ class UserController extends AbstractController
     public function editUserRoles(User $user, Request $request):JsonResponse{
         $data = json_decode($request->getContent(),true);
         if(array_key_exists('roles',$data) === false){
-            throw new \Exception("Le format de données n'est pas correct");
+            return ResponseHandler::errorResponse("Le format de données n'est pas correct");
         }
 
         $roles = $data['roles'];
@@ -252,15 +253,15 @@ class UserController extends AbstractController
         UserPasswordEncoderInterface $passwordEncoder
     ):JsonResponse{
         if($this->getUser() !== $user){
-            throw new \Exception("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
+            return ResponseHandler::errorResponse("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
         }
         $data = json_decode($request->getContent(),true);
         $formError = UserValidator::changePasswordFormError($data);
         if($formError !== null){
-            throw new \Exception($formError);
+            return ResponseHandler::errorResponse($formError);
         }
         if(!$passwordEncoder->isPasswordValid($user, $data['oldPassword'])){
-            throw new \Exception("L'ancien mot de passe ne correspond pas.");
+            return ResponseHandler::errorResponse("L'ancien mot de passe ne correspond pas.");
         }
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
 

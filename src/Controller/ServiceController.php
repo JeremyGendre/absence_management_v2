@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\History;
 use App\Entity\Service;
 use App\Repository\ServiceRepository;
+use App\Service\Handler\ResponseHandler;
 use App\Service\Helper\HistoryHelper;
 use App\Service\Serializer\MySerializer;
 use App\Service\Validator\ServiceValidator;
@@ -61,7 +62,7 @@ class ServiceController extends AbstractController
         $data = json_decode($request->getContent(),true);
 
         if(!ServiceValidator::validate($data)){
-            throw new \Exception("Les données transmises ne sont pas valides");
+            return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
         }
 
         $service = new Service($data['name']);
@@ -89,7 +90,7 @@ class ServiceController extends AbstractController
         $data = json_decode($request->getContent(),true);
 
         if(!ServiceValidator::validate($data)){
-            throw new \Exception("Les données transmises ne sont pas valides");
+            return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
         }
 
         $service->setName($data['name']);
