@@ -35,7 +35,7 @@ class UserController extends AbstractController
     public function getAllUsers(
         UserRepository $userRepository
     ):JsonResponse{
-        $users = $userRepository->findAll();
+        $users = $userRepository->findBy([],['isActive' => 'DESC','lastName' => 'ASC']);
         $response = MySerializer::serializeMany($users);
         return new JsonResponse($response);
     }
@@ -151,10 +151,7 @@ class UserController extends AbstractController
         $em->persist($userHistory);
         $em->remove($user);
         $em->flush();
-        return new JsonResponse([
-            "success" => true,
-            "message" => "Utilisateur supprimé"
-        ]);
+        return ResponseHandler::successResponse("Utilisateur supprimé");
     }
 
     /**
@@ -275,8 +272,34 @@ class UserController extends AbstractController
         return new JsonResponse($user->serialize());
     }
 
-    public function deactivateUser(User $user):JsonResponse
+    /**
+     * @Route(path="/activation/{id}", name="user_activation", methods={"PUT"})
+     * @param User $user
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function toggleUserActivation(User $user, Request $request):JsonResponse
     {
-        return ResponseHandler::successResponse("Utilisateur désactivé");
+        if($this->getUser() === $user){
+            return ResponseHandler::errorResponse("Vous ne pouvez pas gérer votre activation/désactivation");
+        }
+        if($user->isAdmin()){
+            return ResponseHandler::errorResponse("Vous ne pouvez pas gérer l'activation/désactivation d'un administrateur");
+        }
+        $data = json_decode($request->getContent(),true);
+        if(array_key_exists('isActive',$data) === false || ($data['isActive'] !== false && $data['isActive'] !== true)){
+            return ResponseHandler::errorResponse("Les données envoyées ne sont pas valides");
+        }
+        $user->setIsActive($data['isActive']);
+
+        /** @var History $userHistory */
+        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_EDIT);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($userHistory);
+        $em->persist($user);
+        $em->flush();
+        return ResponseHandler::successResponse("Utilisateur " . ($user->getIsActive() === true ? "activé" : "désactivé"));
     }
 }

@@ -83,6 +83,7 @@ class User implements UserInterface, MySerializerInterface
     {
         $this->holidays = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->isActive = true;
     }
 
     /**
