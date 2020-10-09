@@ -40,6 +40,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
         $user->setEmail("admin@media-sante.com");
         $user->setUsername("admin");
         $user->setRoles(["ROLE_ADMIN","ROLE_USER"]);
+        $user->setIsActive(true);
         $user->setPassword($this->encoder->encodePassword($user,"johndoe"));
 
         $manager->persist($user);

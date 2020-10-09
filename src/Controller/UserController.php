@@ -274,4 +274,9 @@ class UserController extends AbstractController
         $em->flush();
         return new JsonResponse($user->serialize());
     }
+
+    public function deactivateUser(User $user):JsonResponse
+    {
+        return ResponseHandler::successResponse("Utilisateur désactivé");
+    }
 }

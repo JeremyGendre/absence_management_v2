@@ -74,6 +74,11 @@ class User implements UserInterface, MySerializerInterface
      */
     private $holidays;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
     public function __construct()
     {
         $this->holidays = new ArrayCollection();
@@ -405,5 +410,24 @@ class User implements UserInterface, MySerializerInterface
             "username" => $this->username,
             "service" => $this->getService()->serialize()
         ];
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     * @return User
+     */
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
     }
 }
