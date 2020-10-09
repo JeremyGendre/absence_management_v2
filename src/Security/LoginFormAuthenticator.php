@@ -72,6 +72,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         if (!$user) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
+        }elseif($user->getIsActive() !== true){
+            throw new CustomUserMessageAuthenticationException("This user's account has been deactivated");
         }
 
         return $user;
