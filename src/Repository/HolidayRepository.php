@@ -22,6 +22,18 @@ class HolidayRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function findAllWithActiveUser(){
+        return $this->createQueryBuilder('h')
+            ->innerJoin('h.user','u')
+            ->andWhere('u.isActive = true')
+            ->orderBy('h.startDate','DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $user
      * @param \DateTime $startDate
      * @param \DateTime $endDate
@@ -30,7 +42,7 @@ class HolidayRepository extends ServiceEntityRepository
     public function findByUserAndDates(User $user, \DateTime $startDate, \DateTime $endDate){
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-            'SELECT h FROM App\Entity\Holiday h WHERE h.user = :user and ((h.startDate between :start and :end) or h.endDate between :start and :end)'
+            'SELECT h FROM '.Holiday::class.' h WHERE h.user = :user and ((h.startDate between :start and :end) or h.endDate between :start and :end)'
         )->setParameter('user',$user)
             ->setParameter('start',$startDate)
             ->setParameter('end',$endDate);
@@ -45,12 +57,27 @@ class HolidayRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('h')
             ->innerJoin('h.user','u')
             ->andWhere('h.status <> :rejectedStatus')
-            ->setParameter('rejectedStatus',Holiday::STATUS_REJECTED)
+            ->andWhere('u.isActive = true')
             ->andWhere('u.service = :service')
+            ->setParameter('rejectedStatus',Holiday::STATUS_REJECTED)
             ->setParameter('service', $service)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
+    }
+
+    /**
+     * @param int $status
+     * @return mixed
+     */
+    public function findByStatus(int $status){
+        return $this->createQueryBuilder('h')
+            ->innerJoin('h.user','u')
+            ->andWhere('h.status = :status')
+            ->andWhere('u.isActive = true')
+            ->setParameter('status', $status)
+            ->orderBy('h.startDate','DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -58,6 +85,8 @@ class HolidayRepository extends ServiceEntityRepository
      */
     public function findAllExceptRejected(){
         return $this->createQueryBuilder('h')
+            ->innerJoin('h.user','u')
+            ->andWhere('u.isActive = true')
             ->andWhere('h.status <> :rejectedStatus')
             ->setParameter('rejectedStatus',Holiday::STATUS_REJECTED)
             ->orderBy('h.startDate','DESC')
@@ -74,7 +103,7 @@ class HolidayRepository extends ServiceEntityRepository
     public function findByServiceAndDates(Service $service, \DateTime $startDate, \DateTime $endDate){
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-            'SELECT h FROM App\Entity\Holiday h join App\Entity\User u WHERE u.service = :service and ((h.startDate between :start and :end) or h.endDate between :start and :end)'
+            'SELECT h FROM '.Holiday::class.' h join '.User::class.' u WHERE u.isActive = true and u.service = :service and ((h.startDate between :start and :end) or h.endDate between :start and :end)'
         )->setParameter('service',$service)
             ->setParameter('start',$startDate)
             ->setParameter('end',$endDate);
@@ -89,7 +118,7 @@ class HolidayRepository extends ServiceEntityRepository
     public function findByDates(\DateTime $startDate, \DateTime $endDate){
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-            'SELECT h FROM App\Entity\Holiday h WHERE (h.startDate between :start and :end) or (h.endDate between :start and :end)'
+            'SELECT h FROM '.Holiday::class.' h join '.User::class.' u WHERE u.isActive = true WHERE (h.startDate between :start and :end) or (h.endDate between :start and :end)'
         )->setParameter('start',$startDate)
             ->setParameter('end',$endDate);
         return $query->getResult();

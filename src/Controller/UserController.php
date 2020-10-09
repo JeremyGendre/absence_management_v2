@@ -43,11 +43,15 @@ class UserController extends AbstractController
     /**
      * @Route(path="/auth", name="get_authenticated_user", methods={"GET"})
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getAuthUser():JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
+        if($user->getIsActive() === false){
+            throw new \Exception("The user account has been deactivated");
+        }
         return new JsonResponse($user->serialize());
     }
 

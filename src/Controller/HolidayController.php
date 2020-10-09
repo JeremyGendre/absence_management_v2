@@ -32,7 +32,7 @@ class HolidayController extends AbstractController
      * @return JsonResponse
      */
     public function getAllHolidays(Request $request, HolidayRepository $holidayRepository) :JsonResponse {
-        $holidays = $holidayRepository->findBy([],["startDate"=>"DESC"]);
+        $holidays = $holidayRepository->findAllWithActiveUser();
         $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
         return new JsonResponse($response);
     }
@@ -81,10 +81,11 @@ class HolidayController extends AbstractController
         if(!array_key_exists($status,Holiday::LABEL_STATUS)){
             return ResponseHandler::errorResponse("Le status recherché n'est correct.");
         }
-        $holidays = $holidayRepository->findBy(["status" => $status],["startDate"=>"DESC"]);
+        $holidays = $holidayRepository->findByStatus($status);
         $response = [];
         $today = new \DateTime();
         $eventSerialization = strpos($request->getRequestUri(),'/events') !== false;
+        /** @var Holiday $holiday */
         foreach ($holidays as $holiday){
             if($holiday->getEndDate() > $today){
                 $response[] = $eventSerialization ? $holiday->serializeAsEvent() : $holiday->serialize();

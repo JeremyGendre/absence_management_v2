@@ -72,6 +72,9 @@ class HolidayHelper
     {
         $response = [];
         foreach ($users as $user){
+            if($user->getIsActive() === false){
+                continue;
+            }
             $response[] = [
                 "userName" => $user->getName(),
                 "events" => self::holidaysSerialization($user->getHolidays(),true,true)
