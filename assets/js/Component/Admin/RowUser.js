@@ -45,8 +45,12 @@ export default function RowUser(props){
                         <Icon title="Administrateur" name="user secret"/>
                     ) : (
                         <>
-                            <Icon title="Modifier les droits" onClick={handleEditRoleUser.bind(this,user)} className="users-list-admin-btn button-edit-user-roles" name="unlock alternate"/>
-                            <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)} className="users-list-admin-btn button-delete-user" name="trash"/>
+                            <Icon title="Modifier les droits" onClick={handleEditRoleUser.bind(this,user)}
+                                  className="users-list-admin-btn button-edit-user-roles" name="unlock alternate"/>
+                            <Icon title={(user.isActive ? "Désactiver" : "Activer") + " l'utilisateur"} onClick={handleDeleteUser.bind(this,user)}
+                                  className={"users-list-admin-btn " + (user.isActive ? "button-deactivate-user" : "button-activate-user")} name="shutdown"/>
+                            <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)}
+                                  className="users-list-admin-btn button-delete-user" name="trash"/>
                         </>
                     )
                 }

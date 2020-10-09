@@ -383,36 +383,6 @@ class User implements UserInterface, MySerializerInterface
     }
 
     /**
-     * @return array
-     */
-    public function serialize(): array
-    {
-        return [
-            "id" => $this->id,
-            "last_name" => $this->lastName,
-            "first_name" => $this->firstName,
-            "email" => $this->email,
-            "username" => $this->username,
-            "roles" => $this->roles,
-            "service" => $this->getService()->serialize(),
-            "title" => $this->title,
-            "created_at" => $this->createdAt->format('d/m/Y')
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function serializeForHoliday():array{
-        return [
-            "id" => $this->id,
-            "display_name" => $this->__toString(),
-            "username" => $this->username,
-            "service" => $this->getService()->serialize()
-        ];
-    }
-
-    /**
      * @return bool|null
      */
     public function getIsActive(): ?bool
@@ -429,5 +399,37 @@ class User implements UserInterface, MySerializerInterface
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function serialize(): array
+    {
+        return [
+            "id" => $this->id,
+            "last_name" => $this->lastName,
+            "first_name" => $this->firstName,
+            "email" => $this->email,
+            "username" => $this->username,
+            "roles" => $this->roles,
+            "service" => $this->getService()->serialize(),
+            "title" => $this->title,
+            "isActive" => $this->isActive,
+            "created_at" => $this->createdAt->format('d/m/Y')
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function serializeForHoliday():array{
+        return [
+            "id" => $this->id,
+            "display_name" => $this->__toString(),
+            "username" => $this->username,
+            "isActive" => $this->isActive,
+            "service" => $this->getService()->serialize()
+        ];
     }
 }

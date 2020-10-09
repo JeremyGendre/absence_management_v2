@@ -5,11 +5,11 @@
     cursor:pointer;
 }
 
-.button-delete-user{
+.button-delete-user, .button-deactivate-user{
     color: #c3361b;
 }
 
-.button-delete-user:hover{
+.button-delete-user:hover, .button-deactivate-user:hover{
     color: #f1634f;
 }
 
@@ -19,4 +19,12 @@
 
 .button-edit-user-roles:hover{
     color: #46a0bd;
+}
+
+.button-activate-user{
+    color: #4FCD49;
+}
+
+.button-activate-user:hover{
+    color: #78cd6b;
 }

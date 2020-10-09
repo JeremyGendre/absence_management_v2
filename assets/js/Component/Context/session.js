@@ -28,8 +28,8 @@ export default function ApplicationSession(props){
     });
 
     useEffect(()=>{
-        axios.get('/api/user/auth').then((data)=>{
-            updateUserState(data.data);
+        axios.get('/api/user/auth').then((result)=>{
+            updateUserState(result.data);
         }).catch((error)=>{
             console.error(error);
             logout();
@@ -47,6 +47,9 @@ export default function ApplicationSession(props){
     }
 
     function updateUserState(userData) {
+        if(userData.isActive !== undefined && userData.isActive === false){
+            logout();
+        }
         setUser({
             user: userData,
             isAdmin: userIsAdmin(userData),
