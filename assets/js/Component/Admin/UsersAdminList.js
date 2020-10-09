@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import RowUser from "./RowUser";
-import {editUserRoleInList, userIsAdmin} from "../../utils/user";
+import {editUserInList, editUserRoleInList, userIsAdmin} from "../../utils/user";
 import {servicesToSelectable} from "../../utils/service";
 import {isBadResult} from "../../utils/server";
 import {displayErrorPopup} from "../../utils/error";
@@ -188,6 +188,46 @@ export default function UsersAdminList(props){
         });
     }
 
+    function handleToggleUserActivation(user){
+        const userFullName = user.last_name + ' ' + user.first_name;
+        const toggleAction = (user.isActive === true ? 'Désactiver' : 'Activer');
+        MySwal.fire({
+            title: toggleAction + ' ' + userFullName + ' ?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: toggleAction,
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
+                setUsersBeingProcessed([...usersBeingProcessed,user.id]);
+                return axios.put(
+                    '/api/user/activation/' + user.id,{isActive: !user.isActive}
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        user = result.data;
+                        setUsersListFull(editUserInList(usersListFull,user));
+                        setUsersListDisplayed(editUserInList(usersListDisplayed,user));
+                        return user;
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }).finally(()=>{
+                    setUsersBeingProcessed(removeFromArray(user.id,usersBeingProcessed));
+                });
+            }
+        }).then((result) => {
+            if(result.isConfirmed){
+                MySwal.fire({icon:'success',title:"Utilisateur " + (user.isActive === true ? 'activé' : 'désactivé')});
+            }
+        });
+    }
+
     function handleFilterByServiceChange(data){
         setFilteredService(data);
         setAdminFilter(false);
@@ -279,6 +319,7 @@ export default function UsersAdminList(props){
                                 processed={usersBeingProcessed.includes(data.id)}
                                 handleDelete={handleDeleteUser}
                                 handleEditRoleUser={handleEditRoleUser}
+                                handleToggleUserActivation={handleToggleUserActivation}
                             />
                         );
                     })}

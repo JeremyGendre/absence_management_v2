@@ -26,6 +26,10 @@ export default function RowUser(props){
         props.handleEditRoleUser(user);
     }
 
+    function handleToggleUserActivation(user){
+        props.handleToggleUserActivation(user);
+    }
+
     return (
         <TableRow disabled={props.processed}>
             <TableCell>
@@ -47,7 +51,7 @@ export default function RowUser(props){
                         <>
                             <Icon title="Modifier les droits" onClick={handleEditRoleUser.bind(this,user)}
                                   className="users-list-admin-btn button-edit-user-roles" name="unlock alternate"/>
-                            <Icon title={(user.isActive ? "Désactiver" : "Activer") + " l'utilisateur"} onClick={handleDeleteUser.bind(this,user)}
+                            <Icon title={(user.isActive ? "Désactiver" : "Activer") + " l'utilisateur"} onClick={handleToggleUserActivation.bind(this,user)}
                                   className={"users-list-admin-btn " + (user.isActive ? "button-deactivate-user" : "button-activate-user")} name="shutdown"/>
                             <Icon title="Supprimer l'utilisateur" onClick={handleDeleteUser.bind(this,user)}
                                   className="users-list-admin-btn button-delete-user" name="trash"/>
@@ -63,5 +67,6 @@ RowUser.propTypes = {
     user:PropTypes.object.isRequired,
     processed: PropTypes.bool.isRequired,
     handleDelete: PropTypes.func.isRequired,
-    handleEditRoleUser: PropTypes.func.isRequired
+    handleEditRoleUser: PropTypes.func.isRequired,
+    handleToggleUserActivation: PropTypes.func.isRequired
 };

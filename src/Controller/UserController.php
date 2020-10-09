@@ -300,6 +300,6 @@ class UserController extends AbstractController
         $em->persist($userHistory);
         $em->persist($user);
         $em->flush();
-        return ResponseHandler::successResponse("Utilisateur " . ($user->getIsActive() === true ? "activé" : "désactivé"));
+        return new JsonResponse($user->serialize());
     }
 }

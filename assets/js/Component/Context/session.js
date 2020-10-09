@@ -47,7 +47,7 @@ export default function ApplicationSession(props){
     }
 
     function updateUserState(userData) {
-        if(userData.isActive !== undefined && userData.isActive === false){
+        if(userData !== null && userData.isActive !== undefined && userData.isActive === false){
             logout();
         }
         setUser({

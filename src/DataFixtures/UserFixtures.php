@@ -53,10 +53,12 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
             $oneService = $this->getRandomEntityElement(Service::class);
             $user->setService($oneService);
             $user->setTitle($this->faker->jobTitle);
-            $user->setFirstName($this->faker->firstName);
-            $user->setLastName($this->faker->lastName);
+            $lastName = $this->faker->lastName;
+            $firstName = $this->faker->firstName;
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
 
-            $username = $this->faker->userName;
+            $username = $lastName.'.'.$firstName.$i;
             $user->setUsername($username);
             $user->setEmail($username.'@'.$this->faker->domainName);
             $user->setRoles(["ROLE_USER"]);
