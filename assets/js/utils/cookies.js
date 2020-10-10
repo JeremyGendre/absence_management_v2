@@ -1,9 +1,25 @@
-export function setCookie(cname, cvalue) {
-    document.cookie = cname + "=" + cvalue;
+/**
+ * Create / Update a cookie
+ * @param name
+ * @param value
+ * @param exdays
+ */
+function setCookie(name, value, exdays) {
+    let date, expires;
+    exdays = exdays || 1;
+    date = new Date();
+    date.setTime(date.getTime() + (exdays*24*60*60*1000));
+    expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + "; " + expires;
 }
 
-export function getCookie(cname) {
-    let name = cname + "=";
+/**
+ * Get a cookie value
+ * @param cookieName
+ * @returns {string}
+ */
+export function getCookie(cookieName) {
+    let name = cookieName + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
     for(let i = 0; i <ca.length; i++) {
@@ -18,6 +34,10 @@ export function getCookie(cname) {
     return "";
 }
 
-export function deleteCookie(cname){
-    document.cookie = cname+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+/**
+ * Delete a cookie
+ * @param cookieName
+ */
+export function deleteCookie(cookieName){
+    document.cookie = cookieName+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
