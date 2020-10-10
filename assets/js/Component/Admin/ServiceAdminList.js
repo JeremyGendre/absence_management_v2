@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Grid, Icon, Input, Select, Tab, Table} from "semantic-ui-react";
 import Swal from 'sweetalert2';
@@ -9,6 +9,7 @@ import {editServiceInList} from "../../utils/service";
 import NewService from "./NewService";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
+import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 
 const MySwal = withReactContent(Swal);
 
@@ -16,6 +17,7 @@ export default function ServiceAdminList(props){
     const [services, setServices] = useState([]);
     const [loadingServices, setLoadingServices] = useState(true);
     const [servicesBeingProcessed, setServicesBeingProcessed] = useState([]);
+    const theme = useContext(ThemeContext);
 
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
@@ -116,10 +118,10 @@ export default function ServiceAdminList(props){
     }
 
     return (
-        <Tab.Pane attached={false} loading={loadingServices}>
+        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingServices}>
             <Grid columns={2}>
                 <Grid.Column width={8}>
-                    <Table selectable>
+                    <Table inverted={theme.value === THEME_VALUES.dark} selectable>
                         <Table.Header>
                             <Table.Row>
                                 <Table.HeaderCell>Identifiant</Table.HeaderCell>

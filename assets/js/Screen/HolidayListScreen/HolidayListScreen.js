@@ -17,6 +17,7 @@ import {getShortType} from "../../utils/holidaysTypes";
 import {removeFromArray} from "../../utils/functions";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
+import {THEME_VALUES, ThemeContext} from "../../Component/Context/Theme";
 
 const MySwal = withReactContent(Swal);
 
@@ -25,6 +26,7 @@ export default function HolidayListScreen(props){
     const [listHolidays,setListHolidays] = useState([]);
     const [holidaysBeingDeleted,setHolidaysBeingDeleted] = useState([]);
     const user = useContext(SessionContext);
+    const theme = useContext(ThemeContext);
 
     useEffect(()=>{
         axios.get('/api/holiday/user/'+user.user.id).then(result => {
@@ -89,7 +91,7 @@ export default function HolidayListScreen(props){
     return(
         <Container className="custom-containers">
             <SemanticHeader as='h1' className="classic-head-title">Mes congés</SemanticHeader>
-            <Table selectable textAlign="center" className="p-relative">
+            <Table inverted={theme.value === THEME_VALUES.dark} selectable textAlign="center" className="p-relative">
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell>Debut</TableHeaderCell>

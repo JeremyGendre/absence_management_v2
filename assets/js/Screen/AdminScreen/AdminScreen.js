@@ -10,9 +10,11 @@ import HolidaysAdminList from "../../Component/Admin/HolidaysAdminList";
 import UsersAdminList from "../../Component/Admin/UsersAdminList";
 import NewUser from "../../Component/Admin/NewUser";
 import ServiceAdminList from "../../Component/Admin/ServiceAdminList";
+import {THEME_VALUES, ThemeContext} from "../../Component/Context/Theme";
 
 export default function AdminScreen(props){
     const user = useContext(SessionContext);
+    const theme = useContext(ThemeContext);
 
     const panes = [
         {
@@ -43,7 +45,7 @@ export default function AdminScreen(props){
     return(
         <Container className="profile-container custom-containers">
             <SemanticHeader as='h1' className="classic-head-title">Page Administrateur</SemanticHeader>
-            <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+            <Tab menu={{ secondary: true, pointing: true, inverted: theme.value === THEME_VALUES.dark }} panes={panes} />
         </Container>
     );
 }

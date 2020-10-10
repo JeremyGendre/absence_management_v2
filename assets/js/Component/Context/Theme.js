@@ -4,7 +4,7 @@ const THEME_COLORS = [
     {
         name : "--header-background-color",
         light : "#005973",
-        dark : "#0e2023"
+        dark : "#333435"
     },
     {
         name : "--title-color",
@@ -34,7 +34,7 @@ const THEME_COLORS = [
     {
         name : "--background-color",
         light : "#EEEEEE",
-        dark : "#242b31"
+        dark : "#232425"
     },
     {
         name : "--shadow-color",

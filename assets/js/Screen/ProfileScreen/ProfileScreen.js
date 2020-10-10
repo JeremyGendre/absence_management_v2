@@ -10,6 +10,7 @@ import Profile from "../../Component/User/Profile";
 import {SessionContext} from "../../Component/Context/session";
 import PasswordForm from "../../Component/User/PasswordForm";
 import {servicesToSelectable} from "../../utils/service";
+import {THEME_VALUES, ThemeContext} from "../../Component/Context/Theme";
 
 export default function ProfileScreen(props){
     const [loadingData,setLoadingData] = useState(true);
@@ -22,6 +23,7 @@ export default function ProfileScreen(props){
     ]);
 
     const user = useContext(SessionContext);
+    const theme = useContext(ThemeContext);
 
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
@@ -37,14 +39,14 @@ export default function ProfileScreen(props){
         {
             menuItem: { key: 'profile', icon: 'user', content: 'Profil' },
             render: () =>
-                <Tab.Pane>
+                <Tab.Pane inverted={theme.value === THEME_VALUES.dark}>
                     <Profile services={services} user={user}/>
                 </Tab.Pane>
         },
         {
             menuItem: { key: 'password', icon: 'key', content: 'Mot de passe' },
             render: () =>
-                <Tab.Pane>
+                <Tab.Pane inverted={theme.value === THEME_VALUES.dark}>
                     <PasswordForm/>
                 </Tab.Pane>
         },
@@ -58,7 +60,7 @@ export default function ProfileScreen(props){
                 <Container className="profile-container custom-containers">
                     <SemanticHeader as='h1' className="classic-head-title">Mon Profil</SemanticHeader>
                     <Tab
-                        menu={{ fluid: true, vertical: true }}
+                        menu={{ fluid: true, vertical: true, inverted: theme.value === THEME_VALUES.dark }}
                         menuPosition='left'
                         panes={panes}
                     />

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     Grid,
     Input, Radio, Select, Tab,
@@ -19,6 +19,7 @@ import {editUserInList, editUserRoleInList, userIsAdmin} from "../../utils/user"
 import {servicesToSelectable} from "../../utils/service";
 import {isBadResult} from "../../utils/server";
 import {displayErrorPopup} from "../../utils/error";
+import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 
 const MySwal = withReactContent(Swal);
 
@@ -47,6 +48,8 @@ export default function UsersAdminList(props){
     const [usersListFull,setUsersListFull] = useState(initialState.usersListFull);
     const [services,setServices] = useState(initialState.services);
     const [roles,setRoles] = useState(initialState.roles);
+
+    const theme = useContext(ThemeContext);
 
     let searching = setTimeout(() => {},100);
 
@@ -270,7 +273,7 @@ export default function UsersAdminList(props){
     }
 
     return (
-        <Tab.Pane attached={false} loading={loadingUsers}>
+        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingUsers}>
             <Grid columns={3}>
                 <Grid.Row>
                     <Grid.Column>
@@ -285,7 +288,7 @@ export default function UsersAdminList(props){
                 </Grid.Row>
             </Grid>
             <br/>
-            <Table selectable>
+            <Table inverted={theme.value === THEME_VALUES.dark} selectable>
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell>Status</TableHeaderCell>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Form, Input, Message, Tab} from "semantic-ui-react";
 import Swal from 'sweetalert2';
@@ -6,6 +6,7 @@ import withReactContent from 'sweetalert2-react-content';
 import {servicesToSelectable} from "../../utils/service";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
+import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 
 const MySwal = withReactContent(Swal);
 
@@ -25,6 +26,8 @@ export default function NewUser(props){
     const [serviceLoading,setServiceLoading] = useState(true);
     const [services,setServices] = useState([]);
     const [formErrors,setFormErrors] = useState([]);
+
+    const theme = useContext(ThemeContext);
 
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
@@ -102,7 +105,7 @@ export default function NewUser(props){
     }
 
     return (
-        <Tab.Pane attached={false} loading={serviceLoading}>
+        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={serviceLoading}>
             <Form onSubmit={handleFormSubmit}>
                 {(formErrors.length > 0) ? (
                     <Message negative>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     Icon,
     Input, Tab,
@@ -17,6 +17,7 @@ import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
+import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 
 const MySwal = withReactContent(Swal);
 
@@ -26,6 +27,8 @@ export default function HolidaysAdminList(props){
     const [holidaysBeingProcessed,setHolidaysBeingProcessed] = useState([]);
     const [loadingHolidays,setLoadingHolidays] = useState(true);
     const [holidaysListFull,setHolidaysListFull] = useState([]);
+
+    const theme = useContext(ThemeContext);
 
     let searching = setTimeout(() => {},100);
 
@@ -145,9 +148,9 @@ export default function HolidaysAdminList(props){
     }
 
     return (
-        <Tab.Pane attached={false} loading={loadingHolidays}>
+        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingHolidays}>
             <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
-            <Table selectable>
+            <Table inverted={theme.value === THEME_VALUES.dark} selectable>
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell>Personne</TableHeaderCell>
