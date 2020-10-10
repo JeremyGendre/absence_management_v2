@@ -19,7 +19,17 @@ export function userHasRole(user,role)
  */
 export function userIsAdmin(user)
 {
-    return userHasRole(user,"ROLE_ADMIN") || userHasRole(user,"ROLE_SUPER_ADMIN")
+    return userHasRole(user,"ROLE_ADMIN") || userHasRole(user,"ROLE_SUPER_ADMIN");
+}
+
+/**
+ * Check if the user is a super administrator
+ * @param user
+ * @returns {boolean}
+ */
+export function userIsSuperAdmin(user)
+{
+    return userHasRole(user,"ROLE_SUPER_ADMIN");
 }
 
 /**

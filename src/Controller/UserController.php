@@ -141,15 +141,17 @@ class UserController extends AbstractController
     public function deleteUser(
         User $user
     ):JsonResponse{
-        if($this->getUser() === $user){
+        /** @var User $authUser */
+        $authUser = $this->getUser();
+        if($authUser === $user){
             return ResponseHandler::errorResponse("Vous ne pouvez pas vous supprimer vous-même");
         }
-        if($user->isAdmin()){
-            return ResponseHandler::errorResponse("Vous ne pouvez pas supprimer un administrateur");
+        if(RoleHelper::userIsSuperAdmin($user) || (RoleHelper::userHasRole($user,RoleHelper::ROLE_ADMIN) && !RoleHelper::userIsSuperAdmin($authUser))){
+            return ResponseHandler::errorResponse("Vous n'avez pas les droits nécessaires");
         }
 
         /** @var History $userHistory */
-        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_DELETE);
+        $userHistory = HistoryHelper::historize($user, $authUser->getId(),History::TYPE_DELETE);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($userHistory);
@@ -221,6 +223,12 @@ class UserController extends AbstractController
      * @throws \Exception
      */
     public function editUserRoles(User $user, Request $request):JsonResponse{
+        /** @var User $authUser */
+        $authUser = $this->getUser();
+        if(RoleHelper::hasBadRolesForRoleEdition($user,$authUser)) {
+            return ResponseHandler::errorResponse("Vous n'avez pas les droits nécessaires");
+        }
+
         $data = json_decode($request->getContent(),true);
         if(array_key_exists('roles',$data) === false){
             return ResponseHandler::errorResponse("Le format de données n'est pas correct");
@@ -285,11 +293,13 @@ class UserController extends AbstractController
      */
     public function toggleUserActivation(User $user, Request $request):JsonResponse
     {
-        if($this->getUser() === $user){
+        /** @var User $authUser */
+        $authUser = $this->getUser();
+        if($authUser === $user){
             return ResponseHandler::errorResponse("Vous ne pouvez pas gérer votre activation/désactivation");
         }
-        if($user->isAdmin()){
-            return ResponseHandler::errorResponse("Vous ne pouvez pas gérer l'activation/désactivation d'un administrateur");
+        if(RoleHelper::userIsSuperAdmin($user) || (RoleHelper::userHasRole($user,RoleHelper::ROLE_ADMIN) && !RoleHelper::userIsSuperAdmin($authUser))){
+            return ResponseHandler::errorResponse("Vous n'avez pas les droits nécessaires");
         }
         $data = json_decode($request->getContent(),true);
         if(array_key_exists('isActive',$data) === false || ($data['isActive'] !== false && $data['isActive'] !== true)){
@@ -298,7 +308,7 @@ class UserController extends AbstractController
         $user->setIsActive($data['isActive']);
 
         /** @var History $userHistory */
-        $userHistory = HistoryHelper::historize($user, $this->getUser()->getId(),History::TYPE_EDIT);
+        $userHistory = HistoryHelper::historize($user, $authUser->getId(),History::TYPE_EDIT);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($userHistory);

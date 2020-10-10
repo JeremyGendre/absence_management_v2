@@ -39,7 +39,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
         $user->setLastName("Route");
         $user->setEmail("admin@media-sante.com");
         $user->setUsername("admin");
-        $user->setRoles(["ROLE_ADMIN","ROLE_USER"]);
+        $user->setRoles(["ROLE_SUPER_ADMIN","ROLE_ADMIN","ROLE_USER"]);
         $user->setIsActive(true);
         $user->setPassword($this->encoder->encodePassword($user,"johndoe"));
 

@@ -23,7 +23,7 @@ class RoleHelper
      */
     public static function userHasRole(User $user, string $role): bool
     {
-        if(!in_array($role,self::ROLES)){
+        if(!self::roleExists($role)){
             return false;
         }
         return $user->hasRole($role);
@@ -36,6 +36,15 @@ class RoleHelper
     public static function userIsAdmin(User $user): bool
     {
         return $user->isAdmin();
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public static function userIsSuperAdmin(User $user):bool
+    {
+        return self::userHasRole($user,self::ROLE_SUPER_ADMIN);
     }
 
     /**
@@ -72,5 +81,16 @@ class RoleHelper
         if(RoleHelper::rolesExists($roles) === false){
             throw new \Exception("Un ou plusieurs rôle(s) soumis n'existe(nt) pas");
         }
+    }
+
+    /**
+     * @param User $user
+     * @param User $authUser
+     * @return bool
+     */
+    public static function hasBadRolesForRoleEdition(User $user, User $authUser):bool
+    {
+        return (self::userIsSuperAdmin($user) && !self::userIsSuperAdmin($authUser)) || ($authUser === $user) ||
+            ((!self::userIsSuperAdmin($user) && self::userHasRole($user,self::ROLE_ADMIN)) && !self::userIsSuperAdmin($authUser));
     }
 }
