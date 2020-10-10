@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import '../css/app.css';
@@ -9,7 +9,6 @@ import Header from "./Component/Header/Header";
 import AdminScreen from "./Screen/AdminScreen/AdminScreen";
 import ColleaguesCalendarScreen from "./Screen/ColleaguesCalendarScreen/ColleaguesCalendarScreen";
 import HolidayListScreen from "./Screen/HolidayListScreen/HolidayListScreen";
-import HomeScreen from "./Screen/HomeScreen/HomeScreen";
 import NewHolidaysRequestScreen from "./Screen/NewHolidaysRequestScreen/NewHolidaysRequestScreen";
 import PersonnalCalendarScreen from "./Screen/PersonnalCalendarScreen/PersonnalCalendarScreen";
 import ProfileScreen from "./Screen/ProfileScreen/ProfileScreen";
@@ -17,6 +16,7 @@ import ServiceCalendarScreen from "./Screen/ServiceCalendarScreen/ServiceCalenda
 import ApplicationSession, {SessionContext} from "./Component/Context/session";
 import TabularCalendarScreen from "./Screen/TabularCalendarScreen/TabularCalendarScreen";
 import MyLoader from "./Component/MyLoader/MyLoader";
+import Theme from "./Component/Context/Theme";
 
 function App() {
     const user = useContext(SessionContext);
@@ -52,7 +52,9 @@ function App() {
 ReactDOM.render(
     <React.StrictMode>
         <ApplicationSession>
-            <App/>
+            <Theme>
+                <App/>
+            </Theme>
         </ApplicationSession>
     </React.StrictMode>,
     document.getElementById('app')

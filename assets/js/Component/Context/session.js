@@ -19,12 +19,11 @@ export function redirectToLogout(){
 }
 
 export default function ApplicationSession(props){
-    let userInfos = null;
+    const userInfos = null;
 
     const [user, setUser] = useState({
         user: userInfos,
-        isAdmin: userIsAdmin(userInfos),
-        updateUser: updateUserState
+        isAdmin: userIsAdmin(userInfos)
     });
 
     useEffect(()=>{
@@ -52,15 +51,12 @@ export default function ApplicationSession(props){
         }
         setUser({
             user: userData,
-            isAdmin: userIsAdmin(userData),
-            updateUser: updateUserState
+            isAdmin: userIsAdmin(userData)
         });
     }
 
     return (
-        <SessionContext.Provider
-            value={user}
-        >
+        <SessionContext.Provider value={{...user , updateUser: updateUserState}}>
             {props.children}
         </SessionContext.Provider>
     );
