@@ -54,7 +54,7 @@ function adjustTabularEventBackgroundColor(eventResult,dayOfWeek)
 {
     let backgroundColor = eventResult.bgColor;
     if(isItAWeekEndDay(dayOfWeek)){
-        backgroundColor = 'grey';
+        backgroundColor = 'var(--tabular-calendar-week-end-color)';
     }else if(eventResult.halfDay === true){
         if(eventResult.periodType === PERIOD_TYPE_MORNING){
             backgroundColor = "linear-gradient(140deg, "+ backgroundColor +" 50%, rgba(255,255,255,0) 50%)";

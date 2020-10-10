@@ -6,8 +6,8 @@
 }
 
 .header-nav{
-    background-color: var(--main-color);
-    box-shadow: 0 0 5px grey;
+    background-color: var(--header-background-color);
+    box-shadow: 0 0 5px var(--shadow-color);
     padding-right:1em;
     padding-left: 1em;
 }
@@ -68,7 +68,7 @@
     z-index: 999;
     position:absolute;
     background-color:#d2d2d2;
-    box-shadow: 1px 3px 5px lightgrey;
+    box-shadow: 1px 3px 5px var(--shadow-color);
     transform: translateY(5px);
 }
 .submenu ul li{
@@ -110,10 +110,10 @@
 }
 
 .link-admin-view{
-    color:var(--main-admin-color) !important;
+    color:var(--admin-color) !important;
 }
 .link-admin-view:hover a > *{
-    color:var(--main-admin-color) !important;
+    color:var(--admin-color) !important;
 }
 .link-profile-submenu{
     right:10px;

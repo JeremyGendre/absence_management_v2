@@ -4,17 +4,17 @@
 }
 
 body{
-    background-color: var(--main-background-color);
+    background-color: var(--background-color);
 }
 
 .classic-head-title{
-    border-left: solid 5px var(--main-color) !important;
+    border-left: solid 5px var(--title-color) !important;
     padding-left: 1em !important;
     margin-bottom:1em !important;
 }
 
 h1{
-    color: var(--main-color) !important;
+    color: var(--title-color) !important;
 }
 
 .my-app-container{

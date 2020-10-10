@@ -39,7 +39,7 @@
 
 .login-form-input:focus{
     outline: unset !important;
-    border-color: var(--main-color);
+    border-color: var(--login-color);
 }
 
 .login-submit:focus{
@@ -50,20 +50,20 @@
     padding:0.5em 0.8em;
     font-size: 0.9em;
     font-weight: bold;
-    background-color: var(--main-color);
+    background-color: var(--login-color);
     color:white;
-    border:solid 2px var(--main-color);
+    border:solid 2px var(--login-color);
     border-radius: 3px;
     transition: all 0.1s ease-in-out;
 }
 
 .login-submit:hover{
-    background-color: var(--main-hover-color);
-    border-color: var(--main-hover-color);
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
     cursor:pointer;
 }
 
 .login-error{
-    color:var(--main-error-color);
+    color:var(--error-color);
     margin-bottom: 1em;
 }

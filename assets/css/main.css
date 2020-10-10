@@ -1,9 +1,19 @@
 :root{
-    --main-color:#005973;
-    --main-hover-color:#0088B0;
-    --main-error-color:#D02121;
-    --main-admin-color:#F1634F;
-    --main-background-color: #EEEEEE;
+    --header-background-color : #005973;
+    --login-color : #005973;
+    --loader-color : #005973;
+    --title-color : #005973;
+    --tabular-calendar-btn-bg-color: #005973;
+    --tabular-calendar-btn-color: #EEEEEE;
+    --tabular-calendar-week-end-color: grey;
+    --tabular-calendar-btn-hover-bg-color: #0088B0;
+    --text-color : #232323;
+    --hover-color:#0088B0;
+    --error-color:#D02121;
+    --admin-color:#F1634F;
+    --background-color: #EEEEEE;
+    --shadow-color: grey;
+    --header-list-background-color: #d2d2d2;
 }
 
 *{
@@ -13,7 +23,7 @@
 }
 
 .main-color-text{
-    color:var(--main-color);
+    color:var(--header-background-color);
 }
 
 .text-center{

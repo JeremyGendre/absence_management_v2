@@ -28,8 +28,8 @@
   height:100%;
   border-radius: 50%;
   border: solid 4px transparent;
-  border-bottom : solid 4px var(--main-color);
-  border-top: solid 4px var(--main-color);
+  border-bottom : solid 4px var(--loader-color);
+  border-top: solid 4px var(--loader-color);
   animation: spin 1s linear infinite;
 }
 
