@@ -54,3 +54,7 @@ label{
 .ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
     border: solid 1px #bdbdbd !important;
 }
+
+.ui.loading.segment:before {
+    background: none !important;
+}
