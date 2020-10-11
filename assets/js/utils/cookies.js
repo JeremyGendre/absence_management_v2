@@ -4,7 +4,7 @@
  * @param value
  * @param exdays
  */
-function setCookie(name, value, exdays) {
+export function setCookie(name, value, exdays) {
     let date, expires;
     exdays = exdays || 1;
     date = new Date();

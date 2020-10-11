@@ -1,4 +1,5 @@
 import React, {useState, createContext, useEffect} from "react";
+import {getCookie, setCookie} from "../../utils/cookies";
 
 const THEME_COLORS = [
     {
@@ -79,22 +80,29 @@ export function setupThemeColors(theme){
     });
 }
 
+function storeThemeInCookie(theme){
+    setCookie("theme",theme,30);
+}
+
 export const THEME_VALUES = {
     light : 'light',
     dark : 'dark'
 };
 
+const actualThemeCookie = getCookie('theme');
+
 const defaultThemeContext = {
-    value : THEME_VALUES.light
+    value : actualThemeCookie !== '' ? actualThemeCookie : THEME_VALUES.light
 };
 
 export const ThemeContext = createContext(defaultThemeContext);
 
 export default function Theme(props){
-    const [theme, setTheme] = useState(THEME_VALUES.light);
+    const [theme, setTheme] = useState(actualThemeCookie !== '' ? actualThemeCookie : THEME_VALUES.light);
 
     useEffect(() => {
         setupThemeColors(theme);
+        storeThemeInCookie(theme);
     },[theme]);
 
     function updateTheme(newTheme){
