@@ -1,16 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {
     Grid,
-    Input, Radio, Select, Tab,
+    Input, Pagination, Radio, Select, Tab,
     Table,
     TableBody,
-    TableCell,
+    TableCell, TableFooter,
     TableHeader,
     TableHeaderCell,
     TableRow
 } from "semantic-ui-react";
 import axios from "axios";
-import {collectionOfSelectableObjects, removeFromArray} from "../../utils/functions";
+import {collectionOfSelectableObjects, getFirstItemsInList, removeFromArray} from "../../utils/functions";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
@@ -48,6 +48,10 @@ export default function UsersAdminList(props){
     const [services,setServices] = useState(initialState.services);
     const [roles,setRoles] = useState(initialState.roles);
 
+    const [activePage, setActivePage] = useState(1);
+    const [totalPages, setTotalPages] = useState(10);
+    const maxItemPerPage = 10;
+
     const theme = useContext(ThemeContext);
 
     let searching = setTimeout(() => {},100);
@@ -55,7 +59,8 @@ export default function UsersAdminList(props){
     useEffect(()=>{
         axios.get('/api/user/all').then(data => {
             setUsersListFull(data.data);
-            setUsersListDisplayed(data.data);
+            setUsersListDisplayed(getFirstItemsInList(data.data,0,maxItemPerPage));
+            updateTotalPages(data.data);
         }).catch(error => {
             console.log(error);
         }).finally(() => {
@@ -231,13 +236,17 @@ export default function UsersAdminList(props){
     }
 
     function handleFilterByServiceChange(data){
+        let newUserList = usersListFull;
+        if(data !== noServiceOption.key){
+            newUserList = usersByService(usersListFull,data);
+            setUsersListDisplayed(newUserList);
+        }else{
+            handlePaginationChange(1);
+        }
         setFilteredService(data);
         setAdminFilter(false);
-        if(data === noServiceOption.key){
-            setUsersListDisplayed(usersListFull);
-        }else{
-            setUsersListDisplayed(usersByService(usersListFull,data));
-        }
+        setActivePage(1);
+        updateTotalPages(newUserList);
     }
 
     function usersByService(users,serviceId){
@@ -251,14 +260,18 @@ export default function UsersAdminList(props){
     }
 
     function handleAdminFilterClick(){
-        let newAdminFilterValue = !adminFilter;
-        setFilteredService(noServiceOption.key);
+        const newAdminFilterValue = !adminFilter;
+        let newUserList = usersListFull;
         if(newAdminFilterValue === true){
-            setUsersListDisplayed(adminUsers(usersListFull));
+            newUserList = adminUsers(usersListFull);
+            setUsersListDisplayed(newUserList);
         }else{
-            setUsersListDisplayed(usersListFull);
+            handlePaginationChange(1);
         }
+        setFilteredService(noServiceOption.key);
         setAdminFilter(newAdminFilterValue);
+        setActivePage(1);
+        updateTotalPages(newUserList);
     }
 
     function adminUsers(users){
@@ -269,6 +282,15 @@ export default function UsersAdminList(props){
             }
         });
         return usersList;
+    }
+
+    function updateTotalPages(list){
+        setTotalPages(Math.ceil(list.length / maxItemPerPage));
+    }
+
+    function handlePaginationChange(newActivePage){
+        setActivePage(newActivePage);
+        setUsersListDisplayed(getFirstItemsInList(usersListFull,(newActivePage-1)*maxItemPerPage,maxItemPerPage));
     }
 
     return (
@@ -326,6 +348,23 @@ export default function UsersAdminList(props){
                         );
                     })}
                 </TableBody>
+                <TableFooter>
+                    <TableRow>
+                        <TableHeaderCell colSpan={8}>
+                            <Pagination
+                                inverted={theme.value === THEME_VALUES.dark}
+                                floated='right'
+                                activePage={activePage}
+                                boundaryRange={1}
+                                onPageChange={(e, pagination) => handlePaginationChange(pagination.activePage)}
+                                siblingRange={1}
+                                totalPages={totalPages}
+                                firstItem={null}
+                                lastItem={null}
+                            />
+                        </TableHeaderCell>
+                    </TableRow>
+                </TableFooter>
             </Table>
         </Tab.Pane>
     );

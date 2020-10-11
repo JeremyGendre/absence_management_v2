@@ -63,3 +63,20 @@ export function collectionOfSelectableObjects(haystack)
     });
     return returnedArray;
 }
+
+/**
+ * Return the first {number} items in {list} beginning at offset {start}
+ * @param list
+ * @param start
+ * @param number
+ * @returns {[]}
+ */
+export function getFirstItemsInList(list, start, number){
+    let result = [];
+    for(let i = start; i < (start + number); i++){
+        if(list[i] !== undefined){
+            result.push(list[i]);
+        }
+    }
+    return result;
+}
