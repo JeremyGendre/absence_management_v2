@@ -14,11 +14,11 @@
 }
 
 .button-edit-user-roles{
-    color: #2c6680;
+    color: #46a0bd;
 }
 
 .button-edit-user-roles:hover{
-    color: #46a0bd;
+    color: #2c6680;
 }
 
 .button-activate-user{
@@ -27,4 +27,8 @@
 
 .button-activate-user:hover{
     color: #78cd6b;
+}
+
+.ui.toggle.checkbox input:checked~.box, .ui.toggle.checkbox input:checked~label {
+    color:var(--text-color) !important;
 }

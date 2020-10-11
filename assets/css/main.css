@@ -22,8 +22,16 @@
     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
 }
 
+h2{
+    color:var(--title-color);
+}
+
+label{
+    color:var(--text-color) !important;
+}
+
 .main-color-text{
-    color:var(--header-background-color);
+    color:var(--text-color);
 }
 
 .text-center{
@@ -40,4 +48,9 @@
 
 .swal2-actions{
     z-index:unset !important;
+}
+
+/* Yeah, i know that i shouldn't do this, but i dont really have the choice :( */
+.ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
+    border: solid 1px #bdbdbd !important;
 }

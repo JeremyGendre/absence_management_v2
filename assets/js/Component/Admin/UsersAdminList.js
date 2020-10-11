@@ -18,7 +18,6 @@ import RowUser from "./RowUser";
 import {editUserInList, editUserRoleInList, userIsAdmin} from "../../utils/user";
 import {servicesToSelectable} from "../../utils/service";
 import {isBadResult} from "../../utils/server";
-import {displayErrorPopup} from "../../utils/error";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 
 const MySwal = withReactContent(Swal);

@@ -69,7 +69,7 @@ const THEME_COLORS = [
     {
         name : "--tabular-calendar-week-end-color",
         light : "grey",
-        dark : "#131313"
+        dark : "#0c0c0c"
     },
 ];
 
