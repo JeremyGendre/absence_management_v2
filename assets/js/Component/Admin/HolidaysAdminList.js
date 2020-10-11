@@ -148,7 +148,7 @@ export default function HolidaysAdminList(props){
     }
 
     return (
-        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingHolidays}>
+        <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingHolidays}>
             <Input className="float-right" icon="search" onChange={(e,data) => handleSearchChange(data)} loading={searchLoading} placeholder="Rechercher"/><br/><br/>
             <Table inverted={theme.value === THEME_VALUES.dark} selectable>
                 <TableHeader>

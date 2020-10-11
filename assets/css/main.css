@@ -58,3 +58,7 @@ label{
 .ui.loading.segment:before {
     background: none !important;
 }
+
+.inverted-tab-bg{
+    background-color: #272829 !important;
+}

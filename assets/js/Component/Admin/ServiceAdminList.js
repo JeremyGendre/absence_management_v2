@@ -118,7 +118,7 @@ export default function ServiceAdminList(props){
     }
 
     return (
-        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingServices}>
+        <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingServices}>
             <Grid columns={2}>
                 <Grid.Column width={8}>
                     <Table inverted={theme.value === THEME_VALUES.dark} selectable>

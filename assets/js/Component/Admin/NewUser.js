@@ -105,7 +105,7 @@ export default function NewUser(props){
     }
 
     return (
-        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={serviceLoading}>
+        <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark} attached={false} loading={serviceLoading}>
             <Form onSubmit={handleFormSubmit}>
                 {(formErrors.length > 0) ? (
                     <Message negative>

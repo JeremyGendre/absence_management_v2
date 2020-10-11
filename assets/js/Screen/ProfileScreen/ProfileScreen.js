@@ -39,14 +39,14 @@ export default function ProfileScreen(props){
         {
             menuItem: { key: 'profile', icon: 'user', content: 'Profil' },
             render: () =>
-                <Tab.Pane inverted={theme.value === THEME_VALUES.dark}>
+                <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark}>
                     <Profile services={services} user={user}/>
                 </Tab.Pane>
         },
         {
             menuItem: { key: 'password', icon: 'key', content: 'Mot de passe' },
             render: () =>
-                <Tab.Pane inverted={theme.value === THEME_VALUES.dark}>
+                <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark}>
                     <PasswordForm/>
                 </Tab.Pane>
         },

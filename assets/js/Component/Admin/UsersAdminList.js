@@ -272,7 +272,7 @@ export default function UsersAdminList(props){
     }
 
     return (
-        <Tab.Pane inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingUsers}>
+        <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loadingUsers}>
             <Grid columns={3}>
                 <Grid.Row>
                     <Grid.Column>
