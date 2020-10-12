@@ -92,7 +92,6 @@ export default function UsersAdminList(props){
     },[]);
 
     useEffect(() => {
-        setTotalPages(getTotalPagesForPagination(usersListCanBeDisplayed,maxItemPerPage));
         Paginate(activePage);
     },[usersListCanBeDisplayed]);
 
@@ -288,7 +287,10 @@ export default function UsersAdminList(props){
     }
 
     function Paginate(newActivePage){
-        setActivePage(newActivePage);
+        const newTotalPages = getTotalPagesForPagination(usersListCanBeDisplayed,maxItemPerPage);
+        const realNewActivePage = newTotalPages < newActivePage ? 1 : newActivePage;
+        setTotalPages(newTotalPages);
+        setActivePage(realNewActivePage);
         setUsersListDisplayed(getFirstItemsInList(usersListCanBeDisplayed,(newActivePage-1)*maxItemPerPage,maxItemPerPage));
     }
 

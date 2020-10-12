@@ -10,7 +10,7 @@ import {
     TableRow
 } from "semantic-ui-react";
 import axios from "axios";
-import {removeFromArray} from "../../utils/functions";
+import {getFirstItemsInList, getTotalPagesForPagination, removeFromArray} from "../../utils/functions";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
@@ -18,15 +18,21 @@ import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
+import Footer from "../Table/Footer";
 
 const MySwal = withReactContent(Swal);
 
 export default function HolidaysAdminList(props){
     const [searchLoading,setSearchLoading] = useState(false);
-    const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
-    const [holidaysBeingProcessed,setHolidaysBeingProcessed] = useState([]);
     const [loadingHolidays,setLoadingHolidays] = useState(true);
     const [holidaysListFull,setHolidaysListFull] = useState([]);
+    const [holidaysListDisplayed,setHolidaysListDisplayed] = useState([]);
+    const [holidaysListCanBeDisplayed,setHolidaysListCanBeDisplayed] = useState([]);
+    const [holidaysBeingProcessed,setHolidaysBeingProcessed] = useState([]);
+
+    const [activePage, setActivePage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const maxItemPerPage = 10;
 
     const theme = useContext(ThemeContext);
 
@@ -36,7 +42,7 @@ export default function HolidaysAdminList(props){
         axios.get('/api/holiday/status/' + STATUS_ASKED).then(data => {
             let convertedHolidays = convertListToAdminListFormat(data.data);
             setHolidaysListFull(convertedHolidays);
-            setHolidaysListDisplayed(convertedHolidays);
+            setHolidaysListCanBeDisplayed(convertedHolidays);
         }).catch(error => {
             console.error(error);
             displayErrorPopup(error);
@@ -44,6 +50,10 @@ export default function HolidaysAdminList(props){
             setLoadingHolidays(false);
         });
     },[]);
+
+    useEffect(() =>{
+        Paginate(activePage);
+    },[holidaysListCanBeDisplayed]);
 
     function handleAcceptClick(holiday){
         MySwal.fire({
@@ -66,7 +76,7 @@ export default function HolidaysAdminList(props){
                         Swal.showValidationMessage(`Request failed: ${errorMessage}`);
                     }else{
                         setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
-                        setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                        setHolidaysListCanBeDisplayed(removeFromArray(holiday,holidaysListCanBeDisplayed));
                         return result.data;
                     }
                 }).catch(error => {
@@ -103,7 +113,7 @@ export default function HolidaysAdminList(props){
                         Swal.showValidationMessage(`Request failed: ${errorMessage}`);
                     }else{
                         setHolidaysListFull(removeFromArray(holiday,holidaysListFull));
-                        setHolidaysListDisplayed(removeFromArray(holiday,holidaysListDisplayed));
+                        setHolidaysListCanBeDisplayed(removeFromArray(holiday,holidaysListCanBeDisplayed));
                         return result.data;
                     }
                 }).catch(error => {
@@ -123,13 +133,14 @@ export default function HolidaysAdminList(props){
         clearTimeout(searching);
         setSearchLoading(true);
         searching = setTimeout(function(){
+            setActivePage(1);
             if(!data.value){
                 setSearchLoading(false);
-                setHolidaysListDisplayed(holidaysListFull);
+                setHolidaysListCanBeDisplayed(holidaysListFull);
                 return;
             }
             setSearchLoading(false);
-            setHolidaysListDisplayed(checkHolidaySearch(holidaysListFull,data.value));
+            setHolidaysListCanBeDisplayed(checkHolidaySearch(holidaysListFull,data.value));
         },300);
     }
 
@@ -145,6 +156,14 @@ export default function HolidaysAdminList(props){
             }
         });
         return result;
+    }
+
+    function Paginate(newActivePage){
+        const newTotalPages = getTotalPagesForPagination(holidaysListCanBeDisplayed,maxItemPerPage);
+        const realNewActivePage = newTotalPages < newActivePage ? 1 : newActivePage;
+        setTotalPages(newTotalPages);
+        setActivePage(realNewActivePage);
+        setHolidaysListDisplayed(getFirstItemsInList(holidaysListCanBeDisplayed,(realNewActivePage-1)*maxItemPerPage,maxItemPerPage));
     }
 
     return (
@@ -188,6 +207,7 @@ export default function HolidaysAdminList(props){
                         );
                     })}
                 </TableBody>
+                <Footer activePage={activePage} totalPages={totalPages} Paginate={Paginate}/>
             </Table>
         </Tab.Pane>
     );
