@@ -80,3 +80,13 @@ export function getFirstItemsInList(list, start, number){
     }
     return result;
 }
+
+/**
+ * Get the total number of pages for the pagination
+ * @param list
+ * @param maxItemPerPage
+ * @returns {number}
+ */
+export function getTotalPagesForPagination(list,maxItemPerPage){
+    return Math.ceil(list.length / maxItemPerPage);
+}

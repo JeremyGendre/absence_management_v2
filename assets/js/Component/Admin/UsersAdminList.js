@@ -10,7 +10,12 @@ import {
     TableRow
 } from "semantic-ui-react";
 import axios from "axios";
-import {collectionOfSelectableObjects, getFirstItemsInList, removeFromArray} from "../../utils/functions";
+import {
+    collectionOfSelectableObjects,
+    getFirstItemsInList,
+    getTotalPagesForPagination,
+    removeFromArray
+} from "../../utils/functions";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
@@ -19,6 +24,7 @@ import {editUserInList, editUserRoleInList, userIsAdmin} from "../../utils/user"
 import {servicesToSelectable} from "../../utils/service";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
+import Footer from "../Table/Footer";
 
 const MySwal = withReactContent(Swal);
 
@@ -53,7 +59,7 @@ export default function UsersAdminList(props){
     const [roles,setRoles] = useState(initialState.roles);
 
     const [activePage, setActivePage] = useState(1);
-    const [totalPages, setTotalPages] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
     const maxItemPerPage = 10;
 
     const theme = useContext(ThemeContext);
@@ -86,7 +92,7 @@ export default function UsersAdminList(props){
     },[]);
 
     useEffect(() => {
-        updateTotalPages(usersListCanBeDisplayed);
+        setTotalPages(getTotalPagesForPagination(usersListCanBeDisplayed,maxItemPerPage));
         Paginate(activePage);
     },[usersListCanBeDisplayed]);
 
@@ -281,10 +287,6 @@ export default function UsersAdminList(props){
         return usersList;
     }
 
-    function updateTotalPages(list){
-        setTotalPages(Math.ceil(list.length / maxItemPerPage));
-    }
-
     function Paginate(newActivePage){
         setActivePage(newActivePage);
         setUsersListDisplayed(getFirstItemsInList(usersListCanBeDisplayed,(newActivePage-1)*maxItemPerPage,maxItemPerPage));
@@ -345,23 +347,7 @@ export default function UsersAdminList(props){
                         );
                     })}
                 </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TableHeaderCell colSpan={8}>
-                            <Pagination
-                                inverted={theme.value === THEME_VALUES.dark}
-                                floated='right'
-                                activePage={activePage}
-                                boundaryRange={1}
-                                onPageChange={(e, pagination) => Paginate(pagination.activePage)}
-                                siblingRange={1}
-                                totalPages={totalPages}
-                                firstItem={null}
-                                lastItem={null}
-                            />
-                        </TableHeaderCell>
-                    </TableRow>
-                </TableFooter>
+                <Footer activePage={activePage} totalPages={totalPages} Paginate={Paginate}/>
             </Table>
         </Tab.Pane>
     );

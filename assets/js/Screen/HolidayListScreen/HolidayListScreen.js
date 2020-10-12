@@ -14,17 +14,24 @@ import {SessionContext} from "../../Component/Context/session";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {getShortType} from "../../utils/holidaysTypes";
-import {removeFromArray} from "../../utils/functions";
+import {getFirstItemsInList, getTotalPagesForPagination, removeFromArray} from "../../utils/functions";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../../Component/Context/Theme";
+import Footer from "../../Component/Table/Footer";
 
 const MySwal = withReactContent(Swal);
 
 export default function HolidayListScreen(props){
     const [loadingData,setLoadingData] = useState(true);
     const [listHolidays,setListHolidays] = useState([]);
+    const [listHolidaysDisplayed,setListHolidaysDisplayed] = useState([]);
     const [holidaysBeingDeleted,setHolidaysBeingDeleted] = useState([]);
+
+    const [activePage, setActivePage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const maxItemPerPage = 10;
+
     const user = useContext(SessionContext);
     const theme = useContext(ThemeContext);
 
@@ -52,6 +59,10 @@ export default function HolidayListScreen(props){
             setLoadingData(false);
         })
     },[]);
+
+    useEffect(() => {
+        Paginate(activePage);
+    }, [listHolidays]);
 
     function handleDeleteClick(holiday){
         MySwal.fire({
@@ -88,6 +99,14 @@ export default function HolidayListScreen(props){
         });
     }
 
+    function Paginate(newActivePage){
+        const newTotalPages = getTotalPagesForPagination(listHolidays,maxItemPerPage);
+        const realNewActivePage = newTotalPages < newActivePage ? 1 : newActivePage;
+        setTotalPages(newTotalPages);
+        setActivePage(realNewActivePage);
+        setListHolidaysDisplayed(getFirstItemsInList(listHolidays,(realNewActivePage-1)*maxItemPerPage,maxItemPerPage));
+    }
+
     return(
         <Container className="custom-containers">
             <SemanticHeader as='h1' className="classic-head-title">Mes congés</SemanticHeader>
@@ -108,7 +127,7 @@ export default function HolidayListScreen(props){
                     </TableBody>
                 ) : (
                     <TableBody>
-                        {listHolidays.length === 0 && (
+                        {listHolidaysDisplayed.length === 0 && (
                             <TableRow key={0}>
                                 <TableCell/>
                                 <TableCell/>
@@ -118,7 +137,7 @@ export default function HolidayListScreen(props){
                                 <TableCell/>
                             </TableRow>
                         )}
-                        {listHolidays.length !== 0 && listHolidays.map((data) => {
+                        {listHolidaysDisplayed.length !== 0 && listHolidaysDisplayed.map((data) => {
                             let statusIcon = '';
                             let status = '';
                             switch(data.status){
@@ -158,6 +177,7 @@ export default function HolidayListScreen(props){
                         })}
                     </TableBody>
                 )}
+                <Footer activePage={activePage} totalPages={totalPages} Paginate={Paginate}/>
             </Table>
         </Container>
     );
