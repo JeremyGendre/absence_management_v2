@@ -29,6 +29,7 @@ const initialState = {
     adminFilter: false,
     filteredService: noServiceOption.key,
     usersListDisplayed: [],
+    usersListCanBeDisplayed: [],
     usersBeingProcessed: [],
     loadingUsers: true,
     usersListFull: [],
@@ -39,12 +40,15 @@ const initialState = {
 
 export default function UsersAdminList(props){
     const [searchLoading,setSearchLoading] = useState(initialState.searchLoading);
+    const [loadingUsers,setLoadingUsers] = useState(initialState.loadingUsers);
+
+    const [usersListFull,setUsersListFull] = useState(initialState.usersListFull);
+    const [usersListDisplayed,setUsersListDisplayed] = useState(initialState.usersListDisplayed);
+    const [usersListCanBeDisplayed,setUsersListCanBeDisplayed] = useState(initialState.usersListCanBeDisplayed);
+    const [usersBeingProcessed,setUsersBeingProcessed] = useState(initialState.usersBeingProcessed);
+
     const [adminFilter,setAdminFilter] = useState(initialState.adminFilter);
     const [filteredService,setFilteredService] = useState(initialState.filteredService);
-    const [usersListDisplayed,setUsersListDisplayed] = useState(initialState.usersListDisplayed);
-    const [usersBeingProcessed,setUsersBeingProcessed] = useState(initialState.usersBeingProcessed);
-    const [loadingUsers,setLoadingUsers] = useState(initialState.loadingUsers);
-    const [usersListFull,setUsersListFull] = useState(initialState.usersListFull);
     const [services,setServices] = useState(initialState.services);
     const [roles,setRoles] = useState(initialState.roles);
 
@@ -59,8 +63,7 @@ export default function UsersAdminList(props){
     useEffect(()=>{
         axios.get('/api/user/all').then(data => {
             setUsersListFull(data.data);
-            setUsersListDisplayed(getFirstItemsInList(data.data,0,maxItemPerPage));
-            updateTotalPages(data.data);
+            setUsersListCanBeDisplayed(data.data);
         }).catch(error => {
             console.log(error);
         }).finally(() => {
@@ -82,19 +85,25 @@ export default function UsersAdminList(props){
         });
     },[]);
 
+    useEffect(() => {
+        updateTotalPages(usersListCanBeDisplayed);
+        Paginate(activePage);
+    },[usersListCanBeDisplayed]);
+
     function handleSearchChange(data){
         clearTimeout(searching);
         setAdminFilter(false);
         setFilteredService(noServiceOption.key);
         setSearchLoading(true);
         searching = setTimeout(function(){
+            setActivePage(1);
             if(!data.value){
                 setSearchLoading(false);
-                setUsersListDisplayed(usersListFull);
+                setUsersListCanBeDisplayed(usersListFull);
                 return;
             }
             setSearchLoading(false);
-            setUsersListDisplayed(checkUserSearch(usersListFull,data.value));
+            setUsersListCanBeDisplayed(checkUserSearch(usersListFull,data.value));
         },300);
     }
 
@@ -144,7 +153,7 @@ export default function UsersAdminList(props){
             }
         }).then((result) => {
             if(result.isConfirmed){
-                setUsersListDisplayed(removeFromArray(user,usersListDisplayed));
+                setUsersListCanBeDisplayed(removeFromArray(user,usersListCanBeDisplayed));
                 setUsersListFull(removeFromArray(user,usersListFull));
                 MySwal.fire({icon:'success',title:'Utilisateur supprimé'});
             }
@@ -178,7 +187,7 @@ export default function UsersAdminList(props){
                     }else{
                         user.roles = result.data.roles;
                         setUsersListFull(editUserRoleInList(usersListFull,user.id,result.data.roles));
-                        setUsersListDisplayed(editUserRoleInList(usersListDisplayed,user.id,result.data.roles));
+                        setUsersListCanBeDisplayed(editUserRoleInList(usersListCanBeDisplayed,user.id,result.data.roles));
                         return result.data;
                     }
                 }).catch(error => {
@@ -218,7 +227,7 @@ export default function UsersAdminList(props){
                     }else{
                         user = result.data;
                         setUsersListFull(editUserInList(usersListFull,user));
-                        setUsersListDisplayed(editUserInList(usersListDisplayed,user));
+                        setUsersListCanBeDisplayed(editUserInList(usersListCanBeDisplayed,user));
                         return user;
                     }
                 }).catch(error => {
@@ -236,17 +245,11 @@ export default function UsersAdminList(props){
     }
 
     function handleFilterByServiceChange(data){
-        let newUserList = usersListFull;
-        if(data !== noServiceOption.key){
-            newUserList = usersByService(usersListFull,data);
-            setUsersListDisplayed(newUserList);
-        }else{
-            handlePaginationChange(1);
-        }
+        let newUserList = (data !== noServiceOption.key ? usersByService(usersListFull,data) : usersListFull);
         setFilteredService(data);
         setAdminFilter(false);
         setActivePage(1);
-        updateTotalPages(newUserList);
+        setUsersListCanBeDisplayed(newUserList);
     }
 
     function usersByService(users,serviceId){
@@ -261,17 +264,11 @@ export default function UsersAdminList(props){
 
     function handleAdminFilterClick(){
         const newAdminFilterValue = !adminFilter;
-        let newUserList = usersListFull;
-        if(newAdminFilterValue === true){
-            newUserList = adminUsers(usersListFull);
-            setUsersListDisplayed(newUserList);
-        }else{
-            handlePaginationChange(1);
-        }
+        const newUserList = (newAdminFilterValue === true ? adminUsers(usersListFull) : usersListFull);
         setFilteredService(noServiceOption.key);
         setAdminFilter(newAdminFilterValue);
         setActivePage(1);
-        updateTotalPages(newUserList);
+        setUsersListCanBeDisplayed(newUserList);
     }
 
     function adminUsers(users){
@@ -288,9 +285,9 @@ export default function UsersAdminList(props){
         setTotalPages(Math.ceil(list.length / maxItemPerPage));
     }
 
-    function handlePaginationChange(newActivePage){
+    function Paginate(newActivePage){
         setActivePage(newActivePage);
-        setUsersListDisplayed(getFirstItemsInList(usersListFull,(newActivePage-1)*maxItemPerPage,maxItemPerPage));
+        setUsersListDisplayed(getFirstItemsInList(usersListCanBeDisplayed,(newActivePage-1)*maxItemPerPage,maxItemPerPage));
     }
 
     return (
@@ -356,7 +353,7 @@ export default function UsersAdminList(props){
                                 floated='right'
                                 activePage={activePage}
                                 boundaryRange={1}
-                                onPageChange={(e, pagination) => handlePaginationChange(pagination.activePage)}
+                                onPageChange={(e, pagination) => Paginate(pagination.activePage)}
                                 siblingRange={1}
                                 totalPages={totalPages}
                                 firstItem={null}
