@@ -63,7 +63,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
             $username = $lastName.'.'.$firstName.$i;
             $user->setUsername($username);
             $user->setEmail($username.'@'.$this->faker->domainName);
-            $user->setRoles([RoleHelper::ROLE_ADMIN,RoleHelper::ROLE_USER]);
+            $user->setRoles([RoleHelper::ROLE_USER]);
             $user->setPassword($this->encoder->encodePassword($user,"johndoe"));
 
             return $user;
