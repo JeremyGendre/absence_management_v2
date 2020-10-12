@@ -6,6 +6,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Service;
 use App\Entity\User;
+use App\Service\Helper\RoleHelper;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -39,7 +40,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
         $user->setLastName("Route");
         $user->setEmail("admin@media-sante.com");
         $user->setUsername("admin");
-        $user->setRoles(["ROLE_SUPER_ADMIN","ROLE_ADMIN","ROLE_USER"]);
+        $user->setRoles([RoleHelper::ROLE_SUPER_ADMIN,RoleHelper::ROLE_ADMIN,RoleHelper::ROLE_USER]);
         $user->setIsActive(true);
         $user->setPassword($this->encoder->encodePassword($user,"johndoe"));
 
@@ -57,11 +58,12 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
             $firstName = $this->faker->firstName;
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
+            $user->setIsActive($this->faker->boolean(85));
 
             $username = $lastName.'.'.$firstName.$i;
             $user->setUsername($username);
             $user->setEmail($username.'@'.$this->faker->domainName);
-            $user->setRoles(["ROLE_USER"]);
+            $user->setRoles([RoleHelper::ROLE_ADMIN,RoleHelper::ROLE_USER]);
             $user->setPassword($this->encoder->encodePassword($user,"johndoe"));
 
             return $user;
