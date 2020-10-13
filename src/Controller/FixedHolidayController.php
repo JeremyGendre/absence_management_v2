@@ -43,7 +43,7 @@ class FixedHolidayController extends AbstractController
      * @return JsonResponse
      * @throws \Exception
      */
-    public function createFixedHoliday(Request $request):JsonResponse
+    public function createOne(Request $request):JsonResponse
     {
         $data = json_decode($request->getContent(),true);
         if(!FixedHolidayValidator::validate($data)){
@@ -63,5 +63,23 @@ class FixedHolidayController extends AbstractController
         $em->persist($fixedHolidayHistory);
         $em->flush();
         return new JsonResponse($fixedHoliday->serialize());
+    }
+
+    /**
+     * @Route("/delete/{id}", name="delete_one_fixed_holiday", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param FixedHoliday $fixedHoliday
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function deleteOne(FixedHoliday $fixedHoliday):JsonResponse
+    {
+        /** @var History $fixedHolidayHistory */
+        $fixedHolidayHistory = HistoryHelper::historize($fixedHoliday, $this->getUser()->getId(),History::TYPE_DELETE);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($fixedHoliday);
+        $em->persist($fixedHolidayHistory);
+        $em->flush();
+        return ResponseHandler::successResponse("Jour férié supprimé");
     }
 }

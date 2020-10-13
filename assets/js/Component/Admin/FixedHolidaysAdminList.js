@@ -5,6 +5,10 @@ import {Grid, Icon, Tab, Table} from "semantic-ui-react";
 import {displayErrorPopup} from "../../utils/error";
 import NewFixedHoliday from "./NewFixedHoliday";
 import {getMonthName} from "../../utils/date";
+import {MySwal} from "../../utils/MySwal";
+import {isBadResult} from "../../utils/server";
+import {removeFromArray} from "../../utils/functions";
+import Swal from 'sweetalert2';
 
 export default function FixedHolidaysAdminList(props){
     const theme = useContext(ThemeContext);
@@ -22,7 +26,40 @@ export default function FixedHolidaysAdminList(props){
     },[]);
 
     const handleDeleteFixedHoliday = (oneFixedHoliday) => {
-        console.log(oneFixedHoliday);
+        MySwal.fire({
+            title: 'Supprimer ce jour férié ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {
+                setFixedHolidaysBeingProcessed([...fixedHolidaysBeingProcessed,oneFixedHoliday.id]);
+                return axios.delete(
+                    '/api/fixed/holiday/delete/' + oneFixedHoliday.id
+                ).then(result => {
+                    const errorMessage = isBadResult(result);
+                    if(errorMessage !== ''){
+                        Swal.showValidationMessage(`Request failed: ${errorMessage}`);
+                    }else{
+                        setFixedHolidays(removeFromArray(oneFixedHoliday,fixedHolidays));
+                        return result.data;
+                    }
+                }).catch(error => {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                });
+            }
+        }).then((result) => {
+            if(result.isConfirmed){
+                console.log(result);
+                MySwal.fire({icon:'success',title:result.value.data});
+            }
+        }).finally(()=>{
+            setFixedHolidaysBeingProcessed(removeFromArray(oneFixedHoliday.id,fixedHolidaysBeingProcessed));
+        });
     };
 
     const handleAddNewFixedHoliday = (newFixedHoliday) => {
