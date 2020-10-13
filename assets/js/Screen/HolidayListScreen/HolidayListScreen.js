@@ -11,16 +11,13 @@ import {STATUS_ACCEPTED, STATUS_ASKED, STATUS_LABEL, STATUS_REJECTED} from "../.
 import MyLoader from "../../Component/MyLoader/MyLoader";
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import {getShortType} from "../../utils/holidaysTypes";
 import {getFirstItemsInList, getTotalPagesForPagination, removeFromArray} from "../../utils/functions";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../../Component/Context/Theme";
 import Footer from "../../Component/Table/Footer";
-
-const MySwal = withReactContent(Swal);
+import {MySwal} from '../../utils/MySwal';
 
 export default function HolidayListScreen(props){
     const [loadingData,setLoadingData] = useState(true);

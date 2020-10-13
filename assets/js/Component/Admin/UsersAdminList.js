@@ -16,8 +16,6 @@ import {
     getTotalPagesForPagination,
     removeFromArray
 } from "../../utils/functions";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import './UsersAdminList.css';
 import RowUser from "./RowUser";
 import {editUserInList, editUserRoleInList, userIsAdmin} from "../../utils/user";
@@ -25,8 +23,7 @@ import {servicesToSelectable} from "../../utils/service";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 import Footer from "../Table/Footer";
-
-const MySwal = withReactContent(Swal);
+import {MySwal,Swal} from '../../utils/MySwal';
 
 const noServiceOption = { key: 0, value: 0, text: 'Tous les services' };
 

@@ -5,10 +5,9 @@ import {Grid, Icon, Tab, Table} from "semantic-ui-react";
 import {displayErrorPopup} from "../../utils/error";
 import NewFixedHoliday from "./NewFixedHoliday";
 import {getMonthName} from "../../utils/date";
-import {MySwal} from "../../utils/MySwal";
+import {MySwal,Swal} from "../../utils/MySwal";
 import {isBadResult} from "../../utils/server";
 import {removeFromArray} from "../../utils/functions";
-import Swal from 'sweetalert2';
 
 export default function FixedHolidaysAdminList(props){
     const theme = useContext(ThemeContext);

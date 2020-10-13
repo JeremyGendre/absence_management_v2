@@ -11,16 +11,13 @@ import {
 } from "semantic-ui-react";
 import axios from "axios";
 import {getFirstItemsInList, getTotalPagesForPagination, removeFromArray} from "../../utils/functions";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import {STATUS_ASKED} from "../../utils/holidaysStatus";
 import {convertListToAdminListFormat} from "../../utils/holidayFormat";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 import Footer from "../Table/Footer";
-
-const MySwal = withReactContent(Swal);
+import {MySwal,Swal} from '../../utils/MySwal';
 
 export default function HolidaysAdminList(props){
     const [searchLoading,setSearchLoading] = useState(false);

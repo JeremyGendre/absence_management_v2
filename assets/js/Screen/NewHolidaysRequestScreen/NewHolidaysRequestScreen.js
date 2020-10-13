@@ -15,16 +15,13 @@ import {
     TYPE_CT,
     TYPES_LABEL
 } from "../../utils/holidaysTypes";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import axios from 'axios';
 import {SessionContext} from "../../Component/Context/session";
 import {displayEnglishDate, isSameDay} from "../../utils/date";
 import {STATUS_ACCEPTED, STATUS_ASKED} from "../../utils/holidaysStatus";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
-
-const MySwal = withReactContent(Swal);
+import {MySwal} from '../../utils/MySwal';
 
 const types = [
     {

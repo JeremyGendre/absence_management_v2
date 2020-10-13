@@ -1,13 +1,10 @@
 import React, {useState} from "react";
 import axios from "axios";
 import {Form, Message} from "semantic-ui-react";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import PropTypes from 'prop-types';
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
-
-const MySwal = withReactContent(Swal);
+import {MySwal} from '../../utils/MySwal';
 
 export default function Profile(props){
     const serviceOptions = props.services;

@@ -1,13 +1,10 @@
 import React, {useContext, useState} from "react";
 import {Form, FormGroup, Input, Message} from "semantic-ui-react";
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import {SessionContext} from "../Context/session";
 import {isBadResult} from "../../utils/server";
 import {displayErrorPopup} from "../../utils/error";
-
-const MySwal = withReactContent(Swal);
+import {MySwal} from '../../utils/MySwal';
 
 export default function PasswordForm(props){
     const [oldPassword,setOldPassword] = useState(null);

@@ -1,8 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Grid, Icon, Input, Select, Tab, Table} from "semantic-ui-react";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import './ServiceAdminList.css';
 import {removeFromArray} from "../../utils/functions";
 import {editServiceInList} from "../../utils/service";
@@ -10,8 +8,7 @@ import NewService from "./NewService";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
-
-const MySwal = withReactContent(Swal);
+import {MySwal, Swal} from '../../utils/MySwal';
 
 export default function ServiceAdminList(props){
     const [services, setServices] = useState([]);

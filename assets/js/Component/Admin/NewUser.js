@@ -1,14 +1,11 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
-import {Form, Input, Message, Tab} from "semantic-ui-react";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import {Form, Message, Tab} from "semantic-ui-react";
 import {servicesToSelectable} from "../../utils/service";
 import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
 import {THEME_VALUES, ThemeContext} from "../Context/Theme";
-
-const MySwal = withReactContent(Swal);
+import {MySwal} from '../../utils/MySwal';
 
 const initialUserState = {
     lastName: '',
