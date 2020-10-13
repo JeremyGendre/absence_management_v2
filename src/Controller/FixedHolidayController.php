@@ -40,14 +40,19 @@ class FixedHolidayController extends AbstractController
      * @Route("/new", name="fixed_holiday_new", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
+     * @param FixedHolidayRepository $fixedHolidayRepository
      * @return JsonResponse
      * @throws \Exception
      */
-    public function createOne(Request $request):JsonResponse
+    public function createOne(Request $request, FixedHolidayRepository $fixedHolidayRepository):JsonResponse
     {
         $data = json_decode($request->getContent(),true);
         if(!FixedHolidayValidator::validate($data)){
             return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
+        }
+        $existingFixedHoliday = $fixedHolidayRepository->findOneBy(['day' => $data['day'], 'month' => $data['month']]);
+        if($existingFixedHoliday !== null){
+            return ResponseHandler::errorResponse("Ce jour existe déjà");
         }
 
         /** @var User $user */
