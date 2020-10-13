@@ -3,13 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\FixedHolidayRepository;
-use App\Service\Serializer\MySerializerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=FixedHolidayRepository::class)
  */
-class FixedHoliday implements MySerializerInterface
+class FixedHoliday
 {
     /**
      * @ORM\Id
@@ -19,13 +18,17 @@ class FixedHoliday implements MySerializerInterface
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="integer")
      */
     private $day;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $month;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=true)
      */
     private $createdBy;
 
@@ -34,14 +37,26 @@ class FixedHoliday implements MySerializerInterface
         return $this->id;
     }
 
-    public function getDay(): ?\DateTimeInterface
+    public function getDay(): ?int
     {
         return $this->day;
     }
 
-    public function setDay(\DateTimeInterface $day): self
+    public function setDay(int $day): self
     {
         $this->day = $day;
+
+        return $this;
+    }
+
+    public function getMonth(): ?int
+    {
+        return $this->month;
+    }
+
+    public function setMonth(int $month): self
+    {
+        $this->month = $month;
 
         return $this;
     }
@@ -56,14 +71,5 @@ class FixedHoliday implements MySerializerInterface
         $this->createdBy = $createdBy;
 
         return $this;
-    }
-
-    public function serialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'day' => $this->getDay(),
-            'createdBy' => $this->getCreatedBy()->getName() ?? ''
-        ];
     }
 }
