@@ -49,7 +49,7 @@ export default function FixedHolidaysAdminList(props){
                                             <Table.Cell>{oneFixedHoliday.day} {getMonthName(oneFixedHoliday.month-1)}</Table.Cell>
                                             <Table.Cell>{oneFixedHoliday.createdBy}</Table.Cell>
                                             <Table.Cell>
-                                                <Icon title="Supprimer le jour férié" onClick={handleDeleteFixedHoliday.bind(this,oneFixedHoliday)} className="admin-fixed-holiday-btn button-delete-service" name="trash"/>
+                                                <Icon title="Supprimer le jour férié" onClick={handleDeleteFixedHoliday.bind(this,oneFixedHoliday)} className="admin-fixed-holiday-btn button-delete-service cursor-pointer" name="trash"/>
                                             </Table.Cell>
                                         </Table.Row>
                                     );

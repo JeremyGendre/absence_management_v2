@@ -46,6 +46,10 @@ label{
     display:flex;
 }
 
+.cursor-pointer{
+    cursor:pointer;
+}
+
 .hr-custom{
     opacity:0.4;
 }
