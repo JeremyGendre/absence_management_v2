@@ -11,6 +11,7 @@ import UsersAdminList from "../../Component/Admin/UsersAdminList";
 import NewUser from "../../Component/Admin/NewUser";
 import ServiceAdminList from "../../Component/Admin/ServiceAdminList";
 import {THEME_VALUES, ThemeContext} from "../../Component/Context/Theme";
+import FixedHolidaysAdminList from "../../Component/Admin/FixedHolidaysAdminList";
 
 export default function AdminScreen(props){
     const user = useContext(SessionContext);
@@ -36,6 +37,11 @@ export default function AdminScreen(props){
             menuItem: { key: 'services', icon: 'sitemap', content: 'Services' },
             render: () =>
                 <ServiceAdminList/>
+        },
+        {
+            menuItem: { key: 'Jours Fériés', icon: 'calendar alternate', content: 'Jours Fériés' },
+            render: () =>
+                <FixedHolidaysAdminList/>
         },
     ];
 

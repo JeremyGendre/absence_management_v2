@@ -154,6 +154,7 @@ export default function ServiceAdminList(props){
                         ) : (
                             <Table.Body>
                                 <Table.Row>
+                                    <Table.Cell/>
                                     <Table.Cell>Aucune données</Table.Cell>
                                     <Table.Cell/>
                                 </Table.Row>

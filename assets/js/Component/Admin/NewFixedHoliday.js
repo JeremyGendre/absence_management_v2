@@ -1,15 +1,23 @@
-import React, { useState} from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import axios from "axios";
-import {Form, Message} from "semantic-ui-react";
-import PropTypes from 'prop-types';
-import {displayErrorPopup} from "../../utils/error";
 import {isBadResult} from "../../utils/server";
+import {displayErrorPopup} from "../../utils/error";
+import {Form, FormField, Message} from "semantic-ui-react";
+import {SessionContext} from "../Context/session";
+import PropTypes from 'prop-types';
+import SemanticDatepicker from "react-semantic-ui-datepickers";
 import {MySwal} from "../../utils/MySwal";
 
-export default function NewService(props){
-    const [newServiceName,setNewServiceName] = useState('');
+export default function NewFixedHoliday(props){
+    const [newFixedHolidayDay,setNewFixedHolidayDay] = useState(null);
     const [submitting,setSubmitting] = useState(false);
     const [formErrors,setFormErrors] = useState([]);
+
+    const userInfos = useContext(SessionContext);
+
+    useEffect(()=>{
+        console.log(newFixedHolidayDay);
+    },[newFixedHolidayDay])
 
     function handleFormSubmit(){
         setSubmitting(true);
@@ -20,18 +28,15 @@ export default function NewService(props){
             return false;
         } else { // formulaire ok
             axios.post(
-                '/api/service/new',
-                {name: newServiceName}
+                '/api/fixed/holiday/' + userInfos.user.id + '/new',
+                {day: newFixedHolidayDay}
             ).then(result => {
                 const errorMessage = isBadResult(result);
                 if(errorMessage !== ''){
                     displayErrorPopup(errorMessage);
                 }else{
-                    props.addService(result.data);
-                    MySwal.fire({
-                        icon:'success',
-                        title:'Service créé',
-                    });
+                    props.addFixedHoliday(result.data);
+                    MySwal.fire({icon:'success', title:'Jour férié créé',});
                 }
             }).catch(error => {
                 console.log(error);
@@ -39,22 +44,22 @@ export default function NewService(props){
             }).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);
-                setNewServiceName('');
+                setNewFixedHolidayDay(null);
             });
         }
     }
 
     function validateForm() {
         let errors = [];
-        if(!newServiceName || newServiceName.length === 0){
-            errors.push("Le nom est obligatoire");
+        if(!newFixedHolidayDay || !(newFixedHolidayDay instanceof Date)){
+            errors.push("Le jour est obligatoire");
         }
         return errors;
     }
 
     return (
         <Form onSubmit={handleFormSubmit}>
-            <h2>Créer un nouveau service</h2>
+            <h2>Créer un nouveau jour férié</h2>
             {(formErrors.length > 0) ? (
                 <Message negative>
                     {
@@ -69,7 +74,10 @@ export default function NewService(props){
                 <></>
             )}
             <Form.Group widths='equal'>
-                <Form.Input fluid icon='file alternate outline' iconPosition='left' required label="Nom" placeholder='Nom' value={newServiceName} onChange={(e,data) => setNewServiceName(data.value)}/>
+                <FormField>
+                    <label>Jour <span className="form-required-star">*</span></label>
+                    <SemanticDatepicker icon='calendar' required name="new_fixed_day_date" locale="fr-FR" value={newFixedHolidayDay} format="DD/MM/YYYY" onChange={(e,data) => setNewFixedHolidayDay(data.value)}/>
+                </FormField>
             </Form.Group>
             <Form.Group>
                 <Form.Button className="submit-button-container" primary disabled={submitting} loading={submitting}>Enregistrer</Form.Button>
@@ -78,6 +86,6 @@ export default function NewService(props){
     );
 }
 
-NewService.propTypes = {
-    addService: PropTypes.func.isRequired
-};
+NewFixedHoliday.propTypes = {
+    addFixedHoliday: PropTypes.func.isRequired
+}
