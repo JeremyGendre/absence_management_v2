@@ -23,7 +23,7 @@ function App() {
     return (
         <>
             {user.user === null ? (
-                <MyLoader/>
+                <MyLoader size="big"/>
             ) : (
                 <Router>
                     <Header/>
