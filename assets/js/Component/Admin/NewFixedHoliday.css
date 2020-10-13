@@ -1,0 +1,7 @@
+.new-fixed-holiday-submit > button{
+    align-items: flex-end;
+}
+
+.new-fixed-holiday-submit{
+    height: unset;
+}

@@ -1,23 +1,26 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {isBadResult} from "../../utils/server";
 import {displayErrorPopup} from "../../utils/error";
 import {Form, FormField, Message} from "semantic-ui-react";
-import {SessionContext} from "../Context/session";
 import PropTypes from 'prop-types';
-import SemanticDatepicker from "react-semantic-ui-datepickers";
 import {MySwal} from "../../utils/MySwal";
+import {objectToSelectable} from "../../utils/functions";
+import {getMonthName, getMonthNumberDays} from "../../utils/date";
 
 export default function NewFixedHoliday(props){
-    const [newFixedHolidayDay,setNewFixedHolidayDay] = useState(null);
+    const [newDay,setNewDay] = useState(1);
+    const [newMonth,setNewMonth] = useState(1);
     const [submitting,setSubmitting] = useState(false);
     const [formErrors,setFormErrors] = useState([]);
 
-    const userInfos = useContext(SessionContext);
+    const maxNumberOfDays = getMonthNumberDays(newMonth-1);
 
     useEffect(()=>{
-        console.log(newFixedHolidayDay);
-    },[newFixedHolidayDay])
+        if(newDay > maxNumberOfDays){
+            setNewDay(maxNumberOfDays);
+        }
+    },[newMonth]);
 
     function handleFormSubmit(){
         setSubmitting(true);
@@ -28,8 +31,8 @@ export default function NewFixedHoliday(props){
             return false;
         } else { // formulaire ok
             axios.post(
-                '/api/fixed/holiday/' + userInfos.user.id + '/new',
-                {day: newFixedHolidayDay}
+                '/api/fixed/holiday/new',
+                {day: newDay,month:newMonth}
             ).then(result => {
                 const errorMessage = isBadResult(result);
                 if(errorMessage !== ''){
@@ -44,17 +47,31 @@ export default function NewFixedHoliday(props){
             }).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);
-                setNewFixedHolidayDay(null);
+                setNewDay(1);
+                setNewMonth(1);
             });
         }
     }
 
     function validateForm() {
         let errors = [];
-        if(!newFixedHolidayDay || !(newFixedHolidayDay instanceof Date)){
-            errors.push("Le jour est obligatoire");
+        if(!newDay || !(newDay > 0 && newDay <= 31)){
+            errors.push("Le jour est invalide");
+        }
+        if(!newMonth || !(newMonth > 0 && newMonth <= 12)){
+            errors.push("Le mois est invalide");
         }
         return errors;
+    }
+
+    const daysPossible = [];
+    for(let i = 1; i <= maxNumberOfDays; i++){
+        daysPossible.push(objectToSelectable(i,i,i));
+    }
+
+    const monthsPossible = [];
+    for(let i = 1; i < 13; i++){
+        monthsPossible.push(objectToSelectable(i,i,i + ' - ' +getMonthName(i-1)));
     }
 
     return (
@@ -73,14 +90,18 @@ export default function NewFixedHoliday(props){
             ) : (
                 <></>
             )}
-            <Form.Group widths='equal'>
-                <FormField>
+            <Form.Group>
+                <FormField width={4}>
                     <label>Jour <span className="form-required-star">*</span></label>
-                    <SemanticDatepicker icon='calendar' required name="new_fixed_day_date" locale="fr-FR" value={newFixedHolidayDay} format="DD/MM/YYYY" onChange={(e,data) => setNewFixedHolidayDay(data.value)}/>
+                    <Form.Select fluid required options={daysPossible} onChange={(e,{value}) =>setNewDay(value)} value={newDay}/>
+                </FormField>
+                <FormField width={6}>
+                    <label>Mois <span className="form-required-star">*</span></label>
+                    <Form.Select fluid required options={monthsPossible} onChange={(e,{value}) =>setNewMonth(value)} value={newMonth}/>
                 </FormField>
             </Form.Group>
             <Form.Group>
-                <Form.Button className="submit-button-container" primary disabled={submitting} loading={submitting}>Enregistrer</Form.Button>
+                <Form.Button className="submit-button-container d-flex new-fixed-holiday-submit" primary disabled={submitting} loading={submitting}>Enregistrer</Form.Button>
             </Form.Group>
         </Form>
     );
@@ -88,4 +109,4 @@ export default function NewFixedHoliday(props){
 
 NewFixedHoliday.propTypes = {
     addFixedHoliday: PropTypes.func.isRequired
-}
+};

@@ -4,6 +4,7 @@ import {THEME_VALUES, ThemeContext} from "../Context/Theme";
 import {Grid, Icon, Tab, Table} from "semantic-ui-react";
 import {displayErrorPopup} from "../../utils/error";
 import NewFixedHoliday from "./NewFixedHoliday";
+import {getMonthName} from "../../utils/date";
 
 export default function FixedHolidaysAdminList(props){
     const theme = useContext(ThemeContext);
@@ -18,15 +19,15 @@ export default function FixedHolidaysAdminList(props){
             console.log(error);
             displayErrorPopup(error);
         }).finally(() => setLoading(false))
-    },[])
+    },[]);
 
     const handleDeleteFixedHoliday = (oneFixedHoliday) => {
         console.log(oneFixedHoliday);
-    }
+    };
 
     const handleAddNewFixedHoliday = (newFixedHoliday) => {
         setFixedHolidays([...fixedHolidays,newFixedHoliday]);
-    }
+    };
 
     return (
         <Tab.Pane className={theme.value === THEME_VALUES.dark ? 'inverted-tab-bg' : ''} inverted={theme.value === THEME_VALUES.dark} attached={false} loading={loading}>
@@ -42,10 +43,10 @@ export default function FixedHolidaysAdminList(props){
                         </Table.Header>
                         {fixedHolidays.length > 0 ? (
                             <Table.Body>
-                                {fixedHolidays.map(oneFixedHoliday => {
+                                {fixedHolidays.map((oneFixedHoliday,index) => {
                                     return (
-                                        <Table.Row key={oneFixedHoliday.id} disabled={fixedHolidaysBeingProcessed.includes(oneFixedHoliday.id)}>
-                                            <Table.Cell>{oneFixedHoliday.day}</Table.Cell>
+                                        <Table.Row key={oneFixedHoliday.id ?? index} disabled={fixedHolidaysBeingProcessed.includes(oneFixedHoliday.id)}>
+                                            <Table.Cell>{oneFixedHoliday.day} {getMonthName(oneFixedHoliday.month-1)}</Table.Cell>
                                             <Table.Cell>{oneFixedHoliday.createdBy}</Table.Cell>
                                             <Table.Cell>
                                                 <Icon title="Supprimer le jour férié" onClick={handleDeleteFixedHoliday.bind(this,oneFixedHoliday)} className="admin-fixed-holiday-btn button-delete-service" name="trash"/>

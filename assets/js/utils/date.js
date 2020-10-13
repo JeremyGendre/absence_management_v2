@@ -94,6 +94,36 @@ export function getMonth(index, year = today.getFullYear())
 }
 
 /**
+ * Get the month name from a given index
+ * @param index
+ * @returns {string|null}
+ */
+export function getMonthName(index)
+{
+    for(let i = 0; i < defaultMonths.length; i++){
+        if(defaultMonths[i].index === index){
+            return defaultMonths[i].label;
+        }
+    }
+    return null;
+}
+
+/**
+ * Get the month number of days from a given index
+ * @param index
+ * @returns {null|number}
+ */
+export function getMonthNumberDays(index)
+{
+    for(let i = 0; i < defaultMonths.length; i++){
+        if(defaultMonths[i].index === index){
+            return defaultMonths[i].days;
+        }
+    }
+    return 0;
+}
+
+/**
  * Get for each months their number of days for the given year
  * @param year
  * @returns {[]}

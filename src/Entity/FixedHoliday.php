@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\FixedHolidayRepository;
+use App\Service\Serializer\MySerializerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=FixedHolidayRepository::class)
  */
-class FixedHoliday
+class FixedHoliday implements MySerializerInterface
 {
     /**
      * @ORM\Id
@@ -71,5 +72,15 @@ class FixedHoliday
         $this->createdBy = $createdBy;
 
         return $this;
+    }
+
+    public function serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'day' => $this->day,
+            'month' => $this->month,
+            'createdBy' => $this->getCreatedBy()->getName() ?? null
+        ];
     }
 }

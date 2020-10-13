@@ -42,6 +42,10 @@ label{
     display:none;
 }
 
+.d-flex{
+    display:flex;
+}
+
 .hr-custom{
     opacity:0.4;
 }
