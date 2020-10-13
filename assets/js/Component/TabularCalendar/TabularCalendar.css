@@ -76,9 +76,6 @@
     padding-left:1em;
     transition: all 0.15s ease-in-out;
 }
-.tabular-calendar-user:hover{
-    border-left: solid 2px black;
-}
 
 .tooltip-event{
     position:absolute;
