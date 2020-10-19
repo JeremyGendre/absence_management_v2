@@ -14,10 +14,15 @@ export default function TabularCalendarScreen(props){
     const [datasLoading, setDatasLoading] = useState(true);
     const [serviceList, setServiceList] = useState([]);
     const [service, setService] = useState(userContext.user.service.id);
+    const [fixedHolidays, setFixedHolidays] = useState([]);
 
     useEffect(() => {
         axios.get('/api/service/all').then((result)=>{
             setServiceList(servicesToSelectable(result.data));
+        }).catch( displayErrorPopup );
+
+        axios.get('/api/fixed/holiday/all').then( ({ data }) => {
+            setFixedHolidays(data);
         }).catch( displayErrorPopup );
     },[]);
 
@@ -39,7 +44,7 @@ export default function TabularCalendarScreen(props){
             {datasLoading ? (
                 <MyLoader size="big"/>
             ) : (
-                <TabularCalendar data={datas} loading={datasLoading}/>
+                <TabularCalendar data={datas} loading={datasLoading} fixedHolidays={fixedHolidays}/>
             )}
         </Container>
     );

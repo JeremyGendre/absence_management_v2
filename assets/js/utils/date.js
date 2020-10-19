@@ -314,6 +314,22 @@ export function isItAWeekEndDay(day)
 }
 
 /**
+ * @param day
+ * @param month
+ * @param fixedDays
+ * @returns {boolean}
+ */
+export function isItAFixedDay(day, month, fixedDays)
+{
+    for(let i = 0; i < fixedDays.length; i++){
+        if(fixedDays[i].month === month && fixedDays[i].day === day){
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Get the time difference between two dates
  * @param date1
  * @param date2

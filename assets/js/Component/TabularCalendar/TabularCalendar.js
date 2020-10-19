@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     getDaysOfMonth,
@@ -11,7 +11,6 @@ import {
     adjustTabularEventTitle,
     adjustTabularEventBackgroundColor
 } from "./functions";
-import {displayErrorPopup} from "../../utils/error";
 
 const today = new Date();
 
@@ -81,10 +80,6 @@ export default function TabularCalendar(props){
 
     const daysOfMonth = getDaysOfMonth(period.month.index + 1, period.year, period.month.days);
 
-    useEffect(() => {
-        axios.get('/api/fixed/holiday/all').then().catch( displayErrorPopup )
-    }, []);
-
     return (
         <div id="tabular-calendar-container">
             <div className="tabular-calendar-container-header">
@@ -114,20 +109,21 @@ export default function TabularCalendar(props){
                             </tr>
                         </thead>
                         <tbody>
-                            {props.data.map((dataInfos,index) => {
-                                let eventResult = {bgColor:'transparent',title:''};
+                            {props.data.map((dataInfos, index) => {
+                                let eventResult = {bgColor:'transparent', title:''};
+                                const currentMonth = getCurrentMonth();
                                 return (
                                     <tr key={index} className="tabular-calendar-user">
                                         <td className="tabular-user-name-cell">{dataInfos.userName}</td>
-                                        {daysOfMonth.map((dayOfWeek,index) => {
-                                            eventResult = checkHolidayForCellColor(dataInfos.events,new Date(period.year + '-' + getCurrentMonth() + '-' + (index + 1) ));
-                                            eventResult.bgColor = adjustTabularEventBackgroundColor(eventResult,dayOfWeek);
+                                        {daysOfMonth.map((dayOfWeek, index) => {
+                                            eventResult = checkHolidayForCellColor(dataInfos.events, new Date(period.year + '-' + currentMonth + '-' + (index + 1)));
+                                            eventResult.bgColor = adjustTabularEventBackgroundColor(eventResult,dayOfWeek, index + 1, currentMonth, props.fixedHolidays);
                                             eventResult.title = adjustTabularEventTitle(eventResult, userInfos.isAdmin);
                                             const element = (eventResult.title !== '') ?
                                                 <td data-title={eventResult.title} onMouseMove={cellMouseMove}
                                                     onMouseEnter={cellEnter} onMouseLeave={cellLeave}
                                                     className="event-cell" style={{padding:'1px'}} key={index}>
-                                                    <div style={{background:eventResult.bgColor,width:'100%',height:'100%'}}/>
+                                                    <div style={{background:eventResult.bgColor, width:'100%', height:'100%'}}/>
                                                 </td>
                                                 :
                                                 <td className="event-cell" style={{background:eventResult.bgColor}} key={index}/>;
@@ -147,6 +143,7 @@ export default function TabularCalendar(props){
 
 TabularCalendar.propTypes = {
     data: PropTypes.array.isRequired,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    fixedHolidays: PropTypes.array
 };
 

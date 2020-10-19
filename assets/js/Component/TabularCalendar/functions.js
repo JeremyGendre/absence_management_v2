@@ -1,5 +1,5 @@
 import {PERIOD_TYPE_ALL_DAY, PERIOD_TYPE_MORNING} from "../../utils/holidaysTypes";
-import {displayDate, isDateBetween, isItAWeekEndDay, isSameDay} from "../../utils/date";
+import {displayDate, isDateBetween, isItAFixedDay, isItAWeekEndDay, isSameDay} from "../../utils/date";
 
 /**
  * Gives the usefull informations concerning a day event (for the tabular calendar mainly)
@@ -38,12 +38,15 @@ export function checkHolidayForCellColor(events, date){
  * Return the correct backgroundColor (which will be displayed) for a given event of the tabular calendar
  * @param eventResult
  * @param dayOfWeek
+ * @param day
+ * @param month
+ * @param fixedDays
  * @returns {string|string}
  */
-export function adjustTabularEventBackgroundColor(eventResult,dayOfWeek)
+export function adjustTabularEventBackgroundColor(eventResult, dayOfWeek, day = 0, month = 0, fixedDays = [])
 {
     let backgroundColor = eventResult.bgColor;
-    if(isItAWeekEndDay(dayOfWeek)){
+    if(isItAWeekEndDay(dayOfWeek) || isItAFixedDay(day, month, fixedDays)){
         backgroundColor = 'var(--tabular-calendar-week-end-color)';
     }else if(eventResult.halfDay === true){
         if(eventResult.periodType === PERIOD_TYPE_MORNING){
