@@ -50,7 +50,7 @@ export default function Header(props){
                     <li className="header-li-right">
                         <div className='header-theme-btn-container'>
                             <Popup inverted content={'Activer le thème ' + (theme.value === THEME_VALUES.dark ? 'clair' : 'sombre')} position="bottom right" trigger={
-                                <Button onClick={theme.toggleTheme} basic color={theme.value === THEME_VALUES.dark ? 'yellow' : 'yellow'} circular icon={theme.value === THEME_VALUES.dark ? 'moon' : 'sun' } />
+                                <Button onClick={theme.toggleTheme} basic color={theme.value === THEME_VALUES.dark ? 'yellow' : 'yellow'} circular icon={theme.value === THEME_VALUES.dark ? 'sun' : 'moon' } />
                             } />
                         </div>
                         <div className="link-profile header-dropdown-links">
