@@ -47,10 +47,7 @@ export default function Profile(props){
                             title:'Profil mis à jour',
                         });
                     }
-            }).catch(error => {
-                console.log(error);
-                displayErrorPopup(error);
-            }).finally(() => {
+            }).catch( displayErrorPopup ).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);
             });

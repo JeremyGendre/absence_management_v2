@@ -6,5 +6,6 @@ import {MySwal} from "./MySwal";
  */
 export function displayErrorPopup(error)
 {
+    console.log(error);
     MySwal.fire({icon:'error',title:'Erreur : ' + (error.message ?? error)});
 }

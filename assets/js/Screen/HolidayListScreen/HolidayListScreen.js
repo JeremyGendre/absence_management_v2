@@ -49,10 +49,7 @@ export default function HolidayListScreen(props){
                 });
             });
             setListHolidays(newHolidaysList);
-        }).catch(error => {// erreur
-            displayErrorPopup(error);
-            console.log(error);
-        }).finally(() => {
+        }).catch( displayErrorPopup ).finally(() => {
             setLoadingData(false);
         })
     },[]);
@@ -86,10 +83,7 @@ export default function HolidayListScreen(props){
                         setListHolidays(newHolidaysList);
                         MySwal.fire({icon:'success', title:'Congés annulés'});
                     }
-                }).catch(error => {
-                    displayErrorPopup(error);
-                    console.log(error);
-                }).finally(() => {
+                }).catch( displayErrorPopup ).finally(() => {
                     setHolidaysBeingDeleted(removeFromArray(holiday.key,holidaysBeingDeleted));
                 });
             }

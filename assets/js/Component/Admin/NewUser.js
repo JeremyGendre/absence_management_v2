@@ -64,10 +64,7 @@ export default function NewUser(props){
                             title:'Utilisateur créé',
                         });
                     }
-            }).catch(error => {
-                console.log(error);
-                displayErrorPopup(error);
-            }).finally(() => {
+            }).catch( displayErrorPopup ).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);
             });

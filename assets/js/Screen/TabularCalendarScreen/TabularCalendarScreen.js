@@ -18,10 +18,7 @@ export default function TabularCalendarScreen(props){
     useEffect(() => {
         axios.get('/api/service/all').then((result)=>{
             setServiceList(servicesToSelectable(result.data));
-        }).catch((error)=>{
-            console.log(error);
-            displayErrorPopup(error);
-        });
+        }).catch( displayErrorPopup );
     },[]);
 
     useEffect(() => {
@@ -30,10 +27,7 @@ export default function TabularCalendarScreen(props){
         }
         axios.get('/api/holiday/service/tabular/'+service).then(result => {
             setDatas(result.data);
-        }).catch(error => {
-            displayErrorPopup(error);
-            console.error(error);
-        }).finally(()=>{
+        }).catch( displayErrorPopup ).finally(()=>{
             setDatasLoading(false);
         })
     },[service]);

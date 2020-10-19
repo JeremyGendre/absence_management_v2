@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     getDaysOfMonth,
@@ -11,6 +11,7 @@ import {
     adjustTabularEventTitle,
     adjustTabularEventBackgroundColor
 } from "./functions";
+import {displayErrorPopup} from "../../utils/error";
 
 const today = new Date();
 
@@ -79,6 +80,10 @@ export default function TabularCalendar(props){
     }
 
     const daysOfMonth = getDaysOfMonth(period.month.index + 1, period.year, period.month.days);
+
+    useEffect(() => {
+        axios.get('/api/fixed/holiday/all').then().catch( displayErrorPopup )
+    }, []);
 
     return (
         <div id="tabular-calendar-container">

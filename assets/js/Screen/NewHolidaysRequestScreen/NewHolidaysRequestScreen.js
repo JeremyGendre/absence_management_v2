@@ -142,10 +142,7 @@ export default function NewHolidaysRequestScreen(props){
                 MySwal.fire({icon:'success', title:'Demande créée',});
                 backToInitialState();
             }
-        }).catch(error => {//erreur
-            displayErrorPopup(error);
-            console.log(error);
-        }).finally(()=>{
+        }).catch( displayErrorPopup ).finally(()=>{
             setSubmitting(false);
         });
     }

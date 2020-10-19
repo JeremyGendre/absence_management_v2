@@ -40,10 +40,7 @@ export default function HolidaysAdminList(props){
             let convertedHolidays = convertListToAdminListFormat(data.data);
             setHolidaysListFull(convertedHolidays);
             setHolidaysListCanBeDisplayed(convertedHolidays);
-        }).catch(error => {
-            console.error(error);
-            displayErrorPopup(error);
-        }).finally(()=>{
+        }).catch( displayErrorPopup ).finally(()=>{
             setLoadingHolidays(false);
         });
     },[]);

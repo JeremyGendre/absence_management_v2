@@ -41,10 +41,7 @@ export default function NewFixedHoliday(props){
                     props.addFixedHoliday(result.data);
                     MySwal.fire({icon:'success', title:'Jour férié créé',});
                 }
-            }).catch(error => {
-                console.log(error);
-                displayErrorPopup(error);
-            }).finally(() => {
+            }).catch( displayErrorPopup ).finally(() => {
                 setFormErrors([]);
                 setSubmitting(false);
                 setNewDay(1);

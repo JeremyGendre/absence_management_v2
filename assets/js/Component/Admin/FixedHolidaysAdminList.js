@@ -18,10 +18,7 @@ export default function FixedHolidaysAdminList(props){
     useEffect(()=>{
         axios.get('/api/fixed/holiday/all').then(result => {
             setFixedHolidays(result.data);
-        }).catch(error => {
-            console.log(error);
-            displayErrorPopup(error);
-        }).finally(() => setLoading(false))
+        }).catch( displayErrorPopup ).finally(() => setLoading(false))
     },[]);
 
     const handleDeleteFixedHoliday = (oneFixedHoliday) => {

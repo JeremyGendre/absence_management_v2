@@ -19,10 +19,7 @@ export default function ServiceAdminList(props){
     useEffect(()=>{
         axios.get('/api/service/all').then((result)=>{
             setServices(result.data);
-        }).catch((error)=>{
-            console.log(error);
-            displayErrorPopup(error);
-        }).finally(()=>{
+        }).catch( displayErrorPopup ).finally(()=>{
             setLoadingServices(false);
         });
     },[]);
