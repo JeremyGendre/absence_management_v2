@@ -195,7 +195,9 @@ export default function TabularCalendar(props){
                                             const element = (eventResult.title !== '') ?
                                                 <td data-title={eventResult.title} onMouseMove={cellMouseMove}
                                                     onMouseEnter={cellEnter} onMouseLeave={cellLeave}
-                                                    className="event-cell" style={{background:eventResult.bgColor}} key={index}/>
+                                                    className="event-cell" style={{padding:'1px'}} key={index}>
+                                                    <div style={{background:eventResult.bgColor,width:'100%',height:'100%'}}/>
+                                                </td>
                                                 :
                                                 <td className="event-cell" style={{background:eventResult.bgColor}} key={index}/>;
                                             return (element);
