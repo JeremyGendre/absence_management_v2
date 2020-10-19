@@ -47,13 +47,13 @@
 }
 
 .login-submit{
-    padding:0.5em 0.8em;
+    padding:0.5em 1em;
     font-size: 0.9em;
     font-weight: bold;
     background-color: var(--login-color);
     color:white;
     border:solid 2px var(--login-color);
-    border-radius: 3px;
+    border-radius: 9999px;
     transition: all 0.1s ease-in-out;
 }
 
