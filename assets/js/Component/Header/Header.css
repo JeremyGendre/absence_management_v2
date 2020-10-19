@@ -1,7 +1,8 @@
 #header{
     z-index: 999;
     display: block;
-    position: relative;
+    position: sticky;
+    top:0;
     font-size:1.1em;
 }
 
