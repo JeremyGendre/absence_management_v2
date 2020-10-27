@@ -7,12 +7,10 @@ namespace App\Controller;
 use App\Entity\History;
 use App\Entity\Service;
 use App\Repository\ServiceRepository;
-use App\Service\Handler\ResponseHandler;
 use App\Service\Helper\HistoryHelper;
 use App\Service\Serializer\MySerializer;
 use App\Service\Validator\ServiceValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class ServiceController
  * @package App\Controller
  */
-class ServiceController extends AbstractController
+class ServiceController extends BaseAbstractController
 {
     /**
      * @Route(path="/all", name="services_all", methods={"GET"})
@@ -62,7 +60,7 @@ class ServiceController extends AbstractController
         $data = json_decode($request->getContent(),true);
 
         if(!ServiceValidator::validate($data)){
-            return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
+            return $this->errorJsonResponse("Les données transmises ne sont pas valides");
         }
 
         $service = new Service($data['name']);
@@ -90,7 +88,7 @@ class ServiceController extends AbstractController
         $data = json_decode($request->getContent(),true);
 
         if(!ServiceValidator::validate($data)){
-            return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
+            return $this->errorJsonResponse("Les données transmises ne sont pas valides");
         }
 
         $service->setName($data['name']);

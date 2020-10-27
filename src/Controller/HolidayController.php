@@ -7,11 +7,9 @@ use App\Entity\Holiday;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\HolidayRepository;
-use App\Service\Handler\ResponseHandler;
 use App\Service\Helper\HistoryHelper;
 use App\Service\Helper\HolidayHelper;
 use App\Service\Validator\HolidayValidator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @package App\Controller
  * @Route(path="/api/holiday")
  */
-class HolidayController extends AbstractController
+class HolidayController extends BaseAbstractController
 {
     /**
      * @Route(path="/all", name="holidays_all", methods={"GET"})
@@ -58,7 +56,7 @@ class HolidayController extends AbstractController
      * @param HolidayRepository $holidayRepository
      * @return JsonResponse
      */
-    public function getByUser(Request $request, User $user,HolidayRepository $holidayRepository) : JsonResponse{
+    public function getByUser(Request $request, User $user, HolidayRepository $holidayRepository) : JsonResponse{
         $holidays = $holidayRepository->findBy(["user" => $user],["startDate"=>"DESC"]);
         $response = HolidayHelper::holidaysSerialization($holidays,HolidayHelper::isHolidayEventSerialization($request),($user === $this->getUser()));
         return new JsonResponse($response);
@@ -79,7 +77,7 @@ class HolidayController extends AbstractController
         HolidayRepository $holidayRepository
     ):JsonResponse{
         if(!array_key_exists($status,Holiday::LABEL_STATUS)){
-            return ResponseHandler::errorResponse("Le status recherché n'est correct.");
+            return $this->errorJsonResponse("Le status recherché n'est correct.");
         }
         $holidays = $holidayRepository->findByStatus($status);
         $response = [];
@@ -119,7 +117,7 @@ class HolidayController extends AbstractController
             $end = new \DateTime();
             $end->setTimestamp($timestampEnd);
         }catch(Exception $exception){
-            return ResponseHandler::errorResponse("Un problème est survenu lors de la récupération des dates");
+            return $this->errorJsonResponse("Un problème est survenu lors de la récupération des dates");
         }
         $holidays = $holidayRepository->findByUserAndDates($user,$start,$end);
         $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
@@ -152,7 +150,7 @@ class HolidayController extends AbstractController
             $end = new \DateTime();
             $end->setTimestamp($timestampEnd);
         }catch(Exception $exception){
-            return ResponseHandler::errorResponse("Un problème est survenu lors de la récupération des dates");
+            return $this->errorJsonResponse("Un problème est survenu lors de la récupération des dates");
         }
         $holidays = $holidayRepository->findByServiceAndDates($service,$start,$end);
         $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
@@ -213,7 +211,7 @@ class HolidayController extends AbstractController
             $end = new \DateTime();
             $end->setTimestamp($timestampEnd);
         }catch(Exception $exception){
-            return ResponseHandler::errorResponse("Un problème est survenu lors de la récupération des dates");
+            return $this->errorJsonResponse("Un problème est survenu lors de la récupération des dates");
         }
         $holidays = $holidayRepository->findByDates($start,$end);
         $response = HolidayHelper::holidaysSerialization($holidays, HolidayHelper::isHolidayEventSerialization($request));
@@ -234,11 +232,11 @@ class HolidayController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if($authUser !== $user && !$authUser->isAdmin()){
-            return ResponseHandler::errorResponse("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
+            return $this->errorJsonResponse("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
         }
         $data = json_decode($request->getContent(),true);
         if(!HolidayValidator::validate($data)){
-            return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
+            return $this->errorJsonResponse("Les données transmises ne sont pas valides");
         }
 
         $holiday = new Holiday();
@@ -320,7 +318,7 @@ class HolidayController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if($holiday->getUser() !== $authUser && !$authUser->isAdmin()){
-            return ResponseHandler::errorResponse("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
+            return $this->errorJsonResponse("Vous devez être le créateur de ces congés ou être administrateur pour faire cette action.");
         }
 
         /** @var History $holidayHistory */

@@ -7,13 +7,11 @@ use App\Entity\Service;
 use App\Entity\User;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
-use App\Service\Handler\ResponseHandler;
 use App\Service\Helper\HistoryHelper;
 use App\Service\Helper\RoleHelper;
 use App\Service\Serializer\MySerializer;
 use App\Service\Validator\UserValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +22,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * Class UserController
  * @package App\Controller
  */
-class UserController extends AbstractController
+class UserController extends BaseAbstractController
 {
     /**
      * @Route(path="/all", name="users_all", methods={"GET"})
@@ -81,7 +79,7 @@ class UserController extends AbstractController
             "username" => $username
         ]);
         if($user === null){
-            return ResponseHandler::errorResponse("Aucun utilisateur trouvé avec le nom '".$username."'.");
+            return $this->errorJsonResponse("Aucun utilisateur trouvé avec le nom '".$username."'.");
         }
         return new JsonResponse($user->serialize());
     }
@@ -104,11 +102,11 @@ class UserController extends AbstractController
     ):JsonResponse{
         $data = json_decode($request->getContent(),true);
         if(!UserValidator::validate($data) || !$userValidator->checkServiceExistence($data) || !UserValidator::checkPassword($data)){
-            return ResponseHandler::errorResponse("Les données envoyées ne sont pas valides");
+            return $this->errorJsonResponse("Les données envoyées ne sont pas valides");
         }
         $user = new User();
         if(!$userValidator->checkUsername($data['username'])){
-            return ResponseHandler::errorResponse("Le nom d'utilisateur existe déjà");
+            return $this->errorJsonResponse("Le nom d'utilisateur existe déjà");
         }
         $user->setUsername($data['username']);
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
@@ -144,10 +142,10 @@ class UserController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if($authUser === $user){
-            return ResponseHandler::errorResponse("Vous ne pouvez pas vous supprimer vous-même");
+            return $this->errorJsonResponse("Vous ne pouvez pas vous supprimer vous-même");
         }
         if(RoleHelper::userIsSuperAdmin($user) || (RoleHelper::userHasRole($user,RoleHelper::ROLE_ADMIN) && !RoleHelper::userIsSuperAdmin($authUser))){
-            return ResponseHandler::errorResponse("Vous n'avez pas les droits nécessaires");
+            return $this->errorJsonResponse("Vous n'avez pas les droits nécessaires");
         }
 
         /** @var History $userHistory */
@@ -157,7 +155,7 @@ class UserController extends AbstractController
         $em->persist($userHistory);
         $em->remove($user);
         $em->flush();
-        return ResponseHandler::successResponse("Utilisateur supprimé");
+        return $this->successJsonResponse("Utilisateur supprimé");
     }
 
     /**
@@ -176,20 +174,20 @@ class UserController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if($user->isAdmin() && $user !== $authUser){
-            return ResponseHandler::errorResponse("Vous ne pouvez pas modifier un autre administrateur.");
+            return $this->errorJsonResponse("Vous ne pouvez pas modifier un autre administrateur.");
         }
         if(!$authUser->isAdmin() && $authUser !== $user){
-            return ResponseHandler::errorResponse("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
+            return $this->errorJsonResponse("La personne authentifiée n'est pas la même que celle modifiée ou n'a pas les droits nécessaires.");
         }
         $data = json_decode($request->getContent(),true);
         if(!UserValidator::validate($data)){
-            return ResponseHandler::errorResponse("Les données envoyées ne sont pas valides");
+            return $this->errorJsonResponse("Les données envoyées ne sont pas valides");
         }
 
         if($data['username'] !== $user->getUsername()){
             $usernameUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(["username"=>$data['username']]);
             if($usernameUser !== null){
-                return ResponseHandler::errorResponse("Le nom d'utilisateur existe déjà.");
+                return $this->errorJsonResponse("Le nom d'utilisateur existe déjà.");
             }
             $user->setUsername($data['username']);
         }
@@ -226,12 +224,12 @@ class UserController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if(RoleHelper::hasBadRolesForRoleEdition($user,$authUser)) {
-            return ResponseHandler::errorResponse("Vous n'avez pas les droits nécessaires");
+            return $this->errorJsonResponse("Vous n'avez pas les droits nécessaires");
         }
 
         $data = json_decode($request->getContent(),true);
         if(array_key_exists('roles',$data) === false){
-            return ResponseHandler::errorResponse("Le format de données n'est pas correct");
+            return $this->errorJsonResponse("Le format de données n'est pas correct");
         }
 
         $roles = $data['roles'];
@@ -262,15 +260,15 @@ class UserController extends AbstractController
         UserPasswordEncoderInterface $passwordEncoder
     ):JsonResponse{
         if($this->getUser() !== $user){
-            return ResponseHandler::errorResponse("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
+            return $this->errorJsonResponse("Vous ne pouvez pas modifier le mot de passe d'une autre personne");
         }
         $data = json_decode($request->getContent(),true);
         $formError = UserValidator::changePasswordFormError($data);
         if($formError !== null){
-            return ResponseHandler::errorResponse($formError);
+            return $this->errorJsonResponse($formError);
         }
         if(!$passwordEncoder->isPasswordValid($user, $data['oldPassword'])){
-            return ResponseHandler::errorResponse("L'ancien mot de passe ne correspond pas.");
+            return $this->errorJsonResponse("L'ancien mot de passe ne correspond pas.");
         }
         $user->setPassword($passwordEncoder->encodePassword($user,$data['password']));
 
@@ -296,14 +294,14 @@ class UserController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         if($authUser === $user){
-            return ResponseHandler::errorResponse("Vous ne pouvez pas gérer votre activation/désactivation");
+            return $this->errorJsonResponse("Vous ne pouvez pas gérer votre activation/désactivation");
         }
         if(RoleHelper::userIsSuperAdmin($user) || (RoleHelper::userHasRole($user,RoleHelper::ROLE_ADMIN) && !RoleHelper::userIsSuperAdmin($authUser))){
-            return ResponseHandler::errorResponse("Vous n'avez pas les droits nécessaires");
+            return $this->errorJsonResponse("Vous n'avez pas les droits nécessaires");
         }
         $data = json_decode($request->getContent(),true);
         if(array_key_exists('isActive',$data) === false || ($data['isActive'] !== false && $data['isActive'] !== true)){
-            return ResponseHandler::errorResponse("Les données envoyées ne sont pas valides");
+            return $this->errorJsonResponse("Les données envoyées ne sont pas valides");
         }
         $user->setIsActive($data['isActive']);
 

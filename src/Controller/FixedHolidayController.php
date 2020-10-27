@@ -8,12 +8,10 @@ use App\Entity\FixedHoliday;
 use App\Entity\History;
 use App\Entity\User;
 use App\Repository\FixedHolidayRepository;
-use App\Service\Handler\ResponseHandler;
 use App\Service\Helper\HistoryHelper;
 use App\Service\Serializer\MySerializer;
 use App\Service\Validator\FixedHolidayValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class FixedHolidayController
  * @package App\Controller
  */
-class FixedHolidayController extends AbstractController
+class FixedHolidayController extends BaseAbstractController
 {
     /**
      * @Route("/all", name="fixed_holiday_all", methods={"GET"})
@@ -48,11 +46,11 @@ class FixedHolidayController extends AbstractController
     {
         $data = json_decode($request->getContent(),true);
         if(!FixedHolidayValidator::validate($data)){
-            return ResponseHandler::errorResponse("Les données transmises ne sont pas valides");
+            return $this->errorJsonResponse("Les données transmises ne sont pas valides");
         }
         $existingFixedHoliday = $fixedHolidayRepository->findOneBy(['day' => $data['day'], 'month' => $data['month']]);
         if($existingFixedHoliday !== null){
-            return ResponseHandler::errorResponse("Ce jour existe déjà");
+            return $this->errorJsonResponse("Ce jour existe déjà");
         }
 
         /** @var User $user */
@@ -85,6 +83,6 @@ class FixedHolidayController extends AbstractController
         $em->remove($fixedHoliday);
         $em->persist($fixedHolidayHistory);
         $em->flush();
-        return ResponseHandler::successResponse("Jour férié supprimé");
+        return $this->successJsonResponse("Jour férié supprimé");
     }
 }
