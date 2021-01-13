@@ -48,7 +48,7 @@ abstract class BaseFixture extends Fixture
      *          $user = new User();
      *          $user->setFirstName('Ryan');
      *
-     *           return $user;
+     *          return $user;
      *      });
      *
      * @param int $count
