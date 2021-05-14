@@ -3,7 +3,7 @@
 **Requirements** :
 - [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable) / [npm](https://www.npmjs.com/get-npm) installed 
 - [composer](https://getcomposer.org/download/) installed
-- [PHP](https://www.php.net/manual/fr/install.php) >= 7.2.5 installed
+- [PHP](https://www.php.net/manual/fr/install.php) >= 7.4.0 installed
 
 **optionally** :
 - install the [make](http://gnuwin32.sourceforge.net/packages/make.htm) program in order to just have a single command to execute and setup the project.
