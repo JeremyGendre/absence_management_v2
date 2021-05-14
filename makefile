@@ -1,8 +1,14 @@
-composer:
+composer.lock: composer.json
+	composer update --prefer-stable
+
+vendor: composer.lock
 	composer install
 
-yarn:
-	yarn install
+yarn.lock: package.json
+	yarn upgrade
+
+node_modules: yarn.lock
+	yarn install --freeze-lock --check-files
 
 db:
 	php bin/console doctrine:database:drop --if-exists --force
@@ -15,10 +21,13 @@ dataset:
 cache:
 	php bin/console cache:clear
 
+build: node_modules
+	yarn build
+
 asset:
 	yarn encore dev
 
-install: composer yarn db cache asset
+install: vendor node_modules db cache asset
 
 i : install
 
@@ -33,3 +42,5 @@ id: install-dataset
 install-local-dataset: install-local dataset
 
 ild: install-local-dataset
+
+deploy: install build
